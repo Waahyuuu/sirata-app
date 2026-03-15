@@ -24,7 +24,7 @@
 
         {{-- IMAGE --}}
         <div class="mt-10 md:mt-0">
-            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" class="w-[420px]">
+            <img src="{{ asset('images/undraw_grading-papers_lty0.svg') }}" alt="Hero Image" class="w-[420px]">
         </div>
 
     </div>

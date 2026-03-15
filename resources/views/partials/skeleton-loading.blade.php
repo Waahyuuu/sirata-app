@@ -128,13 +128,13 @@
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">
 
             <!-- Kiri -->
-            <div class="text-center md:text-left">
+            <div class="text-center flex flex-col items-center">
 
                 <!-- Title Skeleton -->
-                <div class="h-6 w-72 bg-gray-300 rounded mb-8 mx-auto md:mx-0"></div>
+                <div class="h-6 w-72 bg-gray-300 rounded mb-8 mx-auto"></div>
 
                 <!-- Image Skeleton -->
-                <div class="w-full max-w-md h-72 bg-gray-200 rounded-lg mx-auto md:mx-0"></div>
+                <div class="w-full max-w-md h-72 bg-gray-200 rounded-lg mx-auto"></div>
 
             </div>
 
@@ -175,49 +175,49 @@
 </div>
 
 <div id="skeleton-footer" class="max-w-8xl mx-auto animate-pulse">
-    
+
     {{-- LINK --}}
     <section class="w-full border-t border-b bg-gray-100 py-6">
-    
+
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-start">
-    
+
             {{-- Sosmed --}}
             <div>
-    
+
                 <div class="h-4 w-28 bg-gray-300 rounded mb-3"></div>
-    
+
                 <div class="flex gap-2">
                     <div class="w-10 h-7 bg-gray-300 rounded"></div>
                     <div class="w-10 h-7 bg-gray-300 rounded"></div>
                     <div class="w-10 h-7 bg-gray-300 rounded"></div>
                 </div>
-    
+
             </div>
-    
+
             {{-- Menu --}}
             <div class="text-right space-y-2">
-    
+
                 <div class="h-4 w-16 bg-gray-300 rounded ml-auto mb-3"></div>
-    
+
                 <div class="h-3 w-24 bg-gray-300 rounded ml-auto"></div>
                 <div class="h-3 w-32 bg-gray-300 rounded ml-auto"></div>
                 <div class="h-3 w-36 bg-gray-300 rounded ml-auto"></div>
-    
+
             </div>
-    
+
         </div>
-    
+
     </section>
-    
-    
+
+
     {{-- FOOTER --}}
     <footer class="w-full bg-gray-100">
-    
+
         <div class="max-w-7xl mx-auto py-4 flex justify-center">
-    
+
             <div class="h-3 w-64 bg-gray-300 rounded"></div>
-    
+
         </div>
-    
+
     </footer>
 </div>

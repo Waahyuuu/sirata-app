@@ -3,13 +3,13 @@
     <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">
 
         <!-- Kiri -->
-        <div class="text-center md:text-left">
+        <div class="text-center flex flex-col items-center">
 
             <h2 class="text-2xl font-bold mb-8">
                 Frequently Asked Questions
             </h2>
 
-            <img src="{{ asset('images/faq-dashboard.png') }}" alt="FAQ Image" class="w-full max-w-md mx-auto md:mx-0">
+            <img src="{{ asset('images/undraw_faq_pgxi.svg') }}" alt="FAQ Image" class="w-full max-w-md">
 
         </div>
 
