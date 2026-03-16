@@ -64,5 +64,9 @@ html {
 }
 
 .faq-item:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+[x-cloak] {
+    display: none;
 }

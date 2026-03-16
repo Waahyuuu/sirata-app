@@ -1,5 +1,10 @@
 import "./bootstrap";
 
+import Alpine from "alpinejs";
+
+window.Alpine = Alpine;
+Alpine.start();
+
 // load skeleton
 window.addEventListener("load", function () {
     const skeleton = document.getElementById("skeleton");
@@ -69,17 +74,15 @@ backToTop.addEventListener("click", function () {
 // accordion
 const faqItems = document.querySelectorAll(".faq-item");
 
-faqItems.forEach(item => {
-
+faqItems.forEach((item) => {
     const btn = item.querySelector(".faq-question");
     const content = item.querySelector(".faq-content");
 
     btn.addEventListener("click", () => {
-
         const isOpen = item.classList.contains("active");
 
         // tutup semua
-        faqItems.forEach(i => {
+        faqItems.forEach((i) => {
             i.classList.remove("active");
             i.querySelector(".faq-content").style.height = "0px";
         });
@@ -89,7 +92,5 @@ faqItems.forEach(item => {
             item.classList.add("active");
             content.style.height = content.scrollHeight + "px";
         }
-
     });
-
 });
