@@ -39,3 +39,30 @@ html {
 
     mask: radial-gradient(circle at top right, transparent 51px, black 52px);
 }
+
+.faq-content {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.35s ease;
+}
+
+.faq-item:hover {
+    transform: translateY(-2px);
+    transition: all 0.25s ease;
+}
+
+.faq-icon {
+    transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-item {
+    transition: all 0.25s ease;
+}
+
+.faq-item:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}

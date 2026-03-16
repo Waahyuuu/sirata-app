@@ -65,3 +65,31 @@ backToTop.addEventListener("click", function () {
         behavior: "smooth",
     });
 });
+
+// accordion
+const faqItems = document.querySelectorAll(".faq-item");
+
+faqItems.forEach(item => {
+
+    const btn = item.querySelector(".faq-question");
+    const content = item.querySelector(".faq-content");
+
+    btn.addEventListener("click", () => {
+
+        const isOpen = item.classList.contains("active");
+
+        // tutup semua
+        faqItems.forEach(i => {
+            i.classList.remove("active");
+            i.querySelector(".faq-content").style.height = "0px";
+        });
+
+        // buka yang diklik
+        if (!isOpen) {
+            item.classList.add("active");
+            content.style.height = content.scrollHeight + "px";
+        }
+
+    });
+
+});
