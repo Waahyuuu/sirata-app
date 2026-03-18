@@ -1,8 +1,11 @@
-<div>
-    <h1>Dashboard Admin</h1>
+@extends('layouts.admin')
 
-    <form method="POST" action="/admin/logout">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
+@section('title', 'Dashboard')
+
+@section('content')
+
+<div class="bg-white p-6">
+    <h1 class="text-lg font-semibold">Selamat Datang di Dashboard</h1>
 </div>
+
+@endsection

@@ -70,3 +70,26 @@ html {
 [x-cloak] {
     display: none;
 }
+
+.menu-item {
+    @apply flex items-center gap-3 
+           py-3 pr-6 pl-7 
+           w-full 
+           rounded-full rounded-r-none
+           ml-2
+           transition-all duration-200;
+}
+
+.menu-item .icon {
+    @apply w-5 h-5;
+}
+
+/* Hover */
+.menu-item:hover {
+    @apply bg-white translate-x-4;
+}
+
+/* Active */
+.menu-item.active {
+    @apply bg-white translate-x-4 shadow-sm font-medium;
+}

@@ -1,3 +1,11 @@
-<div>
-    <!-- Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less. - Marie Curie -->
+@extends('layouts.admin')
+
+@section('title', 'Manajemen Konten')
+
+@section('content')
+
+<div class="bg-white p-6">
+    <h1 class="text-lg font-semibold">Bagian Manajemen Konten</h1>
 </div>
+
+@endsection
