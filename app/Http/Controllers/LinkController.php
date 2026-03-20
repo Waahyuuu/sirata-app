@@ -12,7 +12,8 @@ class LinkController extends Controller
      */
     public function index()
     {
-        //
+        $links = Link::latest()->get();
+        return view('index', compact('links'));
     }
 
     /**
@@ -28,7 +29,19 @@ class LinkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'url'  => 'required|url|unique:links,url',
+        ], [
+            'url.unique'  => 'URL sudah terdaftar',
+        ]);
+
+        Link::create([
+            'name' => $request->name,
+            'url'  => $request->url
+        ]);
+
+        return back()->with('success', 'Link berhasil ditambahkan');
     }
 
     /**
@@ -52,14 +65,30 @@ class LinkController extends Controller
      */
     public function update(Request $request, Link $link)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'url'  => 'required|url|unique:links,url,' . $link->id,
+        ]);
+
+        $link->update($request->only('name', 'url'));
+
+        return back()->with('success', 'Link berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Link $link)
+    public function destroy($id)
     {
-        //
+        Link::findOrFail($id)->delete();
+
+        return back()->with('success', 'Link berhasil dihapus');
+    }
+
+    public function deleteAll()
+    {
+        Link::truncate();
+
+        return redirect()->back()->with('success', 'Semua data berhasil dihapus!');
     }
 }

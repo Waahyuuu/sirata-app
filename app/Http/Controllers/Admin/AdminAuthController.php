@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Faq;
+use App\Models\Link;
 
 class AdminAuthController extends Controller
 {
@@ -39,6 +41,14 @@ class AdminAuthController extends Controller
         }
 
         return view('admin.dashboard');
+    }
+
+    public function konten()
+    {
+        $faqs = Faq::latest()->get();
+        $links = Link::latest()->get();
+
+        return view('admin.konten.index', compact('faqs', 'links'));
     }
 
     public function logout()

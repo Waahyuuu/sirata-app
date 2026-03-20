@@ -3,11 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\MahasiswaController;
-
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\LinkController;
+use App\Models\Link;
+use App\Models\Faq;
 
 // landingpage akses
 Route::get('/', function () {
-    return view('landing.index');
+    $links = Link::latest()->get();
+    $faqs = Faq::latest()->get();
+
+    return view('index', compact('links', 'faqs'));
 });
 
 // admin akses
@@ -24,7 +30,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/mahasiswa', fn() => view('admin.mahasiswa'))->name('mahasiswa');
 
-        Route::get('/konten', fn() => view('admin.konten.index'))->name('konten');
+        Route::get('/konten', [AdminAuthController::class, 'konten'])->name('konten');
+
+        // konten (FAQ)
+        Route::prefix('konten/faq')->name('konten.faq.')->group(function () {
+            Route::get('/', [FaqController::class, 'admin'])->name('index');
+            Route::post('/', [FaqController::class, 'store'])->name('store');
+            Route::put('/{faq}', [FaqController::class, 'update'])->name('update');
+            Route::delete('/{faq}', [FaqController::class, 'destroy'])->name('destroy');
+            Route::get('/delete-all', [FaqController::class, 'deleteAll'])->name('deleteAll');
+        });
+
+        // konten (MANFAAT)
+
+
+        // konten (LINK)
+        Route::prefix('konten/link')->name('konten.link.')->group(function () {
+            Route::post('/', [LinkController::class, 'store'])->name('store');
+            Route::put('/{link}', [LinkController::class, 'update'])->name('update');
+            Route::delete('/{link}', [LinkController::class, 'destroy'])->name('destroy');
+            Route::get('/delete-all', [LinkController::class, 'deleteAll'])->name('deleteAll');
+        });
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });

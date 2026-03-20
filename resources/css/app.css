@@ -40,15 +40,16 @@ html {
     mask: radial-gradient(circle at top right, transparent 51px, black 52px);
 }
 
+/* partials faq css Start*/
 .faq-content {
     height: 0;
     overflow: hidden;
-    transition: height 0.35s ease;
+    padding: 0 1rem;
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.faq-item:hover {
-    transform: translateY(-2px);
-    transition: all 0.25s ease;
+.faq-item.active .faq-content {
+    padding-bottom: 1rem;
 }
 
 .faq-icon {
@@ -70,26 +71,163 @@ html {
 [x-cloak] {
     display: none;
 }
+/* partials faq css End*/
 
+/* components/admin-sidebar css Start*/
 .menu-item {
     @apply flex items-center gap-3 
-           py-3 pr-6 pl-7 
-           w-full 
-           rounded-full rounded-r-none
-           ml-2
-           transition-all duration-200;
+            py-3 pr-6 pl-7 
+            w-full 
+            rounded-full rounded-r-none
+            ml-2
+            transition-all duration-200;
 }
 
 .menu-item .icon {
     @apply w-5 h-5;
 }
 
-/* Hover */
 .menu-item:hover {
     @apply bg-white translate-x-4;
 }
 
-/* Active */
 .menu-item.active {
     @apply bg-white translate-x-4 shadow-sm font-medium;
 }
+/* components/admin-sidebar css End*/
+
+/* partials link css Start*/
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: #000000;
+
+    opacity: 0;
+    transform: scale(1);
+
+    transition: all 0.3s ease;
+}
+
+.group:hover .dot {
+    opacity: 1;
+    animation: dotPulse 0.9s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.6);
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+    }
+}
+/* partials link css End*/
+
+/* admin/konten css Start*/
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: 50;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+}
+
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    transform: scale(0.95) translateY(10px);
+    opacity: 0;
+    transition: all 0.25s ease;
+}
+
+.modal.show .modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* admin/konten css khusus index */
+.tab-btn {
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.tab-btn:hover {
+    background: white;
+    transform: translateY(-1px);
+}
+
+.active-tab {
+    background: white;
+    color: #2563eb;
+}
+
+.content-card {
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+}
+
+.modal-show {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.modal-box-show {
+    opacity: 1 !important;
+    transform: scale(1) translateY(0) !important;
+}
+
+#modalBox {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    50% {
+        transform: translateX(4px);
+    }
+
+    75% {
+        transform: translateX(-4px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.shake {
+    animation: shake 0.3s;
+}
+/* admin/konten css End*/

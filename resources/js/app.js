@@ -45,52 +45,84 @@ window.addEventListener("load", function () {
     }, delay);
 });
 
-// Back Top
-const backToTop = document.getElementById("back-to-top");
-const formSection = document.querySelector(".form-section");
+// back to top
+window.addEventListener("load", function () {
+    const backToTop = document.getElementById("back-to-top");
+    const formSection = document.querySelector(".form-section");
 
-window.addEventListener("scroll", function () {
-    if (!formSection) return;
+    if (!backToTop) return;
 
-    if (window.scrollY > formSection.offsetTop + 100) {
-        // fade in
-        backToTop.classList.remove("opacity-0", "pointer-events-none");
-        backToTop.classList.add("opacity-100", "pointer-events-auto");
-    } else {
-        // fade out
-        backToTop.classList.add("opacity-0", "pointer-events-none");
-        backToTop.classList.remove("opacity-100", "pointer-events-auto");
-    }
-});
+    window.addEventListener("scroll", function () {
+        if (!formSection) {
+            if (window.scrollY > 300) {
+                backToTop.classList.remove("opacity-0", "pointer-events-none");
+                backToTop.classList.add("opacity-100", "pointer-events-auto");
+            } else {
+                backToTop.classList.add("opacity-0", "pointer-events-none");
+                backToTop.classList.remove(
+                    "opacity-100",
+                    "pointer-events-auto",
+                );
+            }
+            return;
+        }
 
-// scroll ke atas
-backToTop.addEventListener("click", function () {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth",
+        if (window.scrollY > formSection.offsetTop + 100) {
+            backToTop.classList.remove("opacity-0", "pointer-events-none");
+            backToTop.classList.add("opacity-100", "pointer-events-auto");
+        } else {
+            backToTop.classList.add("opacity-0", "pointer-events-none");
+            backToTop.classList.remove("opacity-100", "pointer-events-auto");
+        }
+    });
+
+    backToTop.addEventListener("click", function () {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
     });
 });
 
-// accordion
-const faqItems = document.querySelectorAll(".faq-item");
+// faq accordion
+window.addEventListener("load", () => {
+    const faqItems = document.querySelectorAll(".faq-item");
 
-faqItems.forEach((item) => {
-    const btn = item.querySelector(".faq-question");
-    const content = item.querySelector(".faq-content");
+    faqItems.forEach((item) => {
+        const btn = item.querySelector(".faq-question");
+        const content = item.querySelector(".faq-content");
+        const icon = btn.querySelector(".faq-icon");
 
-    btn.addEventListener("click", () => {
-        const isOpen = item.classList.contains("active");
+        content.style.height = "0px";
+        content.style.overflow = "hidden";
+        content.style.transition = "height 0.35s ease, padding 0.35s ease";
 
-        // tutup semua
-        faqItems.forEach((i) => {
-            i.classList.remove("active");
-            i.querySelector(".faq-content").style.height = "0px";
+        btn.addEventListener("click", () => {
+            const isOpen = item.classList.contains("active");
+
+            faqItems.forEach((i) => {
+                const c = i.querySelector(".faq-content");
+                const ic = i.querySelector(".faq-icon");
+
+                i.classList.remove("active");
+
+                c.style.height = "0px";
+
+                c.style.height = "0px";
+
+                if (ic) ic.style.transform = "rotate(0deg)";
+            });
+
+            if (!isOpen) {
+                item.classList.add("active");
+
+                const maxHeight = 500;
+                const fullHeight = Math.min(content.scrollHeight, maxHeight);
+
+                content.style.height = fullHeight + "px";
+
+                if (icon) icon.style.transform = "rotate(180deg)";
+            }
         });
-
-        // buka yang diklik
-        if (!isOpen) {
-            item.classList.add("active");
-            content.style.height = content.scrollHeight + "px";
-        }
     });
 });

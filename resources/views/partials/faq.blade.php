@@ -14,104 +14,30 @@
         </div>
 
         <!-- Kanan -->
-        <div class="space-y-4">
+        <div class="space-y-4" id="faqContainer">
 
-            <!-- ITEM -->
+            @forelse($faqs as $faq)
             <div class="faq-item border rounded-xl bg-white shadow-sm">
 
                 <button class="faq-question w-full flex justify-between items-center p-4 font-semibold">
-
-                    Apa fungsi sistem ini?
-
+                    {{ $faq->question }}
                     <span class="faq-icon transition-transform duration-300">▼</span>
-
                 </button>
 
                 <div class="faq-content px-4 text-gray-600">
                     <div class="pb-4">
-                        Sistem ini membantu mengelola data dan informasi secara efisien dan terstruktur.
+                        {{ $faq->answer }}
                     </div>
                 </div>
 
             </div>
-
-            <!-- ITEM -->
-            <div class="faq-item border rounded-xl bg-white shadow-sm">
-
-                <button class="faq-question w-full flex justify-between items-center p-4 font-semibold">
-
-                    Apakah sistem bisa diakses melalui mobile?
-
-                    <span class="faq-icon transition-transform duration-300">▼</span>
-
-                </button>
-
-                <div class="faq-content px-4 text-gray-600">
-                    <div class="pb-4">
-                        Ya, sistem sudah responsive sehingga dapat diakses melalui laptop, tablet, maupun smartphone.
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ITEM -->
-            <div class="faq-item border rounded-xl bg-white shadow-sm">
-
-                <button class="faq-question w-full flex justify-between items-center p-4 font-semibold">
-
-                    Apakah data yang dimasukkan aman?
-
-                    <span class="faq-icon transition-transform duration-300">▼</span>
-
-                </button>
-
-                <div class="faq-content px-4 text-gray-600">
-                    <div class="pb-4">
-                        Data disimpan dalam database yang dilindungi oleh sistem keamanan dan autentikasi pengguna.
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ITEM -->
-            <div class="faq-item border rounded-xl bg-white shadow-sm">
-
-                <button class="faq-question w-full flex justify-between items-center p-4 font-semibold">
-
-                    Apakah data yang dimasukkan aman?
-
-                    <span class="faq-icon transition-transform duration-300">▼</span>
-
-                </button>
-
-                <div class="faq-content px-4 text-gray-600">
-                    <div class="pb-4">
-                        Data disimpan dalam database yang dilindungi oleh sistem keamanan dan autentikasi pengguna.
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ITEM -->
-            <div class="faq-item border rounded-xl bg-white shadow-sm">
-
-                <button class="faq-question w-full flex justify-between items-center p-4 font-semibold">
-
-                    Apakah data yang dimasukkan aman?
-
-                    <span class="faq-icon transition-transform duration-300">▼</span>
-
-                </button>
-
-                <div class="faq-content px-4 text-gray-600">
-                    <div class="pb-4">
-                        Data disimpan dalam database yang dilindungi oleh sistem keamanan dan autentikasi pengguna.
-                    </div>
-                </div>
-
-            </div>
+            @empty
+            <p class="text-gray-400 italic">Belum ada FAQ yang disetting</p>
+            @endforelse
 
         </div>
+
+    </div>
 
     </div>
 

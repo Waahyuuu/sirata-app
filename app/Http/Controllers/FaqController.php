@@ -12,7 +12,8 @@ class FaqController extends Controller
      */
     public function index()
     {
-        //
+        $faqs = Faq::latest()->get();
+        return view('index', compact('faqs'));
     }
 
     /**
@@ -28,7 +29,21 @@ class FaqController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'question' => 'required',
+            'answer' => 'required'
+        ]);
+
+        if (Faq::count() >= 8) {
+            return back()->with('error', 'Maksimal hanya 8 FAQ');
+        }
+
+        Faq::create([
+            'question' => $request->question,
+            'answer' => $request->answer
+        ]);
+
+        return back()->with('success', 'FAQ berhasil ditambahkan');
     }
 
     /**
@@ -52,7 +67,14 @@ class FaqController extends Controller
      */
     public function update(Request $request, Faq $faq)
     {
-        //
+        $request->validate([
+            'question' => 'required',
+            'answer' => 'required'
+        ]);
+
+        $faq->update($request->all());
+
+        return back()->with('success', 'FAQ berhasil diupdate');
     }
 
     /**
@@ -60,6 +82,21 @@ class FaqController extends Controller
      */
     public function destroy(Faq $faq)
     {
-        //
+        $faq->delete();
+
+        return back()->with('success', 'FAQ berhasil dihapus');
+    }
+
+    public function admin()
+    {
+        $faqs = Faq::latest()->get();
+        return view('admin.konten.faq.index', compact('faqs'));
+    }
+
+    public function deleteAll()
+    {
+        Faq::truncate();
+
+        return redirect()->back()->with('success', 'Semua data berhasil dihapus!');
     }
 }

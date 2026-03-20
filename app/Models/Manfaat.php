@@ -9,7 +9,6 @@ class Manfaat extends Model
     protected $fillable = [
         'icon',
         'title',
-        'description',
-        'order'
+        'description'
     ];
 }

@@ -138,39 +138,18 @@
 
             </div>
 
-            <!-- Kanan -->
-            <div class="space-y-4">
-
-                <!-- Item -->
-                <div class="border rounded-md bg-white px-4 py-4">
-                    <div class="h-4 w-3/4 bg-gray-300 rounded"></div>
-                </div>
-
-                <!-- Item -->
-                <div class="border rounded-md bg-white px-4 py-4">
-                    <div class="h-4 w-2/3 bg-gray-300 rounded"></div>
-                </div>
-
-                <!-- Item -->
-                <div class="border rounded-md bg-white px-4 py-4">
-                    <div class="h-4 w-4/5 bg-gray-300 rounded"></div>
-                </div>
-
-                <!-- Item -->
-                <div class="border rounded-md bg-white px-4 py-4">
-                    <div class="h-4 w-3/5 bg-gray-300 rounded"></div>
-                </div>
-
-                <!-- Item -->
-                <div class="border rounded-md bg-white px-4 py-4">
-                    <div class="h-4 w-2/4 bg-gray-300 rounded"></div>
-                </div>
-
+            <div id="skeleton-faq" class="space-y-4 animate-pulse">
+                @php $faqCount = $faqs->count() ?: 4; @endphp
+                @for ($i = 0; $i < $faqCount; $i++) <div class="border rounded-xl bg-white px-4 py-4">
+                    <div class="h-4 w-3/4 bg-gray-300 rounded mb-2"></div>
+                    <div class="h-3 w-5/6 bg-gray-200 rounded"></div>
             </div>
-
+            @endfor
         </div>
 
-    </section>
+</div>
+
+</section>
 
 </div>
 
@@ -183,15 +162,13 @@
 
             {{-- Sosmed --}}
             <div>
-
-                <div class="h-4 w-28 bg-gray-300 rounded mb-3"></div>
+                <div class="h-4 w-28 bg-gray-300 rounded mb-3 animate-pulse"></div>
 
                 <div class="flex gap-2">
-                    <div class="w-10 h-7 bg-gray-300 rounded"></div>
-                    <div class="w-10 h-7 bg-gray-300 rounded"></div>
-                    <div class="w-10 h-7 bg-gray-300 rounded"></div>
+                    @for ($i = 0; $i < max($links->count(), 3); $i++)
+                        <div class="w-16 h-7 bg-gray-300 rounded animate-pulse"></div>
+                        @endfor
                 </div>
-
             </div>
 
             {{-- Menu --}}

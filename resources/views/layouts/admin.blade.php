@@ -26,9 +26,38 @@
                 </div>
             </div>
 
-            <!-- Content -->
-            <div class="flex-1 px-6">
-                @yield('content')
+            <div class="flex-1 px-6 mb-6 flex flex-col overflow-hidden">
+
+                <!-- FLOATING ALERT -->
+                <div class="fixed top-5 right-5 z-50 space-y-2 w-80">
+
+                    @if(session('success'))
+                    @include('component.alert', [
+                    'type' => 'success',
+                    'message' => session('success')
+                    ])
+                    @endif
+
+                    @if(session('error'))
+                    @include('component.alert', [
+                    'type' => 'error',
+                    'message' => session('error')
+                    ])
+                    @endif
+
+                    @if ($errors->any())
+                    @include('component.alert', [
+                    'type' => 'error',
+                    'message' => $errors->first()
+                    ])
+                    @endif
+
+                </div>
+
+                <div class="flex-1 overflow-hidden">
+                    @yield('content')
+                </div>
+
             </div>
 
         </div>
