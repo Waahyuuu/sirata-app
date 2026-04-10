@@ -11,13 +11,14 @@
 
 <body class="bg-white flex flex-col min-h-screen">
 
-    <div class="flex flex-1">
+    <!-- MAIN WRAPPER -->
+    <div class="flex flex-1 min-h-0">
 
         <!-- Sidebar -->
         @include('component.admin-sidebar')
 
-        <!-- Main -->
-        <div class="flex-1 flex flex-col">
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 min-h-0">
 
             <!-- Header -->
             <div class="p-6">
@@ -26,7 +27,8 @@
                 </div>
             </div>
 
-            <div class="flex-1 px-6 mb-6 flex flex-col overflow-hidden">
+            <!-- Content Area -->
+            <div class="flex-1 px-6 pb-6 overflow-y-auto relative">
 
                 <!-- FLOATING ALERT -->
                 <div class="fixed top-5 right-5 z-50 space-y-2 w-80">
@@ -54,9 +56,7 @@
 
                 </div>
 
-                <div class="flex-1 overflow-hidden">
-                    @yield('content')
-                </div>
+                @yield('content')
 
             </div>
 

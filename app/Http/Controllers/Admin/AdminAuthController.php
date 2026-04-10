@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Faq;
 use App\Models\Link;
+use App\Models\Manfaat;
 
 class AdminAuthController extends Controller
 {
@@ -47,8 +48,9 @@ class AdminAuthController extends Controller
     {
         $faqs = Faq::latest()->get();
         $links = Link::latest()->get();
+        $manfaats = Manfaat::latest()->get();
 
-        return view('admin.konten.index', compact('faqs', 'links'));
+        return view('admin.konten.index', compact('faqs', 'links', 'manfaats'));
     }
 
     public function logout()

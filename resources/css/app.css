@@ -81,6 +81,8 @@ html {
             rounded-full rounded-r-none
             ml-2
             transition-all duration-200;
+
+    transform: translateZ(0);
 }
 
 .menu-item .icon {
@@ -88,11 +90,11 @@ html {
 }
 
 .menu-item:hover {
-    @apply bg-white translate-x-4;
+    @apply bg-white translate-x-2;
 }
 
 .menu-item.active {
-    @apply bg-white translate-x-4 shadow-sm font-medium;
+    @apply bg-white translate-x-2 shadow-sm font-medium;
 }
 /* components/admin-sidebar css End*/
 
@@ -231,3 +233,23 @@ html {
     animation: shake 0.3s;
 }
 /* admin/konten css End*/
+
+.swiper-wrapper {
+    transition-timing-function: linear !important;
+}
+
+.manfaatSwiper .swiper-button-next,
+.manfaatSwiper .swiper-button-prev {
+    width: 42px;
+    height: 42px;
+    background: white;
+    border-radius: 9999px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.manfaatSwiper .swiper-button-next:after,
+.manfaatSwiper .swiper-button-prev:after {
+    font-size: 16px;
+    font-weight: bold;
+    color: #374151;
+}

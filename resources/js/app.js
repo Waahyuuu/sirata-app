@@ -5,12 +5,11 @@ import Alpine from "alpinejs";
 window.Alpine = Alpine;
 Alpine.start();
 
-// load skeleton
 window.addEventListener("load", function () {
     const skeleton = document.getElementById("skeleton");
-    const skeletonfooter = document.getElementById("skeleton-footer");
+    const skeletonFooter = document.getElementById("skeleton-footer");
     const content = document.getElementById("content");
-    const contentfooter = document.getElementById("content-footer");
+    const contentFooter = document.getElementById("content-footer");
 
     let delay = 1000;
 
@@ -38,23 +37,69 @@ window.addEventListener("load", function () {
     }
 
     setTimeout(function () {
-        skeleton.style.display = "none";
-        skeletonfooter.style.display = "none";
-        content.classList.remove("hidden");
-        contentfooter.classList.remove("hidden");
-    }, delay);
-});
+        if (skeleton) skeleton.style.display = "none";
+        if (skeletonFooter) skeletonFooter.style.display = "none";
 
-// back to top
-window.addEventListener("load", function () {
+        if (content) content.classList.remove("hidden");
+        if (contentFooter) contentFooter.classList.remove("hidden");
+
+        if (document.querySelector(".manfaatSwiper")) {
+            if (window.manfaatSwiperInstance) {
+                window.manfaatSwiperInstance.destroy(true, true);
+            }
+
+            window.manfaatSwiperInstance = new Swiper(".manfaatSwiper", {
+                loop: true,
+                slidesPerView: 1,
+                spaceBetween: 20,
+                speed: 800,
+
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
+
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+
+                breakpoints: {
+                    640: { slidesPerView: 2 },
+                    768: { slidesPerView: 3 },
+                    1024: { slidesPerView: 4 },
+                },
+            }, 50);
+        }
+    }, delay);
+
     const backToTop = document.getElementById("back-to-top");
     const formSection = document.querySelector(".form-section");
 
-    if (!backToTop) return;
+    if (backToTop) {
+        window.addEventListener("scroll", function () {
+            if (!formSection) {
+                if (window.scrollY > 300) {
+                    backToTop.classList.remove(
+                        "opacity-0",
+                        "pointer-events-none",
+                    );
+                    backToTop.classList.add(
+                        "opacity-100",
+                        "pointer-events-auto",
+                    );
+                } else {
+                    backToTop.classList.add("opacity-0", "pointer-events-none");
+                    backToTop.classList.remove(
+                        "opacity-100",
+                        "pointer-events-auto",
+                    );
+                }
 
-    window.addEventListener("scroll", function () {
-        if (!formSection) {
-            if (window.scrollY > 300) {
+                return;
+            }
+
+            if (window.scrollY > formSection.offsetTop + 100) {
                 backToTop.classList.remove("opacity-0", "pointer-events-none");
                 backToTop.classList.add("opacity-100", "pointer-events-auto");
             } else {
@@ -64,34 +109,24 @@ window.addEventListener("load", function () {
                     "pointer-events-auto",
                 );
             }
-            return;
-        }
-
-        if (window.scrollY > formSection.offsetTop + 100) {
-            backToTop.classList.remove("opacity-0", "pointer-events-none");
-            backToTop.classList.add("opacity-100", "pointer-events-auto");
-        } else {
-            backToTop.classList.add("opacity-0", "pointer-events-none");
-            backToTop.classList.remove("opacity-100", "pointer-events-auto");
-        }
-    });
-
-    backToTop.addEventListener("click", function () {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
         });
-    });
-});
 
-// faq accordion
-window.addEventListener("load", () => {
+        backToTop.addEventListener("click", function () {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+        });
+    }
+
     const faqItems = document.querySelectorAll(".faq-item");
 
     faqItems.forEach((item) => {
         const btn = item.querySelector(".faq-question");
         const content = item.querySelector(".faq-content");
-        const icon = btn.querySelector(".faq-icon");
+        const icon = item.querySelector(".faq-icon");
+
+        if (!btn || !content) return;
 
         content.style.height = "0px";
         content.style.overflow = "hidden";
@@ -106,10 +141,7 @@ window.addEventListener("load", () => {
 
                 i.classList.remove("active");
 
-                c.style.height = "0px";
-
-                c.style.height = "0px";
-
+                if (c) c.style.height = "0px";
                 if (ic) ic.style.transform = "rotate(0deg)";
             });
 

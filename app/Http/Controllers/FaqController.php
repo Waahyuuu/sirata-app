@@ -43,7 +43,8 @@ class FaqController extends Controller
             'answer' => $request->answer
         ]);
 
-        return back()->with('success', 'FAQ berhasil ditambahkan');
+        return redirect()->route('admin.konten', ['tab' => 'faq'])
+            ->with('success', 'FAQ berhasil ditambahkan');
     }
 
     /**
@@ -74,7 +75,8 @@ class FaqController extends Controller
 
         $faq->update($request->all());
 
-        return back()->with('success', 'FAQ berhasil diupdate');
+        return redirect()->route('admin.konten', ['tab' => 'faq'])
+            ->with('success', 'FAQ berhasil diubah');
     }
 
     /**
@@ -84,7 +86,8 @@ class FaqController extends Controller
     {
         $faq->delete();
 
-        return back()->with('success', 'FAQ berhasil dihapus');
+        return redirect()->route('admin.konten', ['tab' => 'faq'])
+            ->with('success', 'FAQ berhasil dihapus');
     }
 
     public function admin()
@@ -97,6 +100,7 @@ class FaqController extends Controller
     {
         Faq::truncate();
 
-        return redirect()->back()->with('success', 'Semua data berhasil dihapus!');
+        return redirect()->route('admin.konten', ['tab' => 'faq'])
+            ->with('success', 'Semua data FAQ berhasil dihapus!');
     }
 }

@@ -3,7 +3,7 @@
     {{-- LIST FAQ --}}
     @forelse($faqs as $faq)
     <div
-        class="bg-white border border-gray-200 rounded-2xl p-4 flex justify-between items-center shadow-sm hover:shadow-md transition duration-200 group">
+        class="bg-white border border-gray-200 rounded-2xl p-4 flex justify-between items-center transition duration-200 group">
 
         <div>
             <h3 class="font-semibold text-gray-800">{{ $faq->question }}</h3>
@@ -16,7 +16,7 @@
             <button onclick='openEditModal(@json($faq))'
                 class="bg-yellow-500 hover:bg-yellow-600 p-2 rounded-lg shadow-sm transition duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z" />
                 </svg>
@@ -27,7 +27,7 @@
             <button onclick="openDeleteModal({{ $faq->id }})"
                 class="bg-red-500 hover:bg-red-600 p-2 rounded-lg shadow-sm transition duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>

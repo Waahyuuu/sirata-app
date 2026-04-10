@@ -5,15 +5,18 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\ManfaatController;
 use App\Models\Link;
 use App\Models\Faq;
+use App\Models\Manfaat;
 
 // landingpage akses
 Route::get('/', function () {
     $links = Link::latest()->get();
     $faqs = Faq::latest()->get();
+    $manfaats = Manfaat::latest()->get();
 
-    return view('index', compact('links', 'faqs'));
+    return view('index', compact('links', 'faqs', 'manfaats'));
 });
 
 // admin akses
@@ -42,6 +45,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // konten (MANFAAT)
+        Route::prefix('konten/manfaat')->name('konten.manfaat.')->group(function () {
+            Route::post('/', [ManfaatController::class, 'store'])->name('store');
+            Route::put('/{manfaat}', [ManfaatController::class, 'update'])->name('update');
+            Route::delete('/{manfaat}', [ManfaatController::class, 'destroy'])->name('destroy');
+            Route::get('/delete-all', [ManfaatController::class, 'deleteAll'])->name('deleteAll');
+        });
 
 
         // konten (LINK)

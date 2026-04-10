@@ -13,7 +13,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="font-semibold text-sm">User Name</div>
+                    <div class="font-semibold text-sm">Admin SIRATA</div>
                     <div class="text-xs text-gray-600">Admin</div>
                 </div>
             </div>

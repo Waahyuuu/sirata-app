@@ -1,4 +1,4 @@
-<div class="w-full border-t border-b bg-gray-200">
+<section class="w-full border-t border-b bg-gray-200">
     <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-start">
 
         {{-- Link Sosmed --}}
@@ -80,4 +80,4 @@
         </div>
 
     </div>
-</div>
+</section>

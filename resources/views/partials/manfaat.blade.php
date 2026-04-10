@@ -1,46 +1,55 @@
 <section id="manfaat" class="py-24 bg-white px-4">
 
-    <div class="max-w-6xl mx-auto p-2 text-center">
+    <div class="max-w-6xl mx-auto text-center">
 
-        <!-- Title -->
         <h2 class="text-2xl font-bold mb-16">
             Manfaat SIRATA Bagi Orang Tua
         </h2>
 
-        <!-- Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-10 justify-items-center">
+        <div class="swiper manfaatSwiper relative">
 
-            <!-- Item -->
-            <div class="bg-gray-400 w-40 h-40 rounded-2xl flex flex-col items-center justify-center text-white">
-                <img src="{{ asset('images/icon1.png') }}" class="w-12 h-12 mb-3 object-contain">
-                <p class="text-sm font-medium">
-                    Lorem Impsum
-                </p>
+            <div class="swiper-wrapper items-stretch flex">
+
+                @forelse($manfaats as $manfaat)
+
+                <div class="swiper-slide h-full flex">
+
+                    <div
+                        class="bg-gray-100 rounded-2xl p-6 min-h-[260px] flex flex-col items-center justify-center text-center transform transition-all duration-300 hover:-translate-y-3 w-full">
+                        <!-- ICON -->
+                        <div class="w-24 h-24 flex items-center justify-center mb-6 text-blue-500">
+
+                            @if(Str::contains($manfaat->icon,'<svg')) {!! $manfaat->icon !!}
+                                @else
+                                <img src="{{ asset('storage/'.$manfaat->icon) }}" class="w-24 h-24 object-contain">
+                                @endif
+
+                        </div>
+
+                        <!-- TITLE -->
+                        <p class="font-semibold text-gray-800 mb-2 text-lg">
+                            {{ $manfaat->title }}
+                        </p>
+
+                        <!-- DESCRIPTION -->
+                        <p class="text-gray-500 text-sm line-clamp-3">
+                            {{ $manfaat->description }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+                @empty
+
+                <p class="text-gray-400 italic">Belum ada manfaat</p>
+
+                @endforelse
+
             </div>
 
-            <!-- Item -->
-            <div class="bg-gray-400 w-40 h-40 rounded-2xl flex flex-col items-center justify-center text-white">
-                <img src="{{ asset('images/icon2.png') }}" class="w-12 h-12 mb-3 object-contain">
-                <p class="text-sm font-medium">
-                    Lorem Impsum
-                </p>
-            </div>
-
-            <!-- Item -->
-            <div class="bg-gray-400 w-40 h-40 rounded-2xl flex flex-col items-center justify-center text-white">
-                <img src="{{ asset('images/icon3.png') }}" class="w-12 h-12 mb-3 object-contain">
-                <p class="text-sm font-medium">
-                    Lorem Impsum
-                </p>
-            </div>
-
-            <!-- Item -->
-            <div class="bg-gray-400 w-40 h-40 rounded-2xl flex flex-col items-center justify-center text-white">
-                <img src="{{ asset('images/icon4.png') }}" class="w-12 h-12 mb-3 object-contain">
-                <p class="text-sm font-medium">
-                    Lorem Impsum
-                </p>
-            </div>
+            <div class="swiper-button-next !text-gray-700"></div>
+            <div class="swiper-button-prev !text-gray-700"></div>
 
         </div>
 

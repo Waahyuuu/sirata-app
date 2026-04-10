@@ -91,31 +91,34 @@
     {{-- MANFAAT --}}
     <section class="py-24 bg-white px-4 animate-pulse">
 
-        <div class="max-w-6xl mx-auto p-2 text-center">
+        <div class="max-w-6xl mx-auto text-center">
 
+            <!-- TITLE -->
             <div class="h-6 w-64 bg-gray-300 rounded mx-auto mb-16"></div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-10 justify-items-center">
+            <div class="flex flex-wrap justify-center gap-6">
 
-                <div class="bg-gray-200 w-40 h-40 rounded-2xl flex flex-col items-center justify-center">
-                    <div class="w-12 h-12 bg-gray-300 rounded mb-3"></div>
-                    <div class="h-3 w-20 bg-gray-300 rounded"></div>
+                @foreach($manfaats as $manfaat)
+
+                <div
+                    class="bg-gray-100 rounded-2xl p-6 min-h-[260px] w-64 flex flex-col items-center justify-center text-center">
+
+                    <!-- ICON -->
+                    <div class="w-24 h-24 bg-gray-300 mb-6"></div>
+
+                    <!-- TITLE -->
+                    <div class="h-4 w-32 bg-gray-300 rounded mb-3"></div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="space-y-2">
+                        <div class="h-3 w-40 bg-gray-300 rounded"></div>
+                        <div class="h-3 w-36 bg-gray-300 rounded"></div>
+                        <div class="h-3 w-28 bg-gray-300 rounded"></div>
+                    </div>
+
                 </div>
 
-                <div class="bg-gray-200 w-40 h-40 rounded-2xl flex flex-col items-center justify-center">
-                    <div class="w-12 h-12 bg-gray-300 rounded mb-3"></div>
-                    <div class="h-3 w-20 bg-gray-300 rounded"></div>
-                </div>
-
-                <div class="bg-gray-200 w-40 h-40 rounded-2xl flex flex-col items-center justify-center">
-                    <div class="w-12 h-12 bg-gray-300 rounded mb-3"></div>
-                    <div class="h-3 w-20 bg-gray-300 rounded"></div>
-                </div>
-
-                <div class="bg-gray-200 w-40 h-40 rounded-2xl flex flex-col items-center justify-center">
-                    <div class="w-12 h-12 bg-gray-300 rounded mb-3"></div>
-                    <div class="h-3 w-20 bg-gray-300 rounded"></div>
-                </div>
+                @endforeach
 
             </div>
 
@@ -123,6 +126,7 @@
 
     </section>
 
+    {{-- FAQ --}}
     <section class="py-24 bg-white px-6 animate-pulse">
 
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">

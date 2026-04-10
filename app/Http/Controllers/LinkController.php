@@ -41,7 +41,8 @@ class LinkController extends Controller
             'url'  => $request->url
         ]);
 
-        return back()->with('success', 'Link berhasil ditambahkan');
+        return redirect()->route('admin.konten', ['tab' => 'link'])
+            ->with('success', 'Link berhasil ditambahkan');
     }
 
     /**
@@ -72,7 +73,8 @@ class LinkController extends Controller
 
         $link->update($request->only('name', 'url'));
 
-        return back()->with('success', 'Link berhasil diupdate');
+        return redirect()->route('admin.konten', ['tab' => 'link'])
+            ->with('success', 'Link berhasil diubah');
     }
 
     /**
@@ -82,13 +84,15 @@ class LinkController extends Controller
     {
         Link::findOrFail($id)->delete();
 
-        return back()->with('success', 'Link berhasil dihapus');
+        return redirect()->route('admin.konten', ['tab' => 'link'])
+            ->with('success', 'Link berhasil dihapus');
     }
 
     public function deleteAll()
     {
         Link::truncate();
 
-        return redirect()->back()->with('success', 'Semua data berhasil dihapus!');
+        return redirect()->route('admin.konten', ['tab' => 'link'])
+            ->with('success', 'Semua data Link berhasil dihapus!');
     }
 }

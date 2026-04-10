@@ -4,57 +4,62 @@
 
 @section('content')
 
-<div>
-    <div class="bg-white rounded-2xl shadow-sm border p-6 flex flex-col h-full">
+@php
+$activeTab = request('tab', 'manfaat');
+@endphp
 
-        {{-- TAB BUTTON --}}
-        <div class="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
-            <button class="tab-btn active-tab" data-tab="manfaat">Manfaat</button>
-            <button class="tab-btn" data-tab="faq">FAQ</button>
-            <button class="tab-btn" data-tab="link">Link</button>
+<div class="bg-white rounded-2xl shadow-sm border p-6 flex flex-col h-full">
+
+    {{-- TAB BUTTON --}}
+    <div class="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
+        <button class="tab-btn {{ $activeTab == 'manfaat' ? 'active-tab' : '' }}" data-tab="manfaat">Manfaat</button>
+
+        <button class="tab-btn {{ $activeTab == 'faq' ? 'active-tab' : '' }}" data-tab="faq">FAQ</button>
+
+        <button class="tab-btn {{ $activeTab == 'link' ? 'active-tab' : '' }}" data-tab="link">Link</button>
+    </div>
+
+    {{-- HEADER --}}
+    <div id="tabHeader" class="flex justify-between items-center mb-4">
+        <h2 id="tabTitle" class="font-semibold text-lg">
+            @if($activeTab == 'faq')
+            Daftar FAQ
+            @elseif($activeTab == 'link')
+            Daftar Link
+            @else
+            Daftar Manfaat
+            @endif
+        </h2>
+
+        <div class="flex gap-2">
+            <button id="deleteAllBtn"
+                class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                    <path fill-rule="evenodd"
+                        d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                        clip-rule="evenodd" />
+                </svg>
+
+            </button>
+
+            <button id="tabButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition hidden">
+                + Tambah
+            </button>
+        </div>
+    </div>
+
+    {{-- CONTENT --}}
+    <div class="max-h-[55vh] overflow-y-auto pr-2 custom-scroll">
+        <div class="tab-content {{ $activeTab != 'manfaat' ? 'hidden' : '' }}" id="manfaat">
+            @include('admin.konten.manfaat')
         </div>
 
-        {{-- HEADER --}}
-        <div id="tabHeader" class="flex justify-between items-center mb-4">
-            <h2 id="tabTitle" class="font-semibold text-lg">Daftar Manfaat</h2>
-
-            <div class="flex gap-2">
-                <button id="deleteAllBtn"
-                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                        <path fill-rule="evenodd"
-                            d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
-                            clip-rule="evenodd" />
-                    </svg>
-
-                </button>
-
-                <button id="tabButton"
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition hidden">
-                    + Tambah
-                </button>
-            </div>
+        <div class="tab-content {{ $activeTab != 'faq' ? 'hidden' : '' }}" id="faq">
+            @include('admin.konten.faq')
         </div>
 
-        {{-- CONTENT --}}
-        <div class="max-h-[48vh] overflow-y-auto pr-2 custom-scroll">
-            <div class="tab-content active-content" id="manfaat">
-                <div class="content-card">
-                    <p class="text-gray-500">Konten manfaat (kosong dulu)</p>
-                </div>
-            </div>
-
-            <div class="tab-content hidden" id="faq">
-                <div class="content-card">
-                    @include('admin.konten.faq')
-                </div>
-            </div>
-
-            <div class="tab-content hidden" id="link">
-                <div class="content-card">
-                    @include('admin.konten.link')
-                </div>
-            </div>
+        <div class="tab-content {{ $activeTab != 'link' ? 'hidden' : '' }}" id="link">
+            @include('admin.konten.link')
         </div>
     </div>
 </div>
@@ -97,7 +102,8 @@
 <script>
     const deleteRoutes = {
         faq: "{{ route('admin.konten.faq.deleteAll') }}",
-        link: "{{ route('admin.konten.link.deleteAll') }}"
+        link: "{{ route('admin.konten.link.deleteAll') }}",
+        manfaat: "{{ route('admin.konten.manfaat.deleteAll') }}"
     };
 </script>
 
@@ -119,43 +125,63 @@
         const button = document.getElementById('tabButton');
         const deleteBtn = document.getElementById('deleteAllBtn');
 
+        button.classList.remove('hidden');
+        deleteBtn.classList.remove('hidden');
+
+        if (tabName === 'manfaat') {
+
+            title.innerText = 'Daftar Manfaat';
+            button.innerText = '+ Tambah Manfaat';
+
+            button.onclick = () => openModal('createManfaatModal');
+            deleteBtn.onclick = () => openDeleteConfirm('manfaat');
+
+        }
+
         if (tabName === 'faq') {
+
             title.innerText = 'Daftar FAQ';
             button.innerText = '+ Tambah FAQ';
-
-            button.classList.remove('hidden');
-            deleteBtn.classList.remove('hidden');
 
             button.onclick = () => openModal('createModal');
             deleteBtn.onclick = () => openDeleteConfirm('faq');
 
-        } else if (tabName === 'link') {
+        }
+
+        if (tabName === 'link') {
+
             title.innerText = 'Daftar Link';
             button.innerText = '+ Tambah Link';
-
-            button.classList.remove('hidden');
-            deleteBtn.classList.remove('hidden');
 
             button.onclick = () => openModal('createLinkModal');
             deleteBtn.onclick = () => openDeleteConfirm('link');
 
-        } else {
-            title.innerText = 'Daftar Manfaat';
-
-            button.classList.add('hidden');
-            deleteBtn.classList.add('hidden');
         }
+
     }
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
+
             const tabName = tab.dataset.tab;
-            sessionStorage.setItem('activeTab', tabName);
+
+            // update URL TANPA reload
+            const url = new URL(window.location);
+            url.searchParams.set('tab', tabName);
+            window.history.replaceState({}, '', url);
+
             activateTab(tabName);
         });
     });
 
-    activateTab(sessionStorage.getItem('activeTab') || 'manfaat');
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentTab = urlParams.get('tab') || 'manfaat';
+
+    if (!document.getElementById(currentTab)) {
+        currentTab = 'manfaat';
+    }
+
+    activateTab(currentTab);
 });
 
 let deleteTarget = null;
