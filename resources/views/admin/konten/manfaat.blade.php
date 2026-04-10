@@ -1,10 +1,11 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2 pl-2 pr-2 pb-8">
 
     {{-- LIST MANFAAT --}}
     @forelse($manfaats as $manfaat)
 
-    <div
-        class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col items-center text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition duration-200 group relative h-full">
+    <div class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col items-center text-center
+        shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300
+        group relative overflow-hidden h-full">
 
         {{-- ACTION BUTTON --}}
         <div class="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition">
@@ -39,7 +40,7 @@
         </div>
 
         {{-- ICON --}}
-        <div class="w-20 h-20 flex items-center justify-center text-blue-500 mb-3">
+        <div class="w-20 h-20 flex items-center justify-center text-blue-500 mb-4">
 
             @if(Str::contains($manfaat->icon,'<svg')) {!! $manfaat->icon !!}
                 @else
@@ -49,12 +50,12 @@
         </div>
 
         {{-- TITLE --}}
-        <p class="font-semibold text-gray-800 mb-1">
+        <p class="font-semibold text-gray-800 mb-2 break-words">
             {{ $manfaat->title }}
         </p>
 
         {{-- DESCRIPTION --}}
-        <p class="text-gray-500 text-sm line-clamp-2">
+        <p class="text-gray-500 text-sm line-clamp-4 break-words">
             {{ $manfaat->description }}
         </p>
 
@@ -62,7 +63,7 @@
 
     @empty
 
-    <p class="text-gray-400 italic">
+    <p class="text-gray-400 italic col-span-3">
         Belum ada manfaat
     </p>
 

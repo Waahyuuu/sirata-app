@@ -1,9 +1,9 @@
-<div class="space-y-4">
+<div class="space-y-4 pt-2 pl-2 pr-2 pb-8">
 
     {{-- LIST FAQ --}}
     @forelse($faqs as $faq)
     <div
-        class="bg-white border border-gray-200 rounded-2xl p-4 flex justify-between items-center transition duration-200 group">
+        class="bg-white border border-gray-200 rounded-2xl p-4 flex justify-between items-center hover:shadow-xl hover:-translate-y-1 transition duration-300 group">
 
         <div>
             <h3 class="font-semibold text-gray-800">{{ $faq->question }}</h3>

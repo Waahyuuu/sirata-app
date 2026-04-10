@@ -42,35 +42,6 @@ window.addEventListener("load", function () {
 
         if (content) content.classList.remove("hidden");
         if (contentFooter) contentFooter.classList.remove("hidden");
-
-        if (document.querySelector(".manfaatSwiper")) {
-            if (window.manfaatSwiperInstance) {
-                window.manfaatSwiperInstance.destroy(true, true);
-            }
-
-            window.manfaatSwiperInstance = new Swiper(".manfaatSwiper", {
-                loop: true,
-                slidesPerView: 1,
-                spaceBetween: 20,
-                speed: 800,
-
-                autoplay: {
-                    delay: 2500,
-                    disableOnInteraction: false,
-                },
-
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
-
-                breakpoints: {
-                    640: { slidesPerView: 2 },
-                    768: { slidesPerView: 3 },
-                    1024: { slidesPerView: 4 },
-                },
-            }, 50);
-        }
     }, delay);
 
     const backToTop = document.getElementById("back-to-top");

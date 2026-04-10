@@ -1,9 +1,9 @@
-<div class="space-y-4">
+<div class="space-y-4 pt-2 pl-2 pr-2 pb-8">
 
     {{-- LIST LINK --}}
     @forelse($links as $link)
     <div
-        class="bg-white border border-gray-200 rounded-2xl p-4 flex justify-between items-center transition duration-200 group">
+        class="bg-white border border-gray-200 rounded-2xl p-4 flex justify-between items-center hover:shadow-xl hover:-translate-y-1 transition duration-300 group">
 
         <div class="flex items-center gap-3">
             <i class="{{ $link->icon_class }} text-lg text-gray-700"></i>

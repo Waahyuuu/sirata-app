@@ -93,34 +93,27 @@
 
         <div class="max-w-6xl mx-auto text-center">
 
-            <!-- TITLE -->
             <div class="h-6 w-64 bg-gray-300 rounded mx-auto mb-16"></div>
 
-            <div class="flex flex-wrap justify-center gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 
-                @foreach($manfaats as $manfaat)
+                @php
+                $total = count($manfaats) > 0 ? count($manfaats) : 6;
+                @endphp
 
-                <div
-                    class="bg-gray-100 rounded-2xl p-6 min-h-[260px] w-64 flex flex-col items-center justify-center text-center">
+                @for($i = 0; $i < $total; $i++) <div
+                    class="bg-gray-100 rounded-2xl p-8 min-h-[260px] flex flex-col items-center text-center">
 
-                    <!-- ICON -->
-                    <div class="w-24 h-24 bg-gray-300 mb-6"></div>
-
-                    <!-- TITLE -->
+                    <div class="w-24 h-24 bg-gray-300 rounded mb-6"></div>
                     <div class="h-4 w-32 bg-gray-300 rounded mb-3"></div>
-
-                    <!-- DESCRIPTION -->
                     <div class="space-y-2">
                         <div class="h-3 w-40 bg-gray-300 rounded"></div>
                         <div class="h-3 w-36 bg-gray-300 rounded"></div>
                         <div class="h-3 w-28 bg-gray-300 rounded"></div>
                     </div>
 
-                </div>
-
-                @endforeach
-
             </div>
+            @endfor
 
         </div>
 
@@ -131,13 +124,10 @@
 
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">
 
-            <!-- Kiri -->
             <div class="text-center flex flex-col items-center">
 
-                <!-- Title Skeleton -->
                 <div class="h-6 w-72 bg-gray-300 rounded mb-8 mx-auto"></div>
 
-                <!-- Image Skeleton -->
                 <div class="w-full max-w-md h-72 bg-gray-200 rounded-lg mx-auto"></div>
 
             </div>
@@ -151,9 +141,7 @@
             @endfor
         </div>
 
-</div>
-
-</section>
+    </section>
 
 </div>
 
@@ -164,7 +152,6 @@
 
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-start">
 
-            {{-- Sosmed --}}
             <div>
                 <div class="h-4 w-28 bg-gray-300 rounded mb-3 animate-pulse"></div>
 
@@ -175,7 +162,6 @@
                 </div>
             </div>
 
-            {{-- Menu --}}
             <div class="text-right space-y-2">
 
                 <div class="h-4 w-16 bg-gray-300 rounded ml-auto mb-3"></div>
@@ -189,7 +175,6 @@
         </div>
 
     </section>
-
 
     {{-- FOOTER --}}
     <footer class="w-full bg-gray-100">
