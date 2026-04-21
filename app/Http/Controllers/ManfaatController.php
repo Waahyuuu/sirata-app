@@ -13,7 +13,7 @@ class ManfaatController extends Controller
      */
     public function index()
     {
-        $manfaats = Manfaat::latest()->take(8)->get();
+        $manfaats = Manfaat::latest()->take(6)->get();
         return view('index', compact('manfaats'));
     }
 
@@ -30,6 +30,11 @@ class ManfaatController extends Controller
      */
     public function store(Request $request)
     {
+        if (Manfaat::count() >= 6) {
+            return redirect()->route('admin.konten', ['tab' => 'manfaat'])
+                ->withErrors(['limit' => 'Maksimal hanya 6 manfaat yang dapat ditambahkan']);
+        }
+
         $request->validate([
             'title' => 'required',
             'description' => 'required',

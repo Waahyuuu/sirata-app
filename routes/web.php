@@ -6,6 +6,8 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\ManfaatController;
+use App\Http\Controllers\ChatbotRuleController;
+use App\Http\Controllers\MessageController;
 use App\Models\Link;
 use App\Models\Faq;
 use App\Models\Manfaat;
@@ -19,6 +21,12 @@ Route::get('/', function () {
     return view('index', compact('links', 'faqs', 'manfaats'));
 });
 
+// endpoint chatbot (API)
+Route::post('/chatbot', [ChatbotRuleController::class, 'chat']);
+Route::get('/chatbot/messages', [MessageController::class, 'show']);
+Route::post('/chatbot/reply', [MessageController::class, 'reply']);
+Route::get('/chatbot/list', [MessageController::class, 'list']);
+
 // admin akses
 Route::prefix('admin')->name('admin.')->group(function () {
 
@@ -29,7 +37,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/dashboard', [AdminAuthController::class, 'dashboard'])->name('dashboard');
 
-        Route::get('/pesan', fn() => view('admin.pesan'))->name('pesan');
+        // Pesan
+        // Message
+        Route::get('/pesan', [MessageController::class, 'index'])->name('pesan');
+        Route::get('/pesan/{client_id}', [MessageController::class, 'show']);
+        Route::post('/pesan/reply', [MessageController::class, 'reply']);
+        Route::delete('/pesan/delete-all-message', [MessageController::class, 'deleteAllMessage'])
+            ->name('pesan.deleteAllMessage');
+
+        // Chatbot
+        Route::post('/pesan/rule', [ChatbotRuleController::class, 'store'])->name('pesan.store');
+        Route::delete('/pesan/rule/delete-all', [ChatbotRuleController::class, 'deleteAll'])
+            ->name('pesan.deleteAll');
+        Route::put('/pesan/rule/{id}', [ChatbotRuleController::class, 'update'])->name('pesan.update');
+        Route::delete('/pesan/rule/{id}', [ChatbotRuleController::class, 'destroy'])->name('pesan.destroy');
 
         Route::get('/mahasiswa', fn() => view('admin.mahasiswa'))->name('mahasiswa');
 

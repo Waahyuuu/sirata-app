@@ -37,7 +37,7 @@
 
             <!-- Pesan -->
             <a href="{{ route('admin.pesan') }}"
-                class="menu-item {{ request()->routeIs('admin.pesan') ? 'active' : '' }}">
+                class="menu-item {{ request()->routeIs('admin.pesan*') ? 'active' : '' }}">
 
                 <!-- Icon Pesan -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">

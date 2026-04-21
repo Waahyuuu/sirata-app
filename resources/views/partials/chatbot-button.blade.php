@@ -1,81 +1,81 @@
-<div x-data="{ open:false }">
+<div x-data="chatBox()" x-init="init()">
 
     <!-- BUTTON -->
     <div x-show="!open" class="fixed right-0 top-1/2 -translate-y-1/2 z-50">
-
-        <div @click="open = true" class="bg-green-500 text-white 
-        px-4 py-2
-        hover:px-6
-        rounded-r-3xl rotate-180 cursor-pointer
-        border-r-8 border-t-8 border-b-8 border-white
-        transition-all duration-300" style="writing-mode: vertical-rl;">
+        <div @click="open = true" class="bg-green-500 text-white px-4 py-2 hover:px-6 rounded-r-3xl rotate-180 cursor-pointer
+            border-r-8 border-t-8 border-b-8 border-white transition-all duration-300"
+            style="writing-mode: vertical-rl;">
             Kirim Pesan
         </div>
-
     </div>
 
     <!-- CHAT BOX -->
-    <div x-show="open" x-cloak x-transition:enter="transition-all duration-300 ease-out"
+    <div x-show="open" x-cloak x-transition:enter="transition-all duration-500 ease-out"
         x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
-        x-transition:leave="transition-all duration-300 ease-in" x-transition:leave-start="translate-x-0"
-        x-transition:leave-end="translate-x-full" class="fixed top-0 right-0 h-screen w-[360px] 
-        bg-gray-200 shadow-2xl z-50 flex flex-col">
+        x-transition:leave="transition-all duration-400 ease-in" x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="translate-x-full"
+        class="fixed top-0 right-0 h-screen w-[360px] bg-gray-100 shadow-2xl z-50 flex flex-col">
 
         <!-- HEADER -->
         <div class="bg-black text-white p-4 flex items-center gap-3">
-
-            <button @click="open=false" class="text-white hover:text-gray-300 transition cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-            </button>
-
-            <span class="font-semibold text-lg">
-                ChatBot/Admin Message
-            </span>
-
+            <button @click="open=false">←</button>
+            <span class="font-semibold text-lg">Admin Message</span>
         </div>
 
+        <!-- BODY -->
+        <div x-ref="chatBody" class="chat-body flex-1 p-4 overflow-y-auto">
 
-        <!-- CHAT BODY -->
-        <div class="flex-1 p-4 overflow-y-auto space-y-4">
-
-            <div class="bg-white p-3 rounded-2xl w-fit max-w-[70%]">
-                Halo Saya Mau bertanya...
-                <div class="text-xs text-gray-500 text-right mt-1">12.00</div>
+            <!-- EMPTY -->
+            <div x-show="messages.length === 0" class="h-full flex flex-col items-center justify-center text-gray-400">
+                <p class="font-semibold">Belum ada pesan</p>
+                <p class="text-sm">Mulai chat dengan admin 👇</p>
             </div>
 
-            <div class="bg-white p-3 rounded-2xl w-fit max-w-[70%] ml-auto">
-                Halo Saya Mau bertanya...
-                <div class="text-xs text-gray-500 text-right mt-1">12.00</div>
+            <!-- CHAT -->
+            <div class="space-y-4" x-show="messages.length > 0">
+
+                <template x-for="(msg, index) in messages" :key="msg.id">
+                    <div class="flex message-item" :style="`animation-delay:${index*0.05}s`"
+                        :class="msg.from === 'user' ? 'justify-end' : 'justify-start'">
+
+                        <div class="chat-bubble px-4 py-2 rounded-2xl max-w-[75%] shadow-sm text-sm" :class="msg.from === 'user'
+                                ? 'bg-green-500 text-white rounded-br-md'
+                                : 'bg-white text-gray-800 rounded-bl-md'">
+
+                            <span x-text="msg.text"></span>
+
+                            <div class="text-[11px] opacity-70 text-right mt-1" x-text="msg.time"></div>
+                        </div>
+
+                    </div>
+                </template>
+
+                <!-- TYPING -->
+                <div x-show="typing" class="flex">
+                    <div class="bg-white px-4 py-2 rounded-2xl rounded-bl-md shadow-sm">
+                        <div class="flex gap-2">
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
-
 
         <!-- INPUT -->
-        <div class="p-4 flex items-end gap-2">
+        <div class="p-3 flex gap-2 bg-white border-t">
 
-            <textarea rows="1" placeholder="Masukan Pesan Anda..."
-                oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" class="flex-1 rounded-2xl px-4 py-2 outline-none
-                    bg-white border border-gray-300
-                    focus:ring-2 focus:ring-gray-400
-                    resize-none overflow-y-auto max-h-32"></textarea>
+            <textarea x-ref="input" x-model="message" @keydown.enter.prevent="send()" rows="1"
+                placeholder="Tulis pesan..." @input="autoResize"
+                class="flex-1 rounded-xl px-4 py-2 bg-gray-100 border focus:ring-2 focus:ring-green-400 resize-none max-h-[120px] overflow-y-auto">
+            </textarea>
 
-            <button class="bg-white rounded-full w-10 h-10 flex items-center justify-center
-                cursor-pointer text-gray-700 hover:bg-green-500 hover:text-white
-                active:scale-90 transition">
-
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="size-6">
-
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12
-                        59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-
-                </svg>
-
+            <button @click="send()"
+                class="bg-green-500 w-10 h-10 flex items-center justify-center text-white rounded-full">
+                ➤
             </button>
 
         </div>
@@ -83,3 +83,161 @@
     </div>
 
 </div>
+
+<style>
+    /* scrollbar */
+    .chat-body::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .chat-body::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 10px;
+    }
+
+    /* FIX UTAMA (ANTI TEMBUS & PROPORSIONAL) */
+    .chat-bubble {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    /* animasi */
+    @keyframes messageIn {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message-item {
+        animation: messageIn 0.3s ease;
+    }
+
+    /* typing */
+    @keyframes typingBounce {
+
+        0%,
+        80%,
+        100% {
+            transform: translateY(0);
+            opacity: .5;
+        }
+
+        40% {
+            transform: translateY(-6px);
+            opacity: 1;
+        }
+    }
+
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        background: #9CA3AF;
+        border-radius: 9999px;
+        animation: typingBounce 1.2s infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+        animation-delay: .2s
+    }
+
+    .typing-dot:nth-child(3) {
+        animation-delay: .4s
+    }
+</style>
+
+<script>
+    function chatBox(){
+return {
+
+    open:false,
+    message:'',
+    typing:false,
+    messages:[],
+    client_id:null,
+    last_id:0,
+    interval:null,
+
+    init(){
+        localStorage.removeItem('client_id')
+
+        let id = 'user-' + Math.random().toString(36).substr(2,9)
+        localStorage.setItem('client_id', id)
+
+        this.client_id = id
+        this.messages = []
+        this.last_id = 0
+
+        this.loadMessages(true)
+
+        this.interval = setInterval(() => {
+            this.loadMessages()
+        }, 1500)
+    },
+
+    async loadMessages(force=false){
+
+        let res = await fetch(`/chatbot/messages?client_id=${this.client_id}&last_id=${this.last_id}`)
+        let data = await res.json()
+
+        if(data.length > 0){
+
+            data.forEach(msg => {
+                if(!this.messages.find(m => m.id === msg.id)){
+                    this.messages.push(msg)
+                }
+            })
+
+            this.last_id = data[data.length - 1].id
+            this.scrollBottom()
+        }
+
+        if(force) this.scrollBottom()
+    },
+
+    autoResize(){
+        let el = this.$refs.input
+        el.style.height = 'auto'
+        el.style.height = el.scrollHeight + 'px'
+    },
+
+    async send(){
+
+        if(!this.message.trim()) return
+
+        let text = this.message
+        this.message = ''
+        this.typing = true
+
+        await fetch('/chatbot', {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                message:text,
+                client_id:this.client_id
+            })
+        })
+
+        this.typing = false
+        this.$refs.input.style.height = 'auto'
+        this.loadMessages(true)
+    },
+
+    scrollBottom(){
+        this.$nextTick(()=>{
+            let el = this.$refs.chatBody
+            if(el) el.scrollTop = el.scrollHeight
+        })
+    }
+
+}
+}
+</script>
