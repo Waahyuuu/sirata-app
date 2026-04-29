@@ -85,7 +85,6 @@
 </div>
 
 <style>
-    /* scrollbar */
     .chat-body::-webkit-scrollbar {
         width: 6px;
     }
@@ -95,13 +94,11 @@
         border-radius: 10px;
     }
 
-    /* FIX UTAMA (ANTI TEMBUS & PROPORSIONAL) */
     .chat-bubble {
         word-break: break-word;
         overflow-wrap: anywhere;
     }
 
-    /* animasi */
     @keyframes messageIn {
         0% {
             opacity: 0;
@@ -118,7 +115,6 @@
         animation: messageIn 0.3s ease;
     }
 
-    /* typing */
     @keyframes typingBounce {
 
         0%,
@@ -164,20 +160,29 @@ return {
     interval:null,
 
     init(){
-        localStorage.removeItem('client_id')
 
-        let id = 'user-' + Math.random().toString(36).substr(2,9)
-        localStorage.setItem('client_id', id)
+        let id = sessionStorage.getItem('client_id')
+
+        if(!id){
+            id = 'user-' + Math.random().toString(36).substr(2,9)
+            sessionStorage.setItem('client_id', id)
+        }
 
         this.client_id = id
-        this.messages = []
-        this.last_id = 0
+
+        let saved = sessionStorage.getItem('chat_'+id)
+        if(saved){
+            this.messages = JSON.parse(saved)
+            this.last_id = this.messages.length
+                ? this.messages[this.messages.length-1].id
+                : 0
+        }
 
         this.loadMessages(true)
 
         this.interval = setInterval(() => {
             this.loadMessages()
-        }, 1500)
+        }, 10000)
     },
 
     async loadMessages(force=false){
@@ -194,6 +199,10 @@ return {
             })
 
             this.last_id = data[data.length - 1].id
+
+            // ✅ simpan ke sessionStorage
+            sessionStorage.setItem('chat_'+this.client_id, JSON.stringify(this.messages))
+
             this.scrollBottom()
         }
 
@@ -218,7 +227,7 @@ return {
             method:'POST',
             headers:{
                 'Content-Type':'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
             body: JSON.stringify({
                 message:text,

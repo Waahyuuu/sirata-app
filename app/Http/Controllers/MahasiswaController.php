@@ -3,96 +3,51 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use App\Services\KampusApiService;
 use Carbon\Carbon;
 
 class MahasiswaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * =========================
+     * HALAMAN LOGIN / INDEX
+     * =========================
      */
     public function index()
     {
-        //
+        return view('mahasiswa.biodata');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * =========================
+     * VALIDASI MAHASISWA
+     * =========================
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
     public function cari(Request $request, KampusApiService $api)
     {
         $request->validate([
-            'nim' => 'required',
-            'nama_ibu' => 'required',
-            'tanggal_lahir' => 'required'
+            'nim' => 'required|string',
+            'nama_ibu' => 'required|string|min:3',
+            'tanggal_lahir' => 'required|date',
         ]);
 
         $mahasiswa = $api->getMahasiswaByNim($request->nim);
 
         if (!$mahasiswa) {
-            return back()->with('error', 'Data tidak ditemukan');
+            return back()->with('error', 'Data mahasiswa tidak ditemukan');
         }
 
-        if (!isset($mahasiswa['mother_name'], $mahasiswa['birth_date'])) {
+        if (empty($mahasiswa['mother_name']) || empty($mahasiswa['birth_date'])) {
             return back()->with('error', 'Data mahasiswa tidak lengkap');
         }
 
         try {
             $tglApi = Carbon::parse($mahasiswa['birth_date'])->format('Y-m-d');
-
-            $tglInput = Carbon::createFromFormat('d/m/Y', $request->tanggal_lahir)
-                ->format('Y-m-d');
+            $tglInput = Carbon::parse($request->tanggal_lahir)->format('Y-m-d');
         } catch (\Exception $e) {
             return back()->with('error', 'Format tanggal tidak valid');
         }
 
-        // Validasi Kecocokan Data
         if (
             strtolower(trim($mahasiswa['mother_name'])) !== strtolower(trim($request->nama_ibu)) ||
             $tglApi !== $tglInput
@@ -100,8 +55,44 @@ class MahasiswaController extends Controller
             return back()->with('error', 'Data tidak cocok');
         }
 
-        session(['mahasiswa' => $mahasiswa]);
+        // 🔥 ambil data tambahan dari API
+        $khs = $api->getKhs($mahasiswa['nim'], '2024');
+        $jadwal = $api->getJadwalMahasiswa($mahasiswa['nim']);
 
-        return redirect('/mahasiswa/dashboard');
+        return view('mahasiswa.biodata', [
+            'mahasiswa' => $mahasiswa,
+            'khs' => $khs,
+            'jadwal' => $jadwal
+        ])->with([
+            'success' => 'Data berhasil ditemukan'
+        ]);
+    }
+
+    /**
+     * =========================
+     * DASHBOARD MAHASISWA
+     * =========================
+     */
+    public function dashboard()
+    {
+        $mahasiswa = session('mahasiswa');
+
+        if (!$mahasiswa) {
+            return redirect()
+                ->route('mahasiswa.index')
+                ->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        return view('mahasiswa.dashboard', compact('mahasiswa'));
+    }
+
+    public function webJsonMahasiswa(KampusApiService $api)
+    {
+        $data = $api->getAllMahasiswa([
+            'size' => 100,
+            'page' => 1
+        ]);
+
+        return response()->json($data);
     }
 }

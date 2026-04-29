@@ -79,7 +79,7 @@ class ChatService
         Message::create([
             'client_id' => $clientId,
             'message' => $reply,
-            'is_admin' => true, // 🔥 ini kunci
+            'is_admin' => true,
             'status' => $status
         ]);
 

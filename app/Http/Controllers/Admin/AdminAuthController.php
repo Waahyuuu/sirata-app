@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Faq;
 use App\Models\Link;
 use App\Models\Manfaat;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminAuthController extends Controller
 {
@@ -18,14 +20,21 @@ class AdminAuthController extends Controller
 
     public function authenticate(Request $request)
     {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
 
-        $username = $request->username;
-        $password = $request->password;
+        $admin = User::where('email', $request->username)
+            ->where('role', 'admin')
+            ->first();
 
-        if ($username == "admin" && $password == "admin123") {
+        if ($admin && Hash::check($request->password, $admin->password)) {
 
             session([
-                'admin_login' => true
+                'admin_login' => true,
+                'admin_id' => $admin->id,
+                'admin_name' => $admin->name
             ]);
 
             return redirect('/admin/dashboard');

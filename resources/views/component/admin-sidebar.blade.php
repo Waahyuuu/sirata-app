@@ -86,6 +86,19 @@
                 <span>Manajemen Content</span>
             </a>
 
+            @if(auth()->check() && auth()->user()->is_protected)
+            <!-- Management Akun -->
+            <a href="{{ route('admin.akun.index') }}"
+                class="menu-item {{ request()->routeIs('admin.akun*') ? 'active' : '' }}">
+
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="size-6">
+                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0a4.5 4.5 0 0 1-9 0Z" />
+                </svg>
+
+                <span>Management Akun</span>
+            </a>
+            @endif
+
         </div>
     </div>
 

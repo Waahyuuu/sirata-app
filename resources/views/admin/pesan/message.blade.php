@@ -151,7 +151,7 @@ return {
 
         this.listInterval = setInterval(() => {
             this.loadChats()
-        }, 2000)
+        }, 10000)
     },
 
     async loadChats(){

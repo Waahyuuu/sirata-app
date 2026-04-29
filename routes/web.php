@@ -8,6 +8,7 @@ use App\Http\Controllers\LinkController;
 use App\Http\Controllers\ManfaatController;
 use App\Http\Controllers\ChatbotRuleController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Admin\AdminAkunController;
 use App\Models\Link;
 use App\Models\Faq;
 use App\Models\Manfaat;
@@ -54,6 +55,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/mahasiswa', fn() => view('admin.mahasiswa'))->name('mahasiswa');
 
+        Route::prefix('akun')
+            ->name('akun.')
+            ->middleware(['auth', 'protected.admin'])
+            ->group(function () {
+                Route::get('/', [AdminAkunController::class, 'index'])->name('index');
+                Route::post('/store', [AdminAkunController::class, 'store'])->name('store');
+                Route::put('/update/{id}', [AdminAkunController::class, 'update'])->name('update');
+                Route::delete('/destroy/{id}', [AdminAkunController::class, 'destroy'])->name('destroy');
+            });
+
         Route::get('/konten', [AdminAuthController::class, 'konten'])->name('konten');
 
         // konten (FAQ)
@@ -91,5 +102,9 @@ Route::middleware('mahasiswa')->group(function () {
 
     Route::middleware('mahasiswa')->group(function () {
         Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'dashboard']);
+
+        Route::get('/test-mahasiswa', [MahasiswaController::class, 'testAll']);
     });
 });
+
+Route::get('/mahasiswa/all', [MahasiswaController::class, 'webJsonMahasiswa']);

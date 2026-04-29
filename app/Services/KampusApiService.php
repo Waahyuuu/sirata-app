@@ -3,136 +3,131 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Stimata\Portal\Facades\Stimata;
 
 class KampusApiService
 {
-    // Base URL
-    protected $baseUrl = 'https://siakadz.stimata.ac.id/api/v1';
+    /**
+     * =========================
+     * GET ACCESS TOKEN
+     * =========================
+     */
+    private function getToken()
+    {
+        return Cache::remember('stimata_token', now()->addMinutes(50), function () {
+            $token = Stimata::getTokenWithClientCredentials('read');
 
-    // Biodata Mahasiswa Start
-    // Get Detail Mahasiswa by NIM
+            if (empty($token['access_token'])) {
+                throw new \Exception('Gagal mendapatkan access token STIMATA');
+            }
+
+            return $token['access_token'];
+        });
+    }
+
+    /**
+     * =========================
+     * HTTP REQUEST HELPER
+     * =========================
+     */
+    private function request($endpoint, $params = [])
+    {
+        $response = Http::withToken($this->getToken())
+            ->acceptJson()
+            ->timeout(30)
+            ->baseUrl('https://portal-api.stimata.ac.id/api/v1')
+            ->get($endpoint, $params);
+
+        if ($response->unauthorized()) {
+            Cache::forget('stimata_token');
+            return null;
+        }
+
+        if ($response->failed()) {
+            return null;
+        }
+
+        return $response->json();
+    }
+
+    // =====================================================
+    // BIODATA MAHASISWA
+    // =====================================================
+
     public function getMahasiswaByNim($nim)
     {
-        $response = Http::get($this->baseUrl . "/student/$nim");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/student/$nim");
+        return $res['data'] ?? null;
     }
 
-    // Get Detail Mahasiswa by Email
     public function getMahasiswaByEmail($email)
     {
-        $response = Http::get($this->baseUrl . "/student/email/$email");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/student/email/$email");
+        return $res['data'] ?? null;
     }
 
-    // Get Daftar Mahasiswa
     public function getAllMahasiswa($params = [])
     {
-        $response = Http::get($this->baseUrl . "/student", $params);
+        $params = array_merge([
+            'size' => 10
+        ], $params);
 
-        if ($response->successful()) {
-            return $response->json();
-        }
-
-        return null;
+        $res = $this->request("/student", $params);
+        return $res['data'] ?? [];
     }
-    // Biodata Mahasiswa End
 
-    // ---------------------Pembatas--------------------- //
+    // =====================================================
+    // KHS / NILAI
+    // =====================================================
 
-    // Hasil Studi (Kartu Hasil Studi / KHS) Start
-    // Get KHS (Grade Report) per Semester
     public function getKhs($nim, $semester)
     {
-        $response = Http::get($this->baseUrl . "/grade-report/$nim", [
+        $res = $this->request("/grade-report/$nim", [
             'semester' => $semester
         ]);
 
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        return $res['data'] ?? null;
     }
 
-    // Get Transkrip Nilai
     public function getTranskrip($nim)
     {
-        $response = Http::get($this->baseUrl . "/transcript/$nim/courses");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/transcript/$nim/courses");
+        return $res['data'] ?? null;
     }
 
-    // Get KRS History
     public function getKrsHistory()
     {
-        $response = Http::get($this->baseUrl . "/academic-plan/history");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/academic-plan/history");
+        return $res['data'] ?? null;
     }
 
-    // Get KRS Detail per Semester
     public function getKrsDetail($nim, $semester)
     {
-        $response = Http::get($this->baseUrl . "/academic-plan/$nim/detail/$semester");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/academic-plan/$nim/detail/$semester");
+        return $res['data'] ?? null;
     }
-    // Hasil Studi (Kartu Hasil Studi / KHS) End
 
-    // ---------------------Pembatas--------------------- //
+    // =====================================================
+    // IPK / IPS
+    // =====================================================
 
-    // Indeks Prestasi (IPK / IPS) Start
-    // Get Riwayat IP Seluruh Semester
     public function getGpaHistory($nim)
     {
-        $response = Http::get($this->baseUrl . "/gpa-history/histories/$nim");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/gpa-history/histories/$nim");
+        return $res['data'] ?? null;
     }
 
-    // Get IP per Semester
     public function getIpkSemester($nim, $semester)
     {
-        $response = Http::get($this->baseUrl . "/gpa-history/ipk/$nim/$semester");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/gpa-history/ipk/$nim/$semester");
+        return $res['data'] ?? null;
     }
-    // Indeks Prestasi (IPK / IPS) End
 
-    // ---------------------Pembatas--------------------- //
+    // =====================================================
+    // JADWAL
+    // =====================================================
 
-    // Jadwal Mata Kuliah Start
-    // Get Jadwal Mahasiswa (Personal Schedule)
     public function getJadwalMahasiswa($nim, $day = null)
     {
         $params = ['nim' => $nim];
@@ -141,117 +136,62 @@ class KampusApiService
             $params['day'] = $day;
         }
 
-        $response = Http::get($this->baseUrl . "/class/personal-schedule", $params);
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/class/personal-schedule", $params);
+        return $res['data'] ?? null;
     }
 
-    // Get Daftar Kelas (Jadwal Lengkap)
     public function getAllClass($params = [])
     {
-        $response = Http::get($this->baseUrl . "/class", $params);
-
-        if ($response->successful()) {
-            return $response->json();
-        }
-
-        return null;
+        return $this->request("/class", $params);
     }
 
-    // Get Detail Kelas by ID
     public function getClassDetail($id)
     {
-        $response = Http::get($this->baseUrl . "/class/$id");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/class/$id");
+        return $res['data'] ?? null;
     }
-    // Jadwal Mata Kuliah End
 
-    // ---------------------Pembatas--------------------- //
+    // =====================================================
+    // PRESENSI
+    // =====================================================
 
-    // Kehadiran (Presensi) Start
-    // Get Riwayat Presensi Kelas
     public function getAttendanceHistory($classId)
     {
-        $response = Http::get($this->baseUrl . "/attendance/history/$classId");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/attendance/history/$classId");
+        return $res['data'] ?? null;
     }
 
-    // Get Detail Presensi per Pertemuan
     public function getAttendanceDetail($classId, $meeting)
     {
-        $response = Http::get($this->baseUrl . "/attendance/history/$classId/values/$meeting");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/attendance/history/$classId/values/$meeting");
+        return $res['data'] ?? null;
     }
 
-    // Get Rekap Presensi Kelas
     public function getAttendanceRecap($classId)
     {
-        $response = Http::get($this->baseUrl . "/attendance/recap/$classId");
-
-        if ($response->successful()) {
-            return $response->json()['data'][0] ?? null;
-        }
-
-        return null;
+        $res = $this->request("/attendance/recap/$classId");
+        return $res['data'][0] ?? null;
     }
-    // Kehadiran (Presensi) End
 
-    // ---------------------Pembatas--------------------- //
+    // =====================================================
+    // KEUANGAN
+    // =====================================================
 
-    // SPP / Keuangan (Tagihan)
-    // Get Daftar Tagihan
     public function getTagihan($params = [])
     {
-        $response = Http::get($this->baseUrl . "/tagihan", $params);
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/tagihan", $params);
+        return $res['data'] ?? null;
     }
 
-    // Get Detail Tagihan by ID
     public function getTagihanDetail($id)
     {
-        $response = Http::get($this->baseUrl . "/tagihan/$id");
-
-        if ($response->successful()) {
-            return $response->json()['data'];
-        }
-
-        return null;
+        $res = $this->request("/tagihan/$id");
+        return $res['data'] ?? null;
     }
 
-    // Get Status Cekal (Akses Akademik)
     public function getCekal($semester)
     {
-        $response = Http::get($this->baseUrl . "/cekal/$semester");
-
-        if ($response->successful()) {
-            return $response->json()['data']['data'];
-        }
-
-        return null;
+        $res = $this->request("/cekal/$semester");
+        return $res['data']['data'] ?? null;
     }
-    // SPP / Keuangan (Tagihan) End
 }
