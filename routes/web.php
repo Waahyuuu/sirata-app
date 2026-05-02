@@ -9,6 +9,7 @@ use App\Http\Controllers\ManfaatController;
 use App\Http\Controllers\ChatbotRuleController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\AdminAkunController;
+use App\Http\Controllers\DashboardController;
 use App\Models\Link;
 use App\Models\Faq;
 use App\Models\Manfaat;
@@ -36,7 +37,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::middleware('admin')->group(function () {
 
-        Route::get('/dashboard', [AdminAuthController::class, 'dashboard'])->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // Pesan
         // Message
@@ -53,7 +54,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/pesan/rule/{id}', [ChatbotRuleController::class, 'update'])->name('pesan.update');
         Route::delete('/pesan/rule/{id}', [ChatbotRuleController::class, 'destroy'])->name('pesan.destroy');
 
-        Route::get('/mahasiswa', fn() => view('admin.mahasiswa'))->name('mahasiswa');
+        // Route::get('/mahasiswa', fn() => view('admin.mahasiswa'))->name('mahasiswa');
+        Route::get('/mahasiswa', [MahasiswaController::class, 'adminIndex'])
+            ->name('mahasiswa');
 
         Route::prefix('akun')
             ->name('akun.')

@@ -73,8 +73,14 @@ class KampusApiService
             'size' => 10
         ], $params);
 
-        $res = $this->request("/student", $params);
-        return $res['data'] ?? [];
+        $res = $this->request('/student', $params);
+
+        return [
+            'data'    => $res['data'] ?? [],
+            'meta'    => $res['meta'] ?? [],
+            'message' => $res['message'] ?? null,
+            'code'    => $res['code'] ?? 500
+        ];
     }
 
     // =====================================================
