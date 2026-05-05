@@ -2,6 +2,8 @@
 
 @section('content')
 
+<x-loading-overlay text="Mencari data mahasiswa..." />
+
 @include('partials.chatbot-button')
 
 @include('partials.skeleton-loading')
@@ -38,5 +40,35 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
     </svg>
 </button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+    const form = document.querySelector('#sirata form');
+    const btn  = document.getElementById('btnCari');
+    const overlay = document.getElementById('loadingOverlay');
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
+
+            e.preventDefault();
+
+            if (overlay) {
+                overlay.classList.remove('hidden');
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = 'Mencari...';
+            }
+
+            setTimeout(() => {
+                form.submit();
+            }, 300);
+        });
+    }
+
+});
+</script>
 
 @endsection

@@ -42,7 +42,7 @@ $activeTab = request('tab', 'message');
     </div>
 
     {{-- CONTENT --}}
-    <div class="max-h-[55vh] overflow-y-auto pr-2">
+    <div class="overflow-y-auto2">
 
         <div id="message" class="tab-content {{ $activeTab != 'message' ? 'hidden' : '' }}">
             @include('admin.pesan.message')

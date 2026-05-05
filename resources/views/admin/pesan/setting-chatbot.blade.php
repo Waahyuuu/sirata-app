@@ -1,4 +1,4 @@
-<div class="space-y-4 pt-2 pl-2 pr-2 pb-8">
+<div class="space-y-4">
 
     @forelse ($rules as $rule)
 

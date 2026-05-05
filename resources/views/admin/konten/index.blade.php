@@ -49,7 +49,7 @@ $activeTab = request('tab', 'manfaat');
     </div>
 
     {{-- CONTENT --}}
-    <div class="max-h-[55vh] overflow-y-auto pr-2 custom-scroll">
+    <div class="overflow-y-auto custom-scroll">
         <div class="tab-content {{ $activeTab != 'manfaat' ? 'hidden' : '' }}" id="manfaat">
             @include('admin.konten.manfaat')
         </div>

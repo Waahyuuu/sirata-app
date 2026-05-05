@@ -20,12 +20,12 @@
     </div>
 
     {{-- CONTENT --}}
-    <div class="max-h-[60vh] overflow-y-auto pr-2 custom-scroll">
+    <div class="overflow-y-auto pr-2 custom-scroll">
         <div class="overflow-x-auto border rounded-2xl">
 
             <table class="w-full text-sm text-left">
                 <thead class="sticky top-0 bg-gray-100 z-10">
-                    <tr class="text-gray-700">
+                    <tr class="text-gray-700 text-center">
                         <th class="px-4 py-3">No</th>
                         <th class="px-4 py-3">Nama</th>
                         <th class="px-4 py-3">Email</th>
@@ -38,27 +38,27 @@
                 <tbody>
                     @forelse($admins as $index => $admin)
                     <tr class="border-t hover:bg-gray-50 transition">
-                        <td class="px-4 py-3">{{ $index + 1 }}</td>
+                        <td class="text-center px-4 py-3">{{ $index + 1 }}</td>
 
                         <td class="px-4 py-3 font-semibold text-gray-800">
                             {{ $admin->name }}
                         </td>
 
-                        <td class="px-4 py-3 text-gray-600">
+                        <td class="text-center px-4 py-3 text-gray-600">
                             {{ $admin->email }}
                         </td>
 
-                        <td class="px-4 py-3">
+                        <td class="text-center px-4 py-3">
                             <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700">
                                 {{ ucfirst($admin->role) }}
                             </span>
                         </td>
 
-                        <td class="px-4 py-3 text-gray-500">
+                        <td class="text-center px-4 py-3 text-gray-500">
                             {{ $admin->created_at->format('d M Y') }}
                         </td>
 
-                        <td class="px-4 py-3">
+                        <td class="text-center px-4 py-3">
                             <div class="flex gap-2 justify-center">
 
                                 {{-- EDIT --}}

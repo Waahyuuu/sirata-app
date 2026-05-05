@@ -16,7 +16,20 @@ class KampusApiService
     private function getToken()
     {
         return Cache::remember('stimata_token', now()->addMinutes(50), function () {
-            $token = Stimata::getTokenWithClientCredentials('read');
+
+            $scope = implode(' ', [
+                'student:read',
+                'penilaian:khs-read',
+                'transkrip:get',
+                'krs:read',
+                'kelas:read',
+                'presensi:get',
+                'presensi:get-rekap',
+                'tagihan:read',
+                'cekal:read'
+            ]);
+
+            $token = Stimata::getTokenWithClientCredentials($scope);
 
             if (empty($token['access_token'])) {
                 throw new \Exception('Gagal mendapatkan access token STIMATA');
@@ -25,12 +38,6 @@ class KampusApiService
             return $token['access_token'];
         });
     }
-
-    /**
-     * =========================
-     * HTTP REQUEST HELPER
-     * =========================
-     */
     private function request($endpoint, $params = [])
     {
         $response = Http::withToken($this->getToken())
@@ -57,14 +64,26 @@ class KampusApiService
 
     public function getMahasiswaByNim($nim)
     {
-        $res = $this->request("/student/$nim");
-        return $res['data'] ?? null;
+        $res = $this->request('/student', [
+            'size' => 1000
+        ]);
+
+        $data = $res['data'] ?? [];
+
+        return collect($data)->firstWhere('nim', $nim);
     }
 
     public function getMahasiswaByEmail($email)
     {
+        $email = trim($email);
+
         $res = $this->request("/student/email/$email");
-        return $res['data'] ?? null;
+
+        if (!$res || empty($res['data'])) {
+            return null;
+        }
+
+        return $res['data'];
     }
 
     public function getAllMahasiswa($params = [])

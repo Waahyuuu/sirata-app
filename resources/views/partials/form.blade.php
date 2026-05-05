@@ -12,7 +12,7 @@
         </p>
 
         <!-- Form -->
-        <form method="POST" action="/mahasiswa/cari" class="space-y-5 text-left">
+        <form method="POST" action="{{ route('mahasiswa.cari') }}" class="space-y-5 text-left">
             @csrf
 
             <!-- Nama Ibu -->
@@ -20,13 +20,11 @@
                 <label class="block text-sm mb-2">
                     Nama Lengkap Ibu
                 </label>
-                <input type="text" name="nama_ibu"
-                    value="{{ old('nama_ibu') }}"
-                    placeholder="Nama ibu"
+                <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}" required placeholder="Nama ibu"
                     class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                 @error('nama_ibu')
-                    <small class="text-red-500">{{ $message }}</small>
+                <small class="text-red-500">{{ $message }}</small>
                 @enderror
             </div>
 
@@ -35,12 +33,11 @@
                 <label class="block text-sm mb-2">
                     Tanggal Lahir Mahasiswa
                 </label>
-                <input type="date" name="tanggal_lahir"
-                    value="{{ old('tanggal_lahir') }}"
+                <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required
                     class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                 @error('tanggal_lahir')
-                    <small class="text-red-500">{{ $message }}</small>
+                <small class="text-red-500">{{ $message }}</small>
                 @enderror
             </div>
 
@@ -49,28 +46,34 @@
                 <label class="block text-sm mb-2">
                     Nim Mahasiswa
                 </label>
-                <input type="text" name="nim"
-                    value="{{ old('nim') }}"
-                    placeholder="22010001"
+                <input type="text" name="nim" value="{{ old('nim') }}" required placeholder="22010001"
                     class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                 @error('nim')
-                    <small class="text-red-500">{{ $message }}</small>
+                <small class="text-red-500">{{ $message }}</small>
                 @enderror
             </div>
 
             <!-- Button -->
-            <button type="submit"
+            <button type="submit" id="btnCari"
                 class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
                 CARI
             </button>
 
         </form>
 
+        {{-- error --}}
         @if(session('error'))
-            <div class="mt-4 text-red-600 font-semibold">
-                {{ session('error') }}
-            </div>
+        <div class="mt-4 text-red-600 font-semibold">
+            {{ session('error') }}
+        </div>
+        @endif
+
+        {{-- success --}}
+        @if(session('success'))
+        <div class="mt-4 text-green-600 font-semibold">
+            {{ session('success') }}
+        </div>
         @endif
 
     </div>

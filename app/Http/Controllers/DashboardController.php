@@ -13,48 +13,38 @@ class DashboardController extends Controller
 {
     public function index(Request $request, KampusApiService $api)
     {
-        /**
-         * =====================================================
-         * AMBIL TOTAL MAHASISWA DARI API
-         * =====================================================
-         */
-        $totalMahasiswa = 0;
-        try {
-            $allData = [];
-            $cursor = null;
+        $totalMahasiswa = cache()->remember('total_mahasiswa', 3600, function () use ($api) {
 
-            do {
-                $params = ['size' => 1000];
-                if ($cursor) $params['cursor'] = $cursor;
+            try {
+                $total = 0;
+                $cursor = null;
 
-                $result = $api->getAllMahasiswa($params);
-                $batch = $result['data'] ?? [];
-                $allData = array_merge($allData, $batch);
+                do {
+                    $params = ['size' => 1000];
+                    if ($cursor) $params['cursor'] = $cursor;
 
-                $cursor = $result['meta']['next'] ?? null;
-            } while ($cursor && count($batch) > 0);
+                    $result = $api->getAllMahasiswa($params);
+                    $batch  = $result['data'] ?? [];
 
-            $totalMahasiswa = count($allData);
-        } catch (\Exception $e) {
-            $totalMahasiswa = 0;
-        }
+                    $total += count($batch);
 
-        /**
-         * =====================================================
-         * AMBIL TOTAL DARI DATABASE LOKAL
-         * =====================================================
-         */
-        $totalManfaat  = Manfaat::count();
-        $totalLink     = Link::count();
-        $totalFaq      = Faq::count();
-        $totalChatbot  = ChatbotRule::count();
+                    $cursor = $result['meta']['next'] ?? null;
+                } while ($cursor && count($batch) > 0);
 
-        return view('admin.dashboard', compact(
-            'totalMahasiswa',
-            'totalManfaat',
-            'totalLink',
-            'totalFaq',
-            'totalChatbot'
-        ));
+                return $total;
+            } catch (\Exception $e) {
+                return 0;
+            }
+        });
+
+        return view('admin.dashboard.index', [
+            'stats' => [
+                ['label' => 'Mahasiswa', 'value' => $totalMahasiswa],
+                ['label' => 'Manfaat', 'value' => Manfaat::count()],
+                ['label' => 'Link', 'value' => Link::count()],
+                ['label' => 'FAQ', 'value' => Faq::count()],
+                ['label' => 'Chatbot', 'value' => ChatbotRule::count()],
+            ]
+        ]);
     }
 }

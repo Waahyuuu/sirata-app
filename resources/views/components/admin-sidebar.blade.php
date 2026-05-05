@@ -1,20 +1,24 @@
-<div class="w-72 mt-6 mb-6 bg-[#BFC3C9] rounded-r-[30px] flex flex-col justify-between overflow-hidden">
+<div class="w-72 mt-6 bg-[#BFC3C9] rounded-r-[30px] flex flex-col justify-between overflow-hidden">
 
     <div>
 
         <!-- Profile -->
         <div class="p-6">
-            <div class="flex items-center gap-4 mb-5">
-                <div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-7 h-7 text-black">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    </svg>
+            <div class="flex items-center gap-3 mb-5">
+                <div
+                    class="w-14 h-14 flex items-center justify-center overflow-hidden">
+                    <img src="/images/download.svg" alt="Logo SIRATA" class="w-14 h-14 object-contain">
                 </div>
                 <div>
-                    <div class="font-semibold text-sm">Admin SIRATA</div>
-                    <div class="text-xs text-gray-600">Admin</div>
+                    {{-- Mengambil Nama User --}}
+                    <div class="font-bold text-md text-slate-800 capitalize">
+                        {{ auth()->user()->name ?? 'Administrator' }}
+                    </div>
+
+                    {{-- Mengambil Role User --}}
+                    <div class="text-xs font-medium text-gray-500  uppercase tracking-wider">
+                        {{ auth()->user()->role ?? 'Admin' }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,8 +95,9 @@
             <a href="{{ route('admin.akun.index') }}"
                 class="menu-item {{ request()->routeIs('admin.akun*') ? 'active' : '' }}">
 
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="size-6">
-                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0a4.5 4.5 0 0 1-9 0Z" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path fill="currentColor"
+                        d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9A3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42c-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3a3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3a3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9c-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65c2.56.34 4.45 1.51 4.45 2.9z" />
                 </svg>
 
                 <span>Management Akun</span>

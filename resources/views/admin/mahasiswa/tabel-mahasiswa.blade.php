@@ -149,7 +149,7 @@
     }
 </style>
 {{-- TABLE CONTAINER --}}
-<div class="overflow-y-auto max-h-[57vh] custom-scroll flex-1">
+<div class="overflow-y-auto custom-scroll flex-1">
 
     <table class="table-modern">
 

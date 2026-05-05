@@ -10,6 +10,7 @@ use App\Http\Controllers\ChatbotRuleController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\AdminAkunController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TestApiController;
 use App\Models\Link;
 use App\Models\Faq;
 use App\Models\Manfaat;
@@ -23,6 +24,8 @@ Route::get('/', function () {
     return view('index', compact('links', 'faqs', 'manfaats'));
 });
 
+Route::post('/mahasiswa/cari', [MahasiswaController::class, 'cari'])->name('mahasiswa.cari');
+
 // endpoint chatbot (API)
 Route::post('/chatbot', [ChatbotRuleController::class, 'chat']);
 Route::get('/chatbot/messages', [MessageController::class, 'show']);
@@ -32,15 +35,24 @@ Route::get('/chatbot/list', [MessageController::class, 'list']);
 // admin akses
 Route::prefix('admin')->name('admin.')->group(function () {
 
+    // =========================
+    // AUTH
+    // =========================
     Route::get('/login', [AdminAuthController::class, 'login'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'authenticate']);
 
+    // =========================
+    // PROTECTED ROUTES (ADMIN)
+    // =========================
     Route::middleware('admin')->group(function () {
 
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        // Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('dashboard');
 
-        // Pesan
-        // Message
+        // =========================
+        // PESAN
+        // =========================
         Route::get('/pesan', [MessageController::class, 'index'])->name('pesan');
         Route::get('/pesan/{client_id}', [MessageController::class, 'show']);
         Route::post('/pesan/reply', [MessageController::class, 'reply']);
@@ -54,13 +66,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/pesan/rule/{id}', [ChatbotRuleController::class, 'update'])->name('pesan.update');
         Route::delete('/pesan/rule/{id}', [ChatbotRuleController::class, 'destroy'])->name('pesan.destroy');
 
-        // Route::get('/mahasiswa', fn() => view('admin.mahasiswa'))->name('mahasiswa');
+        // =========================
+        // MAHASISWA
+        // =========================
         Route::get('/mahasiswa', [MahasiswaController::class, 'adminIndex'])
             ->name('mahasiswa');
 
+        // =========================
+        // AKUN (SUPER ADMIN)
+        // =========================
         Route::prefix('akun')
             ->name('akun.')
-            ->middleware(['auth', 'protected.admin'])
+            ->middleware('protected.admin')
             ->group(function () {
                 Route::get('/', [AdminAkunController::class, 'index'])->name('index');
                 Route::post('/store', [AdminAkunController::class, 'store'])->name('store');
@@ -68,9 +85,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::delete('/destroy/{id}', [AdminAkunController::class, 'destroy'])->name('destroy');
             });
 
+        // =========================
+        // KONTEN
+        // =========================
         Route::get('/konten', [AdminAuthController::class, 'konten'])->name('konten');
 
-        // konten (FAQ)
+        // FAQ
         Route::prefix('konten/faq')->name('konten.faq.')->group(function () {
             Route::get('/', [FaqController::class, 'admin'])->name('index');
             Route::post('/', [FaqController::class, 'store'])->name('store');
@@ -79,7 +99,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/delete-all', [FaqController::class, 'deleteAll'])->name('deleteAll');
         });
 
-        // konten (MANFAAT)
+        // MANFAAT
         Route::prefix('konten/manfaat')->name('konten.manfaat.')->group(function () {
             Route::post('/', [ManfaatController::class, 'store'])->name('store');
             Route::put('/{manfaat}', [ManfaatController::class, 'update'])->name('update');
@@ -87,8 +107,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/delete-all', [ManfaatController::class, 'deleteAll'])->name('deleteAll');
         });
 
-
-        // konten (LINK)
+        // LINK
         Route::prefix('konten/link')->name('konten.link.')->group(function () {
             Route::post('/', [LinkController::class, 'store'])->name('store');
             Route::put('/{link}', [LinkController::class, 'update'])->name('update');
@@ -96,18 +115,50 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/delete-all', [LinkController::class, 'deleteAll'])->name('deleteAll');
         });
 
+        // =========================
+        // LOGOUT
+        // =========================
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
 
 // user akses
+Route::post('/mahasiswa/cari', [MahasiswaController::class, 'cari'])
+    ->name('mahasiswa.cari');
+
+Route::post('/logout', function () {
+
+    session()->forget('mahasiswa');
+
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+    return redirect('/');
+})->name('logout');
+
 Route::middleware('mahasiswa')->group(function () {
-
-    Route::middleware('mahasiswa')->group(function () {
-        Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'dashboard']);
-
-        Route::get('/test-mahasiswa', [MahasiswaController::class, 'testAll']);
-    });
+    Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'dashboard']);
+    Route::get('/mahasiswa/biodata', [MahasiswaController::class, 'biodata']);
+    Route::get('/mahasiswa/hasil-studi', [MahasiswaController::class, 'hasilStudi']);
+    Route::get('/mahasiswa/nilai-prestasi-akademik', [MahasiswaController::class, 'salinanNilai']);
+    Route::get('/mahasiswa/jadwal', [MahasiswaController::class, 'jadwal']);
 });
 
-Route::get('/mahasiswa/all', [MahasiswaController::class, 'webJsonMahasiswa']);
+// Route UjiCoba API Start
+
+Route::prefix('mahasiswa')->group(function () {
+
+    Route::get('/{nim}/khs/{semester}', [TestApiController::class, 'khs']);
+    Route::get('/{nim}/transkrip', [TestApiController::class, 'transkrip']);
+    Route::get('/{nim}/krs/{semester}', [TestApiController::class, 'krsDetail']);
+    Route::get('/krs/history', [TestApiController::class, 'krsHistory']);
+
+    Route::get('/email/{email}', [TestApiController::class, 'showByEmail'])
+        ->where('email', '.*');
+
+    Route::get('/{nim}', [TestApiController::class, 'show']);
+});
+
+Route::get('/token-test', [TestApiController::class, 'getTokenTest']);
+
+// Route UjiCoba API Start

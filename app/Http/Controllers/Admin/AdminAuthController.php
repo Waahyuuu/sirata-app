@@ -9,35 +9,31 @@ use App\Models\Link;
 use App\Models\Manfaat;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
 
     public function login()
     {
+        if (Auth::check()) {
+            return redirect()->intended('/admin/dashboard');
+        }
         return view('admin.login');
     }
 
     public function authenticate(Request $request)
     {
-        $request->validate([
-            'username' => 'required',
+        $credentials = $request->validate([
+            'username' => 'required|email',
             'password' => 'required',
         ]);
 
-        $admin = User::where('email', $request->username)
-            ->where('role', 'admin')
-            ->first();
+        if (Auth::attempt(['email' => $request->username, 'password' => $request->password, 'role' => 'admin'])) {
 
-        if ($admin && Hash::check($request->password, $admin->password)) {
+            $request->session()->regenerate();
 
-            session([
-                'admin_login' => true,
-                'admin_id' => $admin->id,
-                'admin_name' => $admin->name
-            ]);
-
-            return redirect('/admin/dashboard');
+            return redirect()->intended('/admin/dashboard');
         }
 
         return back()->with('error', 'Username atau password salah');
@@ -45,8 +41,7 @@ class AdminAuthController extends Controller
 
     public function dashboard()
     {
-
-        if (!session('admin_login')) {
+        if (!Auth::check()) {
             return redirect('/admin/login');
         }
 
@@ -62,10 +57,12 @@ class AdminAuthController extends Controller
         return view('admin.konten.index', compact('faqs', 'links', 'manfaats'));
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
+        Auth::logout();
 
-        session()->forget('admin_login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/admin/login');
     }
