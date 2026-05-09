@@ -18,7 +18,7 @@
             <!-- Nama Ibu -->
             <div>
                 <label class="block text-sm mb-2">
-                    Nama Lengkap Ibu
+                    Nama Ibu
                 </label>
                 <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}" required placeholder="Nama ibu"
                     class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">

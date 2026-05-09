@@ -8,6 +8,11 @@ use Stimata\Portal\Facades\Stimata;
 
 class KampusApiService
 {
+    private function baseUrl()
+    {
+        return config('services.stimata.base_url');
+    }
+
     /**
      * =========================
      * GET ACCESS TOKEN
@@ -15,7 +20,7 @@ class KampusApiService
      */
     private function getToken()
     {
-        return Cache::remember('stimata_token', now()->addMinutes(50), function () {
+        return Cache::remember('stimata_token', now()->addSeconds(3500), function () {
 
             $scope = implode(' ', [
                 'student:read',
@@ -29,30 +34,52 @@ class KampusApiService
                 'cekal:read'
             ]);
 
-            $token = Stimata::getTokenWithClientCredentials($scope);
+            try {
+                $token = Stimata::getTokenWithClientCredentials($scope);
 
-            if (empty($token['access_token'])) {
-                throw new \Exception('Gagal mendapatkan access token STIMATA');
+                if (!isset($token['access_token'])) {
+                    throw new \Exception('Token tidak valid dari STIMATA');
+                }
+
+                return $token['access_token'];
+            } catch (\Throwable $e) {
+                Cache::forget('stimata_token');
+                throw new \Exception('Gagal ambil token: ' . $e->getMessage());
             }
-
-            return $token['access_token'];
         });
     }
+
+    /**
+     * =========================
+     * REQUEST FUNC
+     * =========================
+     */
     private function request($endpoint, $params = [])
     {
-        $response = Http::withToken($this->getToken())
+        $token = $this->getToken();
+
+        $response = Http::withToken($token)
             ->acceptJson()
             ->timeout(30)
-            ->baseUrl('https://portal-api.stimata.ac.id/api/v1')
+            ->baseUrl($this->baseUrl())
             ->get($endpoint, $params);
 
         if ($response->unauthorized()) {
             Cache::forget('stimata_token');
-            return null;
+
+            $newToken = $this->getToken();
+            $response = Http::withToken($newToken)
+                ->acceptJson()
+                ->timeout(30)
+                ->baseUrl($this->baseUrl())
+                ->get($endpoint, $params);
         }
 
         if ($response->failed()) {
-            return null;
+            return [
+                'error' => true,
+                'message' => $response->body()
+            ];
         }
 
         return $response->json();
@@ -64,13 +91,8 @@ class KampusApiService
 
     public function getMahasiswaByNim($nim)
     {
-        $res = $this->request('/student', [
-            'size' => 1000
-        ]);
-
-        $data = $res['data'] ?? [];
-
-        return collect($data)->firstWhere('nim', $nim);
+        $res = $this->request("/student/$nim");
+        return $res['data'] ?? null;
     }
 
     public function getMahasiswaByEmail($email)
@@ -115,23 +137,26 @@ class KampusApiService
         return $res['data'] ?? null;
     }
 
-    public function getTranskrip($nim)
+    public function getTranskrip($nim, $final = false)
     {
-        $res = $this->request("/transcript/$nim/courses");
+        $res = $this->request("/transcript/$nim/courses", [
+            'final' => $final ? 'true' : 'false'
+        ]);
+
+        return $res;
+    }
+
+    public function getKrsHistory($params = [])
+    {
+        $res = $this->request("/academic-plan/history", $params);
         return $res['data'] ?? null;
     }
 
-    public function getKrsHistory()
-    {
-        $res = $this->request("/academic-plan/history");
-        return $res['data'] ?? null;
-    }
-
-    public function getKrsDetail($nim, $semester)
-    {
-        $res = $this->request("/academic-plan/$nim/detail/$semester");
-        return $res['data'] ?? null;
-    }
+    // public function getKrsDetail($nim, $semester)
+    // {
+    //     $res = $this->request("/academic-plan/$nim/detail/$semester");
+    //     return $res['data'] ?? null;
+    // }
 
     // =====================================================
     // IPK / IPS
@@ -162,6 +187,13 @@ class KampusApiService
         }
 
         $res = $this->request("/class/personal-schedule", $params);
+        return $res['data'] ?? null;
+    }
+
+    public function getKrsDetail($nim, $semester)
+    {
+        // Pastikan path-nya sesuai dokumentasi: /academic-plan/{nim}/detail/{semester}
+        $res = $this->request("/academic-plan/$nim/detail/$semester");
         return $res['data'] ?? null;
     }
 

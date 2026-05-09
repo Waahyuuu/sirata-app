@@ -147,9 +147,13 @@ Route::middleware('mahasiswa')->group(function () {
 // Route UjiCoba API Start
 
 Route::prefix('mahasiswa')->group(function () {
+    Route::get('/{nim}/krs-aktif', [TestApiController::class, 'krsAktif']);
+    Route::get('/{nim}/jadwal', [TestApiController::class, 'jadwalMahasiswa']);
+    Route::get('/class', [TestApiController::class, 'allClass']);
+    Route::get('/class/{id}', [TestApiController::class, 'classDetail']); // Detail satu kelas
 
     Route::get('/{nim}/khs/{semester}', [TestApiController::class, 'khs']);
-    Route::get('/{nim}/transkrip', [TestApiController::class, 'transkrip']);
+    Route::get('/transkrip/{nim}', [TestApiController::class, 'transkrip']);
     Route::get('/{nim}/krs/{semester}', [TestApiController::class, 'krsDetail']);
     Route::get('/krs/history', [TestApiController::class, 'krsHistory']);
 
@@ -157,6 +161,8 @@ Route::prefix('mahasiswa')->group(function () {
         ->where('email', '.*');
 
     Route::get('/{nim}', [TestApiController::class, 'show']);
+
+    Route::get('/test/gpa/{nim}', [TestApiController::class, 'gpaHistory']);
 });
 
 Route::get('/token-test', [TestApiController::class, 'getTokenTest']);

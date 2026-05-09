@@ -8,7 +8,7 @@
 
                 <!-- Avatar -->
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-full bg-slate-700 text-white font-bold text-lg shadow-sm">
+                    class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-slate-700 text-white font-bold text-lg shadow-sm">
                     {{ $initial }}
                 </div>
 

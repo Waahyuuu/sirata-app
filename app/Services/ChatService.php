@@ -55,16 +55,21 @@ class ChatService
 
         $message = $this->normalize($messageRaw);
 
-        if ($reply = $this->handleNim($message)) {
-            return $this->saveBotReply($clientId, $reply);
-        }
-
         if ($reply = $this->handleNama($message)) {
             return $this->saveBotReply($clientId, $reply);
         }
 
         if ($reply = $this->handleRule($message)) {
             return $this->saveBotReply($clientId, $reply);
+        }
+
+        if ($now->hour < 8 || $now->hour >= 15) {
+
+            return $this->saveBotReply(
+                $clientId,
+                'Jam operasional telah usai. Pesan tetap kami terima dan akan dibalas admin 🙏',
+                'admin'
+            );
         }
 
         return $this->saveBotReply(
@@ -92,30 +97,6 @@ class ChatService
         return preg_replace('/[^a-z0-9 ]/', '', $text);
     }
 
-    private function handleNim($message)
-    {
-        if (preg_match('/^[0-9]{6,15}$/', $message)) {
-            $mhs = $this->kampusApi->getMahasiswaByNim($message);
-
-            if ($mhs) {
-                return "Nama : {$mhs['name']}\nNIM : {$mhs['nim']}";
-            }
-        }
-        return null;
-    }
-
-    private function handleNama($message)
-    {
-        $result = $this->kampusApi->getAllMahasiswa(['name' => $message]);
-
-        if ($result && isset($result['data']['data']) && count($result['data']['data']) > 0) {
-            $mhs = $result['data']['data'][0];
-            return "Nama : {$mhs['name']}\nNIM : {$mhs['nim']}";
-        }
-
-        return null;
-    }
-
     private function handleRule($message)
     {
         $rules = ChatbotRule::select('keyword', 'reply')->get();
@@ -132,5 +113,59 @@ class ChatService
         }
 
         return null;
+    }
+
+    private function handleNama($message)
+    {
+        $result = $this->kampusApi->getAllMahasiswa([
+            'search' => $message,
+            'size' => 10,
+            'page' => 1
+        ]);
+
+        if (
+            !$result ||
+            !isset($result['data']['data']) ||
+            count($result['data']['data']) < 1
+        ) {
+            return null;
+        }
+
+        $mahasiswa = collect($result['data']['data'])->first(function ($item) use ($message) {
+
+            return str_contains(
+                strtolower($item['name'] ?? ''),
+                strtolower($message)
+            );
+        });
+
+        if (!$mahasiswa) {
+            return null;
+        }
+
+        $email = $mahasiswa['stimata_email'] ?? null;
+
+        if (!$email) {
+
+            return "Data Mahasiswa Ditemukan\n\n"
+                . "Nama : {$mahasiswa['name']}\n"
+                . "NIM : {$mahasiswa['nim']}";
+        }
+
+        $detail = $this->kampusApi->getMahasiswaByEmail($email);
+
+        $nama = $mahasiswa['name'] ?? '-';
+        $nim  = $mahasiswa['nim'] ?? '-';
+
+        $ortu = data_get(
+            $detail,
+            'prospective.mother_name',
+            '-'
+        );
+
+        return "Data Mahasiswa Ditemukan\n\n"
+            . "Nama : {$nama}\n"
+            . "NIM : {$nim}\n"
+            . "Nama Orang Tua : {$ortu}";
     }
 }

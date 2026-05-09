@@ -35,4 +35,7 @@ return [
         ],
     ],
 
+    'stimata' => [
+        'base_url' => env('STIMATA_API_BASE_URL'),
+    ],
 ];

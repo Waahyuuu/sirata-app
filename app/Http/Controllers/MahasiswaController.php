@@ -14,6 +14,24 @@ class MahasiswaController extends Controller
         return redirect('/');
     }
 
+    private function getMahasiswaData($api)
+    {
+        $session = session('mahasiswa');
+
+        if (!$session) return null;
+
+        $nim = $session['nim'];
+
+        $mahasiswaByNim = $api->getMahasiswaByNim($nim);
+        if (!$mahasiswaByNim) return null;
+
+        $email = $mahasiswaByNim['stimata_email'];
+
+        return Cache::remember("mahasiswa_$nim", 300, function () use ($api, $email) {
+            return $api->getMahasiswaByEmail($email);
+        });
+    }
+
     public function cari(Request $request, KampusApiService $api)
     {
         $request->validate([
@@ -97,81 +115,110 @@ class MahasiswaController extends Controller
         ));
     }
 
-    public function biodata()
+    public function biodata(KampusApiService $api)
     {
-        $mahasiswa = session('mahasiswa');
+        $mahasiswa = $this->getMahasiswaData($api);
 
         if (!$mahasiswa) {
             return redirect('/')
-                ->with('error', 'Silakan isi data terlebih dahulu');
+                ->with('error', 'Data tidak ditemukan');
         }
 
-        return view('mahasiswa.biodata.index', compact('mahasiswa'));
+        $session = session('mahasiswa');
+
+        $nama = $session['nama'] ?? 'Mahasiswa';
+        $nim  = $session['nim'] ?? '-';
+        $initial = strtoupper(substr($nama, 0, 1));
+
+        return view('mahasiswa.biodata.index', compact(
+            'mahasiswa',
+            'nama',
+            'nim',
+            'initial'
+        ));
     }
 
     public function hasilStudi(KampusApiService $api)
     {
         $mahasiswa = session('mahasiswa');
+        if (!$mahasiswa) return redirect('/')->with('error', 'Silakan isi data terlebih dahulu');
 
-        if (!$mahasiswa) {
-            return redirect('/')
-                ->with('error', 'Silakan isi data terlebih dahulu');
-        }
-
-        $nim = $mahasiswa['nim'] ?? $mahasiswa['data']['nim'] ?? null;
-
-        if (!$nim) {
-            return redirect('/')
-                ->with('error', 'NIM tidak ditemukan');
-        }
+        $nim = $mahasiswa['nim'] ?? null;
+        if (!$nim) return redirect('/')->with('error', 'NIM tidak ditemukan');
 
         $semesterList = [];
-        $totalSks = 0;
-        $totalBobot = 0;
+        $totalSksLulus = 0;
+        $totalSksDiambil = 0;
+        $totalBobotKumulatif = 0;
 
-        $semester = 1;
+        for ($semester = 1; $semester <= 14; $semester++) {
+            $krsData = $api->getKrsDetail($nim, $semester);
+            if (!$krsData || empty($krsData)) continue;
 
-        while (true) {
+            $khsData = $api->getKhs($nim, $semester);
+            $infoKrs = $krsData[0];
 
-            $khs = $api->getKhs($nim, $semester);
+            $sksDiambilSemester = 0;
+            foreach ($krsData as $item) {
+                $sksDiambilSemester += ($item['course']['credits'] ?? 0);
+            }
+            $totalSksDiambil += $sksDiambilSemester;
 
-            if (!$khs || empty($khs['items'])) {
-                break;
+            $sksLulusSemester = $khsData['total_credits'] ?? 0;
+            $ipSemester = $khsData['semester_gpa'] ?? 0;
+
+            if ($sksLulusSemester > 0) {
+                $totalSksLulus += $sksLulusSemester;
+                $totalBobotKumulatif += ($ipSemester * $sksLulusSemester);
             }
 
-            $sks = $khs['total_credits'] ?? 0;
-            $ip  = $khs['semester_gpa'] ?? 0;
+            $ipkSaatIni = $totalSksLulus > 0 ? ($totalBobotKumulatif / $totalSksLulus) : 0;
 
-            $totalSks += $sks;
-            $totalBobot += ($ip * $sks);
+            $itemsToDisplay = [];
+            if (!empty($khsData['items'])) {
+                $itemsToDisplay = $khsData['items'];
+            } else {
+                foreach ($krsData as $krsItem) {
+                    $itemsToDisplay[] = [
+                        'course_code' => $krsItem['course']['course_code'] ?? '-',
+                        'course_name' => $krsItem['course']['course_name'] ?? '-',
+                        'credits'     => $krsItem['course']['credits'] ?? 0,
+                        'predicate'   => '-',
+                        'grade_point' => 0
+                    ];
+                }
+            }
 
             $semesterList[] = [
-                'nama'    => 'Semester ' . $semester,
-                'periode' => 'Semester ' . $semester,
-                'sks'     => $sks,
-                'ip'      => $ip,
-                'ipk'     => $totalSks ? ($totalBobot / $totalSks) : 0,
+                'semester'   => $infoKrs['class']['semester'] ?? $semester,
+                'nama'       => 'Semester ' . ($infoKrs['class']['semester'] ?? $semester),
+                'period'     => $infoKrs['period'] ?? 'Semester',
+                'year'       => $infoKrs['academic_year'] ?? '',
+                'sks'        => ($sksLulusSemester > 0) ? $sksLulusSemester : $sksDiambilSemester,
+                'ip'         => $ipSemester,
+                'ipk'        => $ipkSaatIni,
+                'is_running' => ($sksLulusSemester == 0),
+                'items'      => $itemsToDisplay
             ];
-
-            $semester++;
-
-            // 🔒 safety biar gak infinite loop
-            if ($semester > 14) break;
         }
 
-        $ipk = $totalSks ? ($totalBobot / $totalSks) : 0;
-
         $khs = [
-            'ipk' => $ipk,
-            'total_sks' => $totalSks,
-            'semester' => $semesterList
+            'ipk' => $totalSksLulus > 0 ? ($totalBobotKumulatif / $totalSksLulus) : 0,
+            'total_sks_lulus' => $totalSksLulus,
+            'total_sks_diambil' => $totalSksDiambil,
+            'semester'  => $semesterList
         ];
 
-        return view('mahasiswa.hasilstudi.index', compact('mahasiswa', 'khs'));
+        $nama = $mahasiswa['nama'] ?? 'Mahasiswa';
+        $initial = strtoupper(substr($nama, 0, 1));
+
+        return view('mahasiswa.hasilstudi.index', compact('khs', 'nama', 'nim', 'initial'));
     }
+
     public function salinanNilai()
     {
         $mahasiswa = session('mahasiswa');
+        $nim = $mahasiswa['nim'] ?? null;
 
         if (!$mahasiswa) {
             return redirect('/')
@@ -198,7 +245,10 @@ class MahasiswaController extends Controller
             'ipk' => 4.00
         ];
 
-        return view('mahasiswa.salinannilai.index', compact('mahasiswa', 'transkrip'));
+        $nama = $mahasiswa['nama'] ?? 'Mahasiswa';
+        $initial = strtoupper(substr($nama, 0, 1));
+
+        return view('mahasiswa.salinannilai.index', compact('mahasiswa', 'transkrip', 'nama', 'nim', 'initial'));
     }
 
     public function jadwal()

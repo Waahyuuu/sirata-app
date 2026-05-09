@@ -250,3 +250,24 @@ html {
     background: #cbd5e1;
     border-radius: 10px;
 }
+
+/* icon eye start*/
+.eye-open {
+    display: block !important;
+}
+.eye-closed {
+    display: none !important;
+}
+
+.faq-item.active .eye-open {
+    display: none !important;
+}
+
+.faq-item.active .eye-closed {
+    display: block !important;
+}
+
+.faq-item.active .khs-icon {
+    transform: none !important;
+}
+/* icon eye end*/

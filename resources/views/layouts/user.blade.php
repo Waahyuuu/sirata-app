@@ -67,7 +67,7 @@
 
     </div>
 
-    <!-- Footer (SEKARANG IKUT FLEX COLUMN) -->
+    <!-- Footer -->
     <div class="w-full pt-6">
         @include('components.footer')
     </div>

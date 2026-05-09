@@ -80,23 +80,30 @@ class TestApiController extends Controller
     }
 
     // Transkrip
-    public function transkrip($nim, KampusApiService $api)
-    {
-        $data = $api->getTranskrip($nim);
 
-        if (!$data) {
+    public function transkrip(Request $request, $nim, KampusApiService $api)
+    {
+        $final = $request->query('final', false);
+        $data = $api->getTranskrip($nim, $final);
+
+        // Cek apakah ada error dari HTTP request (seperti timeout atau 500)
+        if (isset($data['error'])) {
+            return response()->json([
+                'message' => 'API Error: ' . $data['message'],
+                'raw_res' => $data
+            ], 500);
+        }
+
+        // Jika data null tapi tidak error, berarti NIM tersebut memang belum punya transkrip
+        if (!$data || empty($data['data'])) {
             return response()->json([
                 'code' => 404,
-                'message' => 'Data transkrip tidak ditemukan',
-                'data' => null
+                'message' => 'Data transkrip tidak ditemukan untuk NIM ' . $nim,
+                'note' => 'Mahasiswa angkatan baru mungkin belum memiliki data di modul transkrip.'
             ], 404);
         }
 
-        return response()->json([
-            'code' => 200,
-            'message' => 'Success',
-            'data' => $data
-        ]);
+        return response()->json($data);
     }
 
     // KRS History
@@ -139,13 +146,119 @@ class TestApiController extends Controller
         ]);
     }
 
-    public function getTokenTest(\App\Services\KampusApiService $api)
+    public function getTokenTest()
     {
-        // ambil token dari cache (kalau sudah pernah dipanggil)
-        $token = Cache::get('stimata_token');
+        return response()->json([
+            'token' => Cache::get('stimata_token'),
+            'exists' => Cache::has('stimata_token')
+        ]);
+    }
+
+    public function gpaHistory($nim, KampusApiService $api)
+    {
+        return response()->json(
+            $api->getGpaHistory($nim)
+        );
+    }
+
+    // =====================================================
+    // JADWAL (Tambahan Baru)
+    // =====================================================
+
+    /**
+     * Get Jadwal Pribadi Mahasiswa
+     */
+    public function jadwalMahasiswa(Request $request, $nim, KampusApiService $api)
+    {
+        // 1. Ambil parameter 'day' dari query string jika ada (misal: ?day=Monday)
+        $day = $request->query('day');
+
+        // 2. Panggil service
+        $data = $api->getJadwalMahasiswa($nim, $day);
+
+        // 3. Cek Error dari Request (Timeout/Connection)
+        if (isset($data['error'])) {
+            return response()->json([
+                'code' => 500,
+                'message' => 'Gagal mengambil data dari server pusat',
+                'error' => $data['message']
+            ], 500);
+        }
+
+        // 4. Jika data kosong (Mahasiswa mungkin belum ambil KRS)
+        if (!$data || empty($data)) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Jadwal tidak ditemukan. Pastikan mahasiswa sudah mengisi KRS.',
+                'data' => []
+            ], 404);
+        }
+
+        // 5. Sukses
+        return response()->json([
+            'code' => 200,
+            'message' => 'Success',
+            'nim' => $nim,
+            'filter_day' => $day ?? 'All Days',
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * Get Semua Daftar Kelas (Jadwal Lengkap Kampus)
+     */
+    public function allClass(Request $request, KampusApiService $api)
+    {
+        $params = $request->all();
+        $params['size'] = 100;
+
+        $data = $api->getAllClass($params);
+        return response()->json($data);
+    }
+
+    public function krsAktif(Request $request, $nim, KampusApiService $api)
+    {
+        // Ambil semester dari query string, jika tidak ada default ke 20251
+        // Contoh akses: /mahasiswa/24510003/krs-aktif?sem=20251
+        $semester = $request->query('sem', '20251');
+
+        $data = $api->getKrsDetail($nim, $semester);
+
+        if (!$data || empty($data)) {
+            return response()->json([
+                'code' => 404,
+                'message' => "KRS Semester $semester tidak ditemukan untuk NIM $nim",
+                'data' => null
+            ], 404);
+        }
 
         return response()->json([
-            'token' => $token
+            'code' => 200,
+            'message' => 'Success',
+            'semester' => $semester,
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * Get Detail Kelas Tertentu
+     */
+    public function classDetail($id, KampusApiService $api)
+    {
+        $data = $api->getClassDetail($id);
+
+        if (!$data) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Detail kelas tidak ditemukan',
+                'data' => null
+            ], 404);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Success',
+            'data' => $data
         ]);
     }
 }

@@ -114,6 +114,19 @@ window.addEventListener("load", function () {
 
                 if (c) c.style.height = "0px";
                 if (ic) ic.style.transform = "rotate(0deg)";
+
+                // khusus mata
+                const eyeOpen = i.querySelector(".eye-open");
+                const eyeClosed = i.querySelector(".eye-closed");
+
+                if (eyeOpen) {
+                    eyeOpen.classList.remove("hidden");
+                    eyeOpen.classList.add("block");
+                }
+                if (eyeClosed) {
+                    eyeClosed.classList.add("hidden");
+                    eyeClosed.classList.remove("block");
+                }
             });
 
             if (!isOpen) {
@@ -125,6 +138,18 @@ window.addEventListener("load", function () {
                 content.style.height = fullHeight + "px";
 
                 if (icon) icon.style.transform = "rotate(180deg)";
+
+                // khusus mata
+                const currentEyeOpen = item.querySelector(".eye-open");
+                const currentEyeClosed = item.querySelector(".eye-closed");
+
+                if (currentEyeOpen && currentEyeClosed) {
+                    currentEyeOpen.classList.remove("block");
+                    currentEyeOpen.classList.add("hidden");
+
+                    currentEyeClosed.classList.remove("hidden");
+                    currentEyeClosed.classList.add("block");
+                }
             }
         });
     });
