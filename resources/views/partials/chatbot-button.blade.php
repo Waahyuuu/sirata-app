@@ -42,7 +42,7 @@
                                 ? 'bg-green-500 text-white rounded-br-md'
                                 : 'bg-white text-gray-800 rounded-bl-md'">
 
-                            <span x-text="msg.text"></span>
+                            <div class="whitespace-pre-line" x-text="msg.text"></div>
 
                             <div class="text-[11px] opacity-70 text-right mt-1" x-text="msg.time"></div>
                         </div>
@@ -64,6 +64,34 @@
             </div>
 
         </div>
+
+        <!-- SUGGESTION BOX -->
+        {{-- <div class="p-3 bg-white border-t border-gray-200">
+
+            <p class="text-xs text-gray-500 mb-2">
+                Contoh pencarian mahasiswa:
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+
+                <button @click="message='cari alvin pratama'"
+                    class="px-3 py-2 text-xs bg-gray-100 hover:bg-gray-200 rounded-xl border transition">
+                    cari alvin pratama
+                </button>
+
+                <button @click="message='nim alvin'"
+                    class="px-3 py-2 text-xs bg-gray-100 hover:bg-gray-200 rounded-xl border transition">
+                    nim alvin
+                </button>
+
+                <button @click="message='mahasiswa alvin'"
+                    class="px-3 py-2 text-xs bg-gray-100 hover:bg-gray-200 rounded-xl border transition">
+                    mahasiswa alvin
+                </button>
+
+            </div>
+
+        </div> --}}
 
         <!-- INPUT -->
         <div class="p-3 flex gap-2 bg-white border-t">
@@ -199,8 +227,6 @@ return {
             })
 
             this.last_id = data[data.length - 1].id
-
-            // ✅ simpan ke sessionStorage
             sessionStorage.setItem('chat_'+this.client_id, JSON.stringify(this.messages))
 
             this.scrollBottom()

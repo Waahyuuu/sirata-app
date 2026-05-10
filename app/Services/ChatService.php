@@ -19,7 +19,6 @@ class ChatService
     public function handle($clientId, $messageRaw)
     {
         $now = Carbon::now('Asia/Jakarta');
-
         $last = Message::where('client_id', $clientId)
             ->latest()
             ->first();
@@ -28,20 +27,19 @@ class ChatService
 
             Message::create([
                 'client_id' => $clientId,
-                'message' => $messageRaw,
-                'is_admin' => false,
-                'status' => 'admin'
+                'message'   => $messageRaw,
+                'is_admin'  => false,
+                'status'    => 'admin'
             ]);
 
             return null;
         }
 
-        // simpan pesan user
         Message::create([
             'client_id' => $clientId,
-            'message' => $messageRaw,
-            'is_admin' => false,
-            'status' => 'bot'
+            'message'   => $messageRaw,
+            'is_admin'  => false,
+            'status'    => 'bot'
         ]);
 
         if ($now->hour < 8 || $now->hour >= 15) {
@@ -55,20 +53,78 @@ class ChatService
 
         $message = $this->normalize($messageRaw);
 
-        if ($reply = $this->handleNama($message)) {
-            return $this->saveBotReply($clientId, $reply);
-        }
+        if (cache()->get('chatbot_waiting_name_' . $clientId)) {
 
-        if ($reply = $this->handleRule($message)) {
-            return $this->saveBotReply($clientId, $reply);
-        }
+            if (
+                in_array($message, [
+                    'no',
+                    'tidak',
+                    'batal'
+                ])
+            ) {
 
-        if ($now->hour < 8 || $now->hour >= 15) {
+                cache()->forget(
+                    'chatbot_waiting_name_' . $clientId
+                );
+
+                return $this->saveBotReply(
+                    $clientId,
+                    "✅ Pencarian mahasiswa telah diakhiri.\n\n"
+                        . "Silakan kirim pesan lain jika membutuhkan bantuan."
+                );
+            }
+
+            $reply = $this->handleNama($message);
+
+            if (
+                $reply &&
+                str_contains($reply, 'DATA MAHASISWA')
+            ) {
+
+                cache()->forget(
+                    'chatbot_waiting_name_' . $clientId
+                );
+            }
+
+            if ($reply) {
+
+                return $this->saveBotReply(
+                    $clientId,
+                    $reply
+                );
+            }
 
             return $this->saveBotReply(
                 $clientId,
-                'Jam operasional telah usai. Pesan tetap kami terima dan akan dibalas admin 🙏',
-                'admin'
+                "❌ Data mahasiswa tidak ditemukan.\n\n"
+                    . "Silakan coba ketik nama lengkap mahasiswa.\n"
+                    . "Atau ketik No untuk mengakhiri pencarian."
+            );
+        }
+
+        if (
+            str_contains($message, 'nim') ||
+            str_contains($message, 'nomor induk')
+        ) {
+
+            cache()->put(
+                'chatbot_waiting_name_' . $clientId,
+                true,
+                now()->addMinutes(10)
+            );
+
+            return $this->saveBotReply(
+                $clientId,
+                "🎓 Pencarian NIM Mahasiswa\n\n"
+                    . "Silakan masukkan nama lengkap mahasiswa."
+            );
+        }
+
+        if ($reply = $this->handleRule($message)) {
+
+            return $this->saveBotReply(
+                $clientId,
+                $reply
             );
         }
 
@@ -79,13 +135,17 @@ class ChatService
         );
     }
 
-    private function saveBotReply($clientId, $reply, $status = 'bot')
-    {
+    private function saveBotReply(
+        $clientId,
+        $reply,
+        $status = 'bot'
+    ) {
+
         Message::create([
             'client_id' => $clientId,
-            'message' => $reply,
-            'is_admin' => true,
-            'status' => $status
+            'message'   => $reply,
+            'is_admin'  => true,
+            'status'    => $status
         ]);
 
         return $reply;
@@ -94,19 +154,35 @@ class ChatService
     private function normalize($text)
     {
         $text = strtolower(trim($text));
-        return preg_replace('/[^a-z0-9 ]/', '', $text);
+
+        return preg_replace(
+            '/[^a-z0-9 ]/',
+            '',
+            $text
+        );
     }
 
     private function handleRule($message)
     {
-        $rules = ChatbotRule::select('keyword', 'reply')->get();
+        $rules = ChatbotRule::select(
+            'keyword',
+            'reply'
+        )->get();
 
         foreach ($rules as $rule) {
-            foreach (explode(',', strtolower($rule->keyword)) as $keyword) {
+
+            foreach (
+                explode(',', strtolower($rule->keyword))
+                as $keyword
+            ) {
 
                 $keyword = trim($keyword);
 
-                if ($keyword && str_contains($message, $keyword)) {
+                if (
+                    $keyword &&
+                    str_contains($message, $keyword)
+                ) {
+
                     return $rule->reply;
                 }
             }
@@ -119,53 +195,76 @@ class ChatService
     {
         $result = $this->kampusApi->getAllMahasiswa([
             'search' => $message,
-            'size' => 10,
-            'page' => 1
+            'size'   => 10,
+            'page'   => 1
         ]);
 
         if (
             !$result ||
-            !isset($result['data']['data']) ||
-            count($result['data']['data']) < 1
+            !isset($result['data']) ||
+            count($result['data']) < 1
         ) {
+
             return null;
         }
 
-        $mahasiswa = collect($result['data']['data'])->first(function ($item) use ($message) {
+        $mahasiswas = collect($result['data']);
 
-            return str_contains(
-                strtolower($item['name'] ?? ''),
-                strtolower($message)
+        $exact = $mahasiswas->first(function ($item)
+        use ($message) {
+
+            $namaDb = strtolower(
+                trim($item['name'] ?? '')
             );
+
+            $input = strtolower(
+                trim($message)
+            );
+
+            return $namaDb === $input;
         });
 
-        if (!$mahasiswa) {
-            return null;
+        if ($exact) {
+
+            $email = $exact['stimata_email'] ?? null;
+
+            $nama = $exact['name'] ?? '-';
+            $nim  = $exact['nim'] ?? '-';
+
+            $ortu = '-';
+
+            if ($email) {
+
+                $detail = $this->kampusApi
+                    ->getMahasiswaByEmail($email);
+
+                $ortu = data_get(
+                    $detail,
+                    'prospective.mother_name',
+                    '-'
+                );
+            }
+
+            return "Data mahasiswa dari {$nama}\n\n"
+                . "NIM : {$nim}\n"
+                . "Nama Ibu : {$ortu}\n\n"
+                . "Silakan sesuaikan data ini dengan kebutuhan Anda.";
         }
 
-        $email = $mahasiswa['stimata_email'] ?? null;
+        $list = $mahasiswas->take(5);
 
-        if (!$email) {
+        $reply = "🔍 Nama yang mirip ditemukan:\n\n";
 
-            return "Data Mahasiswa Ditemukan\n\n"
-                . "Nama : {$mahasiswa['name']}\n"
-                . "NIM : {$mahasiswa['nim']}";
+        foreach ($list as $index => $mhs) {
+
+            $no = $index + 1;
+
+            $reply .= "{$no}. {$mhs['name']}\n";
         }
 
-        $detail = $this->kampusApi->getMahasiswaByEmail($email);
+        $reply .= "\nSilakan ketik kembali nama lengkap mahasiswa.";
+        $reply .= "\nAtau ketik No untuk mengakhiri pencarian.";
 
-        $nama = $mahasiswa['name'] ?? '-';
-        $nim  = $mahasiswa['nim'] ?? '-';
-
-        $ortu = data_get(
-            $detail,
-            'prospective.mother_name',
-            '-'
-        );
-
-        return "Data Mahasiswa Ditemukan\n\n"
-            . "Nama : {$nama}\n"
-            . "NIM : {$nim}\n"
-            . "Nama Orang Tua : {$ortu}";
+        return $reply;
     }
 }
