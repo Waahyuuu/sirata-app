@@ -17,7 +17,7 @@
                 {{ $khs['total_sks_lulus'] ?? 0 }}
             </h1>
             <p class="text-sm text-gray-500">
-                Dari {{ $khs['total_sks_diambil'] ?? 0 }} Total SKS
+                Dari Total {{ $khs['total_sks_diambil'] ?? 0 }} SKS
             </p>
         </div>
 

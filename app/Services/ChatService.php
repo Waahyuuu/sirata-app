@@ -46,7 +46,7 @@ class ChatService
 
             return $this->saveBotReply(
                 $clientId,
-                'Jam operasional telah usai. Pesan tetap kami terima dan akan dibalas admin 🙏',
+                'Jam operasional telah usai. Waktu operasional kami mulai pukul 08.00 s/d 15.00 dari senin-jum`at. Terima Kasih🙏',
                 'admin'
             );
         }

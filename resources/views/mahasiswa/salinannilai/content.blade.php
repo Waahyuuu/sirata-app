@@ -13,43 +13,74 @@
             <div>
                 <p><strong>Program Studi :</strong> {{ $transkrip['prodi'] }}</p>
                 <p><strong>Thn. Akademik Masuk :</strong> {{ $transkrip['angkatan'] }}</p>
+                <p><strong>Dosen Wali :</strong> {{ $transkrip['advisor'] }}</p>
             </div>
 
         </div>
 
         <hr class="my-4">
 
-        <!-- TABEL -->
-        <div class="overflow-auto">
-            <table class="w-full border text-sm">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th class="border px-2 py-1">No.</th>
-                        <th class="border px-2 py-1">Kode MTK</th>
-                        <th class="border px-2 py-1">Nama MTK</th>
-                        <th class="border px-2 py-1">SKS</th>
-                        <th class="border px-2 py-1">Nilai</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($transkrip['matkul'] as $i => $mk)
-                    <tr class="text-center">
-                        <td class="border px-2 py-1">{{ $i + 1 }}</td>
-                        <td class="border px-2 py-1">{{ $mk['kode'] }}</td>
-                        <td class="border px-2 py-1 text-left">{{ $mk['nama'] }}</td>
-                        <td class="border px-2 py-1">{{ $mk['sks'] }}</td>
-                        <td class="border px-2 py-1">{{ $mk['nilai'] }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+        <div x-data="{ showInfo: false }" class="relative">
 
-        <!-- BUTTON -->
-        <div class="mt-4 flex justify-end">
-            <button class="bg-white border px-4 py-2 rounded-xl shadow-sm hover:bg-gray-50">
-                📄 Lihat Detail
-            </button>
+            <!-- TABEL -->
+            <div class="overflow-auto max-h-[328px]">
+                <table class="w-full border-collapse text-sm">
+                    <thead class="bg-gray-200 sticky top-0 z-10">
+                        <tr>
+                            <th class="border px-2 py-2">No.</th>
+                            <th class="border px-2 py-2">Kode MTK</th>
+                            <th class="border px-2 py-2">Nama MTK</th>
+                            <th class="border px-2 py-2">SKS</th>
+                            <th class="border px-2 py-2">Nilai</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($transkrip['matkul'] as $i => $mk)
+                        <tr class="text-center hover:bg-gray-50">
+                            <td class="border px-2 py-1">{{ $i + 1 }}</td>
+
+                            <td class="border px-2 py-1">
+                                {{ $mk['kode'] }}
+                            </td>
+
+                            <td class="border px-2 py-1 text-left">
+                                {{ $mk['nama'] }}
+                            </td>
+
+                            <td class="border px-2 py-1">
+                                {{ $mk['sks'] }}
+                            </td>
+
+                            <td class="border px-2 py-1 font-semibold">
+                                {{ $mk['nilai'] }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ICON INFO -->
+            <div class="mt-4 flex justify-end">
+                <button @click="showInfo = !showInfo"
+                    class="w-6 h-6 flex items-center justify-center bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 transition">
+                    !
+                </button>
+            </div>
+
+            <!-- BUBBLE INFO -->
+            <div x-show="showInfo" @click.outside="showInfo = false" x-transition class="absolute bottom-14 right-0
+                bg-white border shadow-lg rounded-2xl p-4
+                w-72 sm:w-80 md:w-96
+                max-w-[90vw]
+                text-sm z-50">
+
+                <p class="text-gray-600 leading-relaxed">
+                    Data ini berdasarkan matakuliah yang diambil. Scroll untuk melihat lebih banyak data.
+                </p>
+            </div>
+
         </div>
     </div>
 
