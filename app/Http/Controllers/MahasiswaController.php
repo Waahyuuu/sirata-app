@@ -22,7 +22,7 @@ class MahasiswaController extends Controller
 
         $nim = $session['nim'];
 
-        return Cache::remember("mahasiswa_biodata_$nim", 600, function () use ($api, $nim) {
+        return Cache::remember("mahasiswa_biodata_$nim", 800, function () use ($api, $nim) {
 
             $mahasiswaByNim = $api->getMahasiswaByNim($nim);
 
@@ -42,7 +42,7 @@ class MahasiswaController extends Controller
 
     private function getSemesterData($api, $nim)
     {
-        return Cache::remember("semester_data_$nim", 300, function () use ($api, $nim) {
+        return Cache::remember("semester_data_$nim", 800, function () use ($api, $nim) {
 
             $semesterList = [];
 

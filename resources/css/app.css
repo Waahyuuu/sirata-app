@@ -23,9 +23,11 @@ html {
     bottom: 0;
     width: 50px;
     height: 50px;
-    background: white;
-
-    mask: radial-gradient(circle at top right, transparent 51px, black 51px);
+    background: transparent;
+    border-bottom-left-radius: 30px;
+    box-shadow: -20px 20px 0 20px white;
+    z-index: -1;
+    pointer-events: none;
 }
 
 .menu-wrapper::after {
@@ -35,9 +37,11 @@ html {
     top: -50px;
     width: 50px;
     height: 50px;
-    background: white;
-
-    mask: radial-gradient(circle at top right, transparent 51px, black 52px);
+    background: transparent;
+    border-bottom-left-radius: 30px;
+    box-shadow: -20px 20px 0 20px white;
+    z-index: -1;
+    pointer-events: none;
 }
 
 /* partials faq css Start*/
@@ -89,12 +93,56 @@ html {
     @apply w-5 h-5;
 }
 
+/* Hover Desktop */
 .menu-item:hover {
     @apply bg-white translate-x-2;
 }
 
+/* Active Desktop */
 .menu-item.active {
     @apply bg-white translate-x-2 shadow-sm font-medium;
+}
+
+/* MOBILE < 1024px */
+@media (max-width: 1023px) {
+    .menu-item {
+        @apply w-14 h-14
+                p-0
+                rounded-full
+                justify-center
+                relative;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        z-index: 10;
+    }
+
+    .menu-item:hover {
+        @apply bg-white translate-x-0 rounded-full;
+    }
+
+    .menu-item.active {
+        @apply bg-white shadow-md
+                rounded-full
+                translate-x-0;
+    }
+
+    .menu-item span {
+        @apply absolute left-16
+                bg-slate-800 text-white
+                text-sm px-3 py-2
+                rounded-lg shadow-lg
+                whitespace-nowrap
+                opacity-0 invisible
+                transition-all duration-200;
+
+        z-index: 9999;
+    }
+
+    .menu-item:hover span {
+        @apply opacity-100 visible;
+    }
 }
 /* components/admin-sidebar css End*/
 

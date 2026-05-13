@@ -132,11 +132,6 @@
                 <div class="flex flex-wrap gap-4">
                     <div
                         class="px-5 py-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3 shadow-sm">
-                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                        <span class="text-sm font-bold text-slate-700">Database Encrypted</span>
-                    </div>
-                    <div
-                        class="px-5 py-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3 shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

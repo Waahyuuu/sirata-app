@@ -4,7 +4,7 @@
     <section>
 
         <div
-            class="bg-gray-200 rounded-[50px] px-16 py-14 min-h-[520px] flex flex-col md:flex-row items-start justify-between">
+            class="bg-gray-200 rounded-[30px] px-16 py-14 min-h-[520px] flex flex-col md:flex-row items-start justify-between">
 
             <div class="max-w-xl">
 
@@ -33,7 +33,7 @@
     {{-- MENU --}}
     <section class="-mt-25 relative z-10">
 
-        <div class="menu-wrapper relative bg-white rounded-tr-[50px] py-3.5 pr-4 pl-0 pb-0 w-fit">
+        <div class="menu-wrapper relative bg-white rounded-tr-[45px] py-3.5 pr-4 pl-0 pb-0 w-fit">
 
             <div class="bg-gray-200 rounded-[30px] px-12 py-6">
 

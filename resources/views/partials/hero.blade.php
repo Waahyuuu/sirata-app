@@ -1,7 +1,7 @@
 <section>
 
     <div
-        class="bg-gray-200 rounded-[50px] px-16 py-14 min-h-[520px] flex flex-col md:flex-row items-start justify-between">
+        class="bg-gray-200 rounded-[30px] px-16 py-14 min-h-[520px] flex flex-col md:flex-row items-start justify-between">
 
         {{-- TEXT --}}
         <div class="max-w-xl">
