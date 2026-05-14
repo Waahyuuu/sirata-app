@@ -16,7 +16,7 @@ html {
     scroll-behavior: smooth;
 }
 
-.menu-wrapper::before {
+/* .menu-wrapper::before {
     content: "";
     position: absolute;
     right: -50px;
@@ -25,7 +25,7 @@ html {
     height: 50px;
     background: transparent;
     border-bottom-left-radius: 30px;
-    box-shadow: -20px 20px 0 20px white;
+    box-shadow: -5px 5px 0 5px white;
     z-index: -1;
     pointer-events: none;
 }
@@ -39,9 +39,56 @@ html {
     height: 50px;
     background: transparent;
     border-bottom-left-radius: 30px;
-    box-shadow: -20px 20px 0 20px white;
+    box-shadow: -5px 5px 0 5px white;
     z-index: -1;
     pointer-events: none;
+} */
+
+.menu-wrapper::before {
+    content: "";
+    position: absolute;
+    right: -50px;
+    bottom: 0;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border-bottom-left-radius: 30px;
+    box-shadow: -5px 5px 0 5px white;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.menu-wrapper::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -50px;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border-bottom-left-radius: 30px;
+    box-shadow: -5px 5px 0 5px white;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* < 884px */
+@media (max-width: 883px) {
+    .menu-wrapper::before {
+        right: -35px;
+        width: 35px;
+        height: 35px;
+        border-bottom-left-radius: 22px;
+        box-shadow: -4px 4px 0 4px white;
+    }
+
+    .menu-wrapper::after {
+        top: -35px;
+        width: 35px;
+        height: 35px;
+        border-bottom-left-radius: 22px;
+        box-shadow: -4px 4px 0 4px white;
+    }
 }
 
 /* partials faq css Start*/

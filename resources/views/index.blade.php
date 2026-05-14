@@ -8,12 +8,25 @@
 
 @include('partials.skeleton-loading')
 
+<div id="content" class="hidden px-4 py-4 md:px-6 md:pt-6">
 
-<div id="content" class="hidden px-6 pt-6">
+    {{-- HERO ADAPTIVE --}}
+    <div class="hidden md:block">
+        @include('partials.hero')
+    </div>
 
-    @include('partials.hero')
+    <div class="block md:hidden">
+        @include('partials.hero-mobile')
+    </div>
 
-    @include('partials.menu')
+    {{-- MENU ADAPTIVE --}}
+    <div class="hidden md:block">
+        @include('partials.menu')
+    </div>
+
+    <div class="block md:hidden">
+        @include('partials.menu-mobile')
+    </div>
 
     @include('partials.form')
 

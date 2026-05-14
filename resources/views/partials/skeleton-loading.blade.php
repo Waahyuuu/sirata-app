@@ -1,38 +1,68 @@
 <div id="skeleton" class="px-6 pt-6 max-w-8xl mx-auto animate-pulse">
 
-    {{-- HERO --}}
-    <section>
+    {{-- HERO UTAMA --}}
+    <section class="hidden md:block">
+        <div class="bg-gray-200 rounded-[30px] 
+        px-6 md:px-8 xl:px-16 
+        py-8 md:py-10 xl:py-14 
+        md:min-h-[380px] lg:min-h-[465px] xl:min-h-[500px] 
+        flex justify-between items-start gap-6 md:gap-8 xl:gap-10 overflow-hidden">
 
-        <div
-            class="bg-gray-200 rounded-[30px] px-16 py-14 min-h-[520px] flex flex-col md:flex-row items-start justify-between">
-
-            <div class="max-w-xl">
-
-                <div class="h-6 w-56 bg-gray-300 rounded mb-6"></div>
-
-                <div class="space-y-3">
-                    <div class="h-16 w-[420px] bg-gray-300 rounded"></div>
-                    <div class="h-16 w-[300px] bg-gray-300 rounded"></div>
+            <div class="max-w-md lg:max-w-lg xl:max-w-xl md:pt-0 lg:pt-5 xl:pt-3">
+                <div class="h-5 md:h-6 xl:h-7 w-48 bg-gray-300 rounded mb-3 md:mb-4"></div>
+                <div class="space-y-3 mt-3 md:mt-4">
+                    <div class="h-10 md:h-12 lg:h-14 xl:h-20 w-[280px] md:w-[350px] xl:w-[500px] bg-gray-300 rounded">
+                    </div>
+                    <div class="h-10 md:h-12 lg:h-14 xl:h-20 w-[180px] md:w-[250px] xl:w-[350px] bg-gray-300 rounded">
+                    </div>
                 </div>
 
-                <div class="mt-6 space-y-2">
-                    <div class="h-5 w-full bg-gray-300 rounded"></div>
-                    <div class="h-5 w-5/6 bg-gray-300 rounded"></div>
+                <div class="mt-4 md:mt-6 space-y-2">
+                    <div class="h-4 md:h-5 xl:h-6 w-full max-w-lg bg-gray-300 rounded"></div>
+                    <div class="h-4 md:h-5 xl:h-6 w-5/6 max-w-lg bg-gray-300 rounded"></div>
                 </div>
 
             </div>
 
-            <div class="mt-10 md:mt-0">
-                <div class="w-[420px] h-[420px] bg-gray-300 rounded-3xl"></div>
+            <div class="flex-shrink-0 pt-1 md:pt-2">
+                <div class="w-[160px] md:w-[220px] lg:w-[320px] xl:w-[420px] aspect-[4/3] bg-gray-300 rounded-2xl">
+                </div>
             </div>
 
         </div>
-
     </section>
 
-    {{-- MENU --}}
-    <section class="-mt-25 relative z-10">
+    {{-- HERO MOBILE --}}
+    <section class="md:hidden">
+        <div class="bg-gray-200 rounded-[30px] 
+        px-8 py-10 
+        min-h-[450px] 
+        flex flex-col justify-between items-start overflow-hidden">
 
+            <div class="w-full text-left">
+                <div class="h-3 w-32 bg-gray-300 rounded mb-4 animate-pulse"></div>
+
+                <div class="space-y-2 mt-3">
+                    <div class="h-8 w-56 bg-gray-300 rounded"></div>
+                    <div class="h-8 w-40 bg-gray-300 rounded"></div>
+                </div>
+
+                <div class="mt-4 space-y-2 max-w-[260px]">
+                    <div class="h-3.5 w-full bg-gray-300 rounded"></div>
+                    <div class="h-3.5 w-full bg-gray-300 rounded"></div>
+                    <div class="h-3.5 w-3/4 bg-gray-300 rounded"></div>
+                </div>
+            </div>
+
+            <div class="w-full flex justify-center mt-10">
+                <div class="w-48 h-36 bg-gray-300 rounded-2xl shadow-sm"></div>
+            </div>
+
+        </div>
+    </section>
+
+    {{-- MENU UTAMA --}}
+    <section class="hidden md:block -mt-25 relative z-10 animate-pulse">
         <div class="menu-wrapper relative bg-white rounded-tr-[45px] py-3.5 pr-4 pl-0 pb-0 w-fit">
 
             <div class="bg-gray-200 rounded-[30px] px-12 py-6">
@@ -40,15 +70,27 @@
                 <div class="flex gap-10">
 
                     <div class="w-28 h-10 bg-gray-300 rounded-full"></div>
-                    <div class="w-28 h-10 bg-gray-300 rounded-full"></div>
-                    <div class="w-28 h-10 bg-gray-300 rounded-full"></div>
+                    <div class="w-32 h-10 bg-gray-300 rounded-full"></div>
+                    <div class="w-24 h-10 bg-gray-300 rounded-full"></div>
 
                 </div>
 
             </div>
-
         </div>
+    </section>
 
+    {{-- MENU MOBILE --}}
+    <section class="md:hidden mt-3 h-[60px] relative">
+        <section class="absolute left-0 right-0 z-10 px-0">
+            <div
+                class="bg-gray-200 border border-transparent rounded-[24px] px-4 py-3 shadow-md flex justify-center gap-4">
+
+                <div class="px-4 py-1.5 w-20 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+                <div class="px-4 py-1.5 w-24 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+                <div class="px-4 py-1.5 w-16 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+
+            </div>
+        </section>
     </section>
 
     {{-- FORM --}}
