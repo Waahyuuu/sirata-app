@@ -12,37 +12,45 @@
         "Noto Color Emoji";
 }
 
+:root {
+    /* Primary Colors */
+    --primary-color: #FF8F00;
+    --primary-hover: #F57C00;
+    --primary-light: #FFE0B2;
+
+    /* Secondary Colors */
+    --secondary-color: #FFE0B2;
+    --secondary-dark: #FFB74D;
+
+    /* Text Colors */
+    --text-dark: #2D2D2D;
+    --text-light: #FFFFFF;
+    --text-muted: #6B7280;
+
+    /* Background */
+    --bg-light: #FFF8F0;
+    --bg-white: #FFFFFF;
+
+    /* Border */
+    --border-color: #FFD180;
+
+    /* Button */
+    --button-bg: var(--primary-color);
+    --button-hover: var(--primary-hover);
+    --button-text: #FFFFFF;
+
+    /* Button Secondary */
+    --button-secondary-bg: var(--secondary-color);
+    --button-secondary-hover: var(--secondary-dark);
+    --button-secondary-text: var(--text-dark);
+
+    /* Shadow */
+    --shadow-primary: 0 4px 14px rgba(255, 143, 0, 0.25);
+}
+
 html {
     scroll-behavior: smooth;
 }
-
-/* .menu-wrapper::before {
-    content: "";
-    position: absolute;
-    right: -50px;
-    bottom: 0;
-    width: 50px;
-    height: 50px;
-    background: transparent;
-    border-bottom-left-radius: 30px;
-    box-shadow: -5px 5px 0 5px white;
-    z-index: -1;
-    pointer-events: none;
-}
-
-.menu-wrapper::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: -50px;
-    width: 50px;
-    height: 50px;
-    background: transparent;
-    border-bottom-left-radius: 30px;
-    box-shadow: -5px 5px 0 5px white;
-    z-index: -1;
-    pointer-events: none;
-} */
 
 .menu-wrapper::before {
     content: "";
@@ -70,25 +78,6 @@ html {
     box-shadow: -5px 5px 0 5px white;
     z-index: -1;
     pointer-events: none;
-}
-
-/* < 884px */
-@media (max-width: 883px) {
-    .menu-wrapper::before {
-        right: -35px;
-        width: 35px;
-        height: 35px;
-        border-bottom-left-radius: 22px;
-        box-shadow: -4px 4px 0 4px white;
-    }
-
-    .menu-wrapper::after {
-        top: -35px;
-        width: 35px;
-        height: 35px;
-        border-bottom-left-radius: 22px;
-        box-shadow: -4px 4px 0 4px white;
-    }
 }
 
 /* partials faq css Start*/

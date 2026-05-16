@@ -11,10 +11,18 @@ class ManfaatController extends Controller
     /**
      * Display a listing of the resource.
      */
+    private $maxIconSizeKB = 2048;
     public function index()
     {
-        $manfaats = Manfaat::latest()->take(6)->get();
-        return view('index', compact('manfaats'));
+        $manfaats = Manfaat::latest()
+            ->take(6)
+            ->get();
+
+        return view('index', [
+            'manfaats' => $manfaats,
+            'maxIconSizeKB' =>
+            $this->maxIconSizeKB
+        ]);
     }
 
     /**
@@ -32,26 +40,31 @@ class ManfaatController extends Controller
     {
         if (Manfaat::count() >= 6) {
             return redirect()->route('admin.konten', ['tab' => 'manfaat'])
-                ->withErrors(['limit' => 'Maksimal hanya 6 manfaat yang dapat ditambahkan']);
+                ->withErrors([
+                    'limit' => 'Maksimal hanya 6 manfaat yang dapat ditambahkan'
+                ]);
         }
 
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'icon_file' => 'nullable|mimes:png,jpg,jpeg,svg|max:2048',
+            'icon_file' => 'nullable|mimes:png,jpg,jpeg,svg|max:' . $this->maxIconSizeKB,
             'icon_svg' => 'nullable|string'
         ]);
 
         $icon = null;
 
         if ($request->hasFile('icon_file')) {
-            $icon = $request->file('icon_file')->store('manfaat', 'public');
+            $icon = $request->file('icon_file')
+                ->store('manfaat', 'public');
         } elseif ($request->icon_svg) {
             $icon = $request->icon_svg;
         }
 
         if (!$icon) {
-            return back()->withErrors(['icon' => 'Icon wajib diisi']);
+            return back()->withErrors([
+                'icon' => 'Icon wajib diisi'
+            ]);
         }
 
         Manfaat::create([
@@ -60,8 +73,13 @@ class ManfaatController extends Controller
             'icon' => $icon
         ]);
 
-        return redirect()->route('admin.konten', ['tab' => 'manfaat'])
-            ->with('success', 'Manfaat berhasil ditambahkan');
+        return redirect()->route(
+            'admin.konten',
+            ['tab' => 'manfaat']
+        )->with(
+            'success',
+            'Manfaat berhasil ditambahkan'
+        );
     }
 
     /**
@@ -83,12 +101,14 @@ class ManfaatController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Manfaat $manfaat)
-    {
+    public function update(
+        Request $request,
+        Manfaat $manfaat
+    ) {
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'icon_file' => 'nullable|mimes:png,jpg,jpeg,svg|max:2048',
+            'icon_file' => 'nullable|mimes:png,jpg,jpeg,svg|max:' . $this->maxIconSizeKB,
             'icon_svg' => 'nullable|string'
         ]);
 
@@ -96,14 +116,24 @@ class ManfaatController extends Controller
 
         if ($request->hasFile('icon_file')) {
 
-            if ($manfaat->icon && !str_contains($manfaat->icon, '<svg')) {
-
-                if (Storage::disk('public')->exists($manfaat->icon)) {
-                    Storage::disk('public')->delete($manfaat->icon);
+            if (
+                $manfaat->icon &&
+                !str_contains(
+                    $manfaat->icon,
+                    '<svg'
+                )
+            ) {
+                if (
+                    Storage::disk('public')
+                    ->exists($manfaat->icon)
+                ) {
+                    Storage::disk('public')
+                        ->delete($manfaat->icon);
                 }
             }
 
-            $icon = $request->file('icon_file')->store('manfaat', 'public');
+            $icon = $request->file('icon_file')
+                ->store('manfaat', 'public');
         } elseif ($request->icon_svg) {
             $icon = $request->icon_svg;
         }
@@ -114,8 +144,13 @@ class ManfaatController extends Controller
             'icon' => $icon
         ]);
 
-        return redirect()->route('admin.konten', ['tab' => 'manfaat'])
-            ->with('success', 'Manfaat berhasil diubah');
+        return redirect()->route(
+            'admin.konten',
+            ['tab' => 'manfaat']
+        )->with(
+            'success',
+            'Manfaat berhasil diubah'
+        );
     }
 
     /**

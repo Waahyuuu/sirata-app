@@ -1,8 +1,8 @@
 <section>
-    <div class="bg-gray-200 rounded-[30px]
-        px-6 md:px-8 xl:px-16
-        py-8 md:py-10 xl:py-14
-        md:min-h-[380px] lg:min-h-[465px] xl:min-h-[500px]
+    <div class="hero-wrapper bg-gray-200 rounded-[30px] 
+        px-6 md:px-8 xl:px-16 
+        py-8 md:py-10 xl:py-14 
+        md:min-h-[380px] lg:min-h-[465px] xl:min-h-[500px] 
         flex justify-between items-start gap-6 md:gap-8 xl:gap-10 overflow-hidden">
 
         <div class="max-w-md max-w-lg xl:max-w-xl md:pt-0 lg:pt-5 xl:pt-3">

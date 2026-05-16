@@ -3,13 +3,21 @@
         <div id="menuCard"
             class="bg-gray-200 border border-transparent rounded-[24px] px-4 py-3 shadow-md transition-all duration-500 ease-in-out">
 
-            <div class="flex justify-center gap-4 flex-wrap">
+            <div class="flex gap-2">
                 <a href="/#sirata"
-                    class="px-4 py-1.5 border border-gray-700/30 rounded-full text-[10px] font-bold tracking-wider hover:bg-gray-800 hover:text-white transition-all">SIRATA</a>
+                    class="flex-1 text-center px-2 py-1.5 border border-gray-700/30 rounded-full text-[10px] font-bold tracking-wider hover:bg-gray-800 hover:text-white transition-all">
+                    SIRATA
+                </a>
+
                 <a href="/#manfaat"
-                    class="px-4 py-1.5 border border-gray-700/30 rounded-full text-[10px] font-bold tracking-wider hover:bg-gray-800 hover:text-white transition-all">MANFAAT</a>
+                    class="flex-1 text-center px-2 py-1.5 border border-gray-700/30 rounded-full text-[10px] font-bold tracking-wider hover:bg-gray-800 hover:text-white transition-all">
+                    MANFAAT
+                </a>
+
                 <a href="/#faq"
-                    class="px-4 py-1.5 border border-gray-700/30 rounded-full text-[10px] font-bold tracking-wider hover:bg-gray-800 hover:text-white transition-all">FAQ</a>
+                    class="flex-1 text-center px-2 py-1.5 border border-gray-700/30 rounded-full text-[10px] font-bold tracking-wider hover:bg-gray-800 hover:text-white transition-all">
+                    FAQ
+                </a>
             </div>
         </div>
     </section>
