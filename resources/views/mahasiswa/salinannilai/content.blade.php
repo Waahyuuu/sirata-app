@@ -23,7 +23,7 @@
         <div x-data="{ showInfo: false }" class="relative">
 
             <!-- TABEL -->
-            <div class="overflow-auto max-h-[328px]">
+            <div class="overflow-auto md:max-h-[400px] lg:max-h-[328px]">
                 <table class="w-full border-collapse text-sm">
                     <thead class="bg-gray-200 sticky top-0 z-10">
                         <tr>

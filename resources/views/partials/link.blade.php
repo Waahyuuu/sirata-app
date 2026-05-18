@@ -15,13 +15,13 @@
                 @forelse($links as $link)
 
                 <a href="{{ $link->url }}" target="_blank"
-                    class="group flex items-center px-4 py-2 bg-white border border-[var(--border-color)] rounded-xl text-sm
+                    class="group flex items-center px-4 py-2 bg-[var(--primary-color)] border border-[var(--border-color)] rounded-xl text-sm
                     transition-all duration-300 ease-out
                     hover:-translate-y-1 hover:shadow-[var(--shadow-primary)]
                     {{ $link->hover_color }}">
 
                     <i
-                        class="{{ $link->icon_class }} text-lg transition-all duration-300 group-hover:rotate-6 group-hover:scale-110"></i>
+                        class="{{ $link->icon_class }} text-[var(--text-light)] text-lg transition-all duration-300 group-hover:rotate-6 group-hover:scale-110"></i>
 
                     <span
                         class="ml-0 group-hover:ml-2 max-w-0 group-hover:max-w-[120px] opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap">
