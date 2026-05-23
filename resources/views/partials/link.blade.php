@@ -1,10 +1,9 @@
 <section class="w-full border-t border-b border-[var(--border-color)] bg-[var(--bg-light)]">
 
-    <div
-        class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-10 md:gap-6 justify-between items-start">
+    <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-10 md:gap-6 justify-between items-start">
 
         <!-- Sosmed -->
-        <div class="w-full md:w-auto">
+        <div class="w-full md:w-auto reveal reveal-left">
 
             <h3 class="font-semibold text-[var(--text-dark)] mb-4 tracking-wide">
                 Link Sosmed
@@ -14,8 +13,7 @@
 
                 @forelse($links as $link)
 
-                <a href="{{ $link->url }}" target="_blank"
-                    class="group flex items-center px-4 py-2 bg-[var(--primary-color)] border border-[var(--border-color)] rounded-xl text-sm
+                <a href="{{ $link->url }}" target="_blank" style="transition-delay: {{ $loop->index * 100 }}ms;" class="reveal reveal-left group flex items-center px-4 py-2 bg-[var(--primary-color)] border border-[var(--border-color)] rounded-xl text-sm
                     transition-all duration-300 ease-out
                     hover:-translate-y-1 hover:shadow-[var(--shadow-primary)]
                     {{ $link->hover_color }}">
@@ -43,7 +41,7 @@
         </div>
 
         <!-- Menu -->
-        <div class="w-full md:w-auto md:text-right">
+        <div class="w-full md:w-auto md:text-right reveal reveal-right">
 
             <h3 class="font-semibold text-[var(--text-dark)] mb-4 tracking-wide">
                 Menu Informasi
@@ -59,7 +57,8 @@
                             FORM SIRATA
                         </span>
 
-                        <span class="w-1.5 h-1.5 rounded-full bg-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition"></span>
+                        <span
+                            class="w-1.5 h-1.5 rounded-full bg-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition"></span>
 
                     </a>
                 </li>
@@ -72,7 +71,8 @@
                             MANFAAT
                         </span>
 
-                        <span class="w-1.5 h-1.5 rounded-full bg-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition"></span>
+                        <span
+                            class="w-1.5 h-1.5 rounded-full bg-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition"></span>
 
                     </a>
                 </li>
@@ -85,7 +85,8 @@
                             FAQ
                         </span>
 
-                        <span class="w-1.5 h-1.5 rounded-full bg-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition"></span>
+                        <span
+                            class="w-1.5 h-1.5 rounded-full bg-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition"></span>
 
                     </a>
                 </li>

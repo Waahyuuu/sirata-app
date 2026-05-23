@@ -2,7 +2,7 @@
 
     <div class="max-w-6xl mx-auto text-center">
 
-        <div class="max-w-5xl mx-auto text-center mb-16 px-4">
+        <div class="max-w-5xl mx-auto text-center mb-16 px-4 reveal reveal-up">
 
             <div class="flex justify-center mb-4">
                 <div
@@ -34,29 +34,32 @@
             @forelse($manfaats as $manfaat)
 
             <!-- CARD -->
-            <div class="bg-white rounded-2xl p-8 w-full flex flex-col items-center text-center
-                    transition-all duration-300 hover:-translate-y-3 hover:shadow-[var(--shadow-primary)]">
+            <div class="reveal reveal-up" style="transition-delay: {{ $loop->index * 120 }}ms;">
 
-                <!-- ICON -->
-                <div class="w-40 h-40 flex items-center justify-center mb-6">
+                <div class="bg-white rounded-2xl p-8 w-full flex flex-col items-center text-center
+        manfaat-card">
 
-                    @if(Str::contains($manfaat->icon,'<svg')) {!! $manfaat->icon !!}
-                        @else
-                        <img src="{{ asset('storage/'.$manfaat->icon) }}" class="w-40 h-40 object-contain">
-                        @endif
+                    <!-- ICON -->
+                    <div class="w-40 h-40 flex items-center justify-center mb-6">
+
+                        @if(Str::contains($manfaat->icon,'<svg')) {!! $manfaat->icon !!}
+                            @else
+                            <img src="{{ asset('storage/'.$manfaat->icon) }}" class="w-40 h-40 object-contain">
+                            @endif
+
+                    </div>
+
+                    <!-- TITLE -->
+                    <p class="font-semibold text-[var(--text-dark)] mb-2 text-lg break-words w-full">
+                        {{ $manfaat->title }}
+                    </p>
+
+                    <!-- DESCRIPTION -->
+                    <p class="text-gray-500 text-md break-words w-full leading-relaxed">
+                        {{ $manfaat->description }}
+                    </p>
 
                 </div>
-
-                <!-- TITLE -->
-                <p class="font-semibold text-[var(--text-dark)] mb-2 text-lg break-words w-full">
-                    {{ $manfaat->title }}
-                </p>
-
-                <!-- DESCRIPTION -->
-                <p class="text-gray-500 text-md break-words w-full leading-relaxed">
-                    {{ $manfaat->description }}
-                </p>
-
             </div>
 
             @empty

@@ -2,7 +2,7 @@
 
     <div class="w-full max-w-xl text-center">
 
-        <div class="max-w-5xl mx-auto text-center mb-16 px-4">
+        <div class="max-w-5xl mx-auto text-center mb-16 px-4 reveal reveal-up">
 
             <div class="flex justify-center mb-4">
                 <div
@@ -28,7 +28,7 @@
         </div>
 
         <!-- Form -->
-        <form method="POST" action="{{ route('mahasiswa.cari') }}" class="space-y-5 text-left">
+        <form method="POST" action="{{ route('mahasiswa.cari') }}" class="space-y-5 text-left reveal reveal-up delay-1">
             @csrf
 
             <!-- Nama Ibu -->

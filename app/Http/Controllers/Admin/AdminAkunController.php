@@ -17,9 +17,17 @@ class AdminAkunController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'password' => 'required|min:8',
+        ], [
+            'password.min' => 'Password minimal 8 karakter'
+        ]);
+
         User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => strtolower(trim($request->email)) . '@stimata.ac.id',
             'password' => Hash::make($request->password),
             'role' => 'admin'
         ]);
@@ -29,14 +37,22 @@ class AdminAkunController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'password' => 'nullable|min:8',
+        ], [
+            'password.min' => 'Password minimal 8 karakter'
+        ]);
+
         $admin = User::findOrFail($id);
 
         $data = [
-            'name'  => $request->name,
-            'email' => $request->email,
+            'name' => $request->name,
+            'email' => strtolower(trim($request->email)) . '@stimata.ac.id',
         ];
 
-        if (!empty($request->password)) {
+        if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 

@@ -52,6 +52,79 @@ html {
     scroll-behavior: smooth;
 }
 
+.page-enter-right,
+.page-enter-left,
+.page-enter-up {
+    opacity: 0;
+    animation-duration: .9s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease;
+}
+
+.page-enter-right {
+    transform: translateX(120px);
+    animation-name: enterRight;
+}
+
+.page-enter-left {
+    transform: translateX(-120px);
+    animation-name: enterLeft;
+}
+
+.page-enter-up {
+    transform: translateY(80px);
+    animation-name: enterUp;
+}
+
+.delay-200 {
+    animation-delay: .2s;
+}
+
+@keyframes enterRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes enterLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes enterUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal {
+    opacity: 0;
+    transition:
+        transform .8s ease,
+        opacity .8s ease;
+}
+
+.reveal-right {
+    transform: translateX(120px);
+}
+
+.reveal-left {
+    transform: translateX(-120px);
+}
+
+.reveal-up {
+    transform: translateY(70px);
+}
+
+.reveal.show {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
 .menu-wrapper::before {
     content: "";
     position: absolute;
@@ -355,3 +428,17 @@ html {
     transform: none !important;
 }
 /* icon eye end*/
+
+/* hover card manfaat start */
+.manfaat-card {
+    transition:
+        transform .35s cubic-bezier(.22,1,.36,1),
+        box-shadow .35s ease;
+    will-change: transform;
+}
+
+.manfaat-card:hover {
+    transform: translateY(-12px);
+    box-shadow: var(--shadow-primary);
+}
+/* hover card manfaat end */

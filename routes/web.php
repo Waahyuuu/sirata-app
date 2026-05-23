@@ -11,6 +11,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\AdminAkunController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TestApiController;
+use App\Http\Controllers\Admin\BackupController;
 use App\Models\Link;
 use App\Models\Faq;
 use App\Models\Manfaat;
@@ -22,6 +23,15 @@ Route::get('/', function () {
     $manfaats = Manfaat::latest()->get();
 
     return view('index', compact('links', 'faqs', 'manfaats'));
+});
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get(
+        '/admin/backup',
+        [BackupController::class, 'backup']
+    )->name('admin.backup');
+
 });
 
 Route::post('/mahasiswa/cari', [MahasiswaController::class, 'cari'])->name('mahasiswa.cari');
@@ -147,24 +157,24 @@ Route::middleware('mahasiswa')->group(function () {
 // Route UjiCoba API Start
 
 Route::prefix('mahasiswa')->group(function () {
-    Route::get('/{nim}/krs-aktif', [TestApiController::class, 'krsAktif']);
-    Route::get('/{nim}/jadwal', [TestApiController::class, 'jadwalMahasiswa']);
-    Route::get('/class', [TestApiController::class, 'allClass']);
-    Route::get('/class/{id}', [TestApiController::class, 'classDetail']); // Detail satu kelas
+    // Route::get('/{nim}/krs-aktif', [TestApiController::class, 'krsAktif']);
+    // Route::get('/{nim}/jadwal', [TestApiController::class, 'jadwalMahasiswa']);
+    // Route::get('/class', [TestApiController::class, 'allClass']);
+    // Route::get('/class/{id}', [TestApiController::class, 'classDetail']); // Detail satu kelas
 
-    Route::get('/{nim}/khs/{semester}', [TestApiController::class, 'khs']);
-    Route::get('/transkrip/{nim}', [TestApiController::class, 'transkrip']);
-    Route::get('/{nim}/krs/{semester}', [TestApiController::class, 'krsDetail']);
-    Route::get('/krs/history', [TestApiController::class, 'krsHistory']);
+    // Route::get('/{nim}/khs/{semester}', [TestApiController::class, 'khs']);
+    // Route::get('/transkrip/{nim}', [TestApiController::class, 'transkrip']);
+    // Route::get('/{nim}/krs/{semester}', [TestApiController::class, 'krsDetail']);
+    // Route::get('/krs/history', [TestApiController::class, 'krsHistory']);
 
     Route::get('/email/{email}', [TestApiController::class, 'showByEmail'])
         ->where('email', '.*');
 
-    Route::get('/{nim}', [TestApiController::class, 'show']);
+    // Route::get('/{nim}', [TestApiController::class, 'show']);
 
-    Route::get('/test/gpa/{nim}', [TestApiController::class, 'gpaHistory']);
+    // Route::get('/test/gpa/{nim}', [TestApiController::class, 'gpaHistory']);
 });
 
-Route::get('/token-test', [TestApiController::class, 'getTokenTest']);
+// Route::get('/token-test', [TestApiController::class, 'getTokenTest']);
 
 // Route UjiCoba API Start

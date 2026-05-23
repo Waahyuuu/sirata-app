@@ -124,21 +124,56 @@
             <div class="relative z-10">
                 <h3 class="font-black text-2xl text-slate-800 mb-2">SIRATA <span
                         class="text-indigo-600 italic">Core</span></h3>
-                <p class="text-slate-500 leading-relaxed mb-6 max-w-md">
-                    Selamat bekerja kembali! Gunakan panel di sebelah kanan untuk manajemen cepat atau navigasi sidebar
-                    untuk kontrol penuh. Sistem saat ini terhubung ke API Kampus dengan status optimal.
+                <p class="text-slate-500 leading-relaxed mb-6 max-w-lg">
+                    Kelola layanan
+                    <span class="font-semibold text-slate-700">
+                        SIRATA
+                    </span>
+                    dengan lebih mudah melalui integrasi
+                    <span class="font-medium text-slate-700">
+                        API Kampus
+                    </span>
+                    untuk sinkronisasi data akademik serta fitur
+                    <span class="font-medium text-slate-700">
+                        backup sistem
+                    </span>
+                    guna menjaga keamanan database dan dokumen penting.
                 </p>
 
                 <div class="flex flex-wrap gap-4">
                     <div
                         class="px-5 py-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3 shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500" fill="none"
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955
+                                11.955 0 0112 2.944a11.955
+                                11.955 0 01-8.618 3.04A12.02
+                                12.02 0 003 9c0 5.591 3.824
+                                10.29 9 11.622 5.176-1.332
+                                9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
-                        <span class="text-sm font-bold text-slate-700">API Server</span>
+
+                        <span class="text-sm font-bold text-slate-700">
+                            API Server
+                        </span>
                     </div>
+
+                    <a href="{{ route('admin.backup') }}" onclick="return confirm('Backup semua data sekarang?')" class="px-5 py-3 rounded-2xl
+                        bg-emerald-500 hover:bg-emerald-600
+                        text-white shadow-sm transition
+                        flex items-center gap-3">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22px" height="22px" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <path fill="currentColor"
+                                d="m11 12.85l-.9.875Q9.825 14 9.413 14t-.713-.3q-.275-.275-.275-.7t.275-.7l2.6-2.6q.3-.3.7-.3t.7.3l2.6 2.6q.275.275.287.688t-.287.712q-.275.275-.687.288t-.713-.263l-.9-.875V18h5.5q1.05 0 1.775-.725T21 15.5t-.725-1.775T18.5 13H17v-2q0-2.075-1.463-3.538T12 6T8.463 7.463T7 11h-.5q-1.45 0-2.475 1.025T3 14.5t1.025 2.475T6.5 18H8q.425 0 .713.288T9 19t-.288.713T8 20H6.5q-2.275 0-3.887-1.575T1 14.575q0-1.95 1.175-3.475T5.25 9.15q.625-2.3 2.5-3.725T12 4q2.925 0 4.963 2.038T19 11q1.725.2 2.863 1.488T23 15.5q0 1.875-1.312 3.188T18.5 20H13q-.825 0-1.412-.587T11 18zm1 .15" />
+                        </svg>
+
+                        <span class="text-sm font-bold">
+                            Backup Data
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>

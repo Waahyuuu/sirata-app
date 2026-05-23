@@ -10,17 +10,15 @@
 
 <div id="content" class="hidden px-4 py-4 md:px-6 md:pt-6">
 
-    {{-- HERO ADAPTIVE --}}
-    <div class="hidden md:block">
+    <div class="hidden md:block page-enter-right">
         @include('partials.hero')
     </div>
 
-    <div class="block md:hidden">
+    <div class="block md:hidden page-enter-up">
         @include('partials.hero-mobile')
     </div>
 
-    {{-- MENU ADAPTIVE --}}
-    <div class="hidden md:block">
+    <div class="hidden md:block page-enter-left delay-200">
         @include('partials.menu')
     </div>
 
@@ -45,35 +43,5 @@
 </div>
 
 @include('components.back-to-top')
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-    const form = document.querySelector('#sirata form');
-    const btn  = document.getElementById('btnCari');
-    const overlay = document.getElementById('loadingOverlay');
-
-    if (form) {
-        form.addEventListener('submit', function (e) {
-
-            e.preventDefault();
-
-            if (overlay) {
-                overlay.classList.remove('hidden');
-            }
-
-            if (btn) {
-                btn.disabled = true;
-                btn.innerText = 'Mencari...';
-            }
-
-            setTimeout(() => {
-                form.submit();
-            }, 300);
-        });
-    }
-
-});
-</script>
 
 @endsection

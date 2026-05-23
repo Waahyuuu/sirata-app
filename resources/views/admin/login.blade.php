@@ -11,7 +11,8 @@
 
 <body class="bg-gray-200 min-h-screen flex items-center justify-center p-6">
 
-    <div class="w-full max-w-6xl md:min-h-[50vh] lg:min-h-[75vh] bg-white rounded-2xl shadow-[var(--shadow-primary)] flex overflow-hidden">
+    <div
+        class="w-full max-w-6xl md:min-h-[50vh] lg:min-h-[75vh] bg-white rounded-2xl shadow-[var(--shadow-primary)] flex overflow-hidden">
 
         <div class="w-2/3 bg-[var(--bg-light)] p-8 flex flex-col justify-between">
 
@@ -81,10 +82,13 @@
                 <form method="POST" action="/admin/login" class="space-y-6">
                     @csrf
 
-                    <!-- Username -->
+                    <!-- Email -->
                     <div class="relative">
-                        <input type="text" name="username" id="username" placeholder=" "
-                            class="peer w-full border-1 border-[var(--secondary-dark)] rounded-lg px-4 py-3 focus:border-[var(--primary-color)] focus:outline-none">
+                        <input type="email" name="username" id="username" placeholder=" " required autocomplete="email"
+                            oninvalid="this.setCustomValidity('Masukkan email yang valid')"
+                            oninput="this.setCustomValidity('')" class="peer w-full border border-[var(--secondary-dark)] rounded-lg px-4 py-3
+                            focus:border-[var(--primary-color)] focus:outline-none
+                            invalid:border-[var(--secondary-dark)]">
 
                         <label for="username" class="absolute left-3 -top-2 text-sm text-gray-500 bg-gray-50 px-1 
                             transition-all
@@ -94,14 +98,17 @@
                             peer-focus:-top-2.5 
                             peer-focus:text-sm 
                             peer-focus:text-[var(--primary-color)]">
-                            Username
+                            Email
                         </label>
                     </div>
 
                     <!-- Password -->
                     <div class="relative">
-                        <input type="password" name="password" id="password" placeholder=" "
-                            class="peer w-full border-1 border-[var(--secondary-dark)] rounded-lg px-4 py-3 focus:border-[var(--primary-color)] focus:outline-none">
+                        <input type="password" name="password" id="password" placeholder=" " required minlength="6"
+                            oninvalid="this.setCustomValidity('Password wajib diisi')"
+                            oninput="this.setCustomValidity('')" class="peer w-full border border-[var(--secondary-dark)] rounded-lg px-4 py-3
+                            focus:border-[var(--primary-color)] focus:outline-none
+                            invalid:border-[var(--secondary-dark)]">
 
                         <label for="password" class="absolute left-3 -top-2 text-sm text-gray-500 bg-gray-50 px-1 
                             transition-all
@@ -117,7 +124,7 @@
 
                     <button type="submit"
                         class="w-full bg-[var(--button-bg)] hover:bg-[var(--button-hover)] text-[var(--button-text)] font-semibold py-3 rounded-lg shadow-md transition duration-300">
-                        Sign In to Continue
+                        Login
                     </button>
 
                 </form>

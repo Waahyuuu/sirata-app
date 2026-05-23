@@ -1,7 +1,7 @@
 <div x-data="chatBox()" x-init="init()">
 
     <!-- BUTTON -->
-    <div x-show="!open" class="fixed right-0 top-1/2 -translate-y-1/2 z-50">
+    <div x-show="!open" class="fixed right-0 top-1/2 -translate-y-1/2 z-30">
         <div @click="open = true" class="bg-green-500 text-white cursor-pointer border-white transition-all duration-300
 
             /* Mobile Style */
