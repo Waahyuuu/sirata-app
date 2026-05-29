@@ -1,3 +1,13 @@
+@extends('layouts.user')
+
+@section('title', 'UKT / Tagihan Mahasiswa')
+
+@section('content')
+
 <div>
-    <!-- No surplus words or unnecessary actions. - Marcus Aurelius -->
+
+    @include('mahasiswa.spp.content')
+
 </div>
+
+@endsection

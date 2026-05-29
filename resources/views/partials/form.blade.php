@@ -16,7 +16,8 @@
                 </div>
             </div>
 
-            <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 tracking-tight text-[var(--text-dark)] leading-tight">
+            <h1
+                class="text-3xl md:text-5xl font-bold mb-6 tracking-tight text-[var(--text-dark)] leading-tight">
                 Akses Informasi<br>Akademik Mahasiswa
             </h1>
 
@@ -72,7 +73,7 @@
 
             <button type="submit" id="btnCari"
                 class="w-full bg-[var(--button-bg)] hover:bg-[var(--button-hover)] text-[var(--button-text)] py-3 rounded-xl font-semibold transition-all duration-300 shadow-md hover:scale-[1.01]">
-                Cari Informasi 
+                Cari Informasi
             </button>
 
         </form>

@@ -27,12 +27,14 @@
     </div>
 
     @include('partials.form')
-
+    
+    @include('partials.tutorial')
+    
     @include('partials.manfaat')
-
+    
     @include('partials.faq')
-
 </div>
+
 
 <div id="content-footer" class="hidden">
 

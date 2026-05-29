@@ -94,7 +94,7 @@
             </a>
 
             <!-- Kehadiran -->
-            <a href="#" class="menu-item">
+            <a href="/mahasiswa/kehadiran" class="menu-item">
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -109,7 +109,7 @@
             </a>
 
             <!-- UKT -->
-            <a href="#" class="menu-item">
+            <a href="/mahasiswa/spp" class="menu-item">
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
                     <path fill="currentColor"

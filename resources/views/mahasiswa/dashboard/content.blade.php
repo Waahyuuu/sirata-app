@@ -147,12 +147,25 @@
                     <div class="bg-white border rounded-xl p-4">
 
                         <p class="font-medium">
-                            {{ $jadwal['nama'] }}
+                            {{ $jadwal['nama'] ?? '-' }}
                         </p>
 
                         <p class="text-sm text-gray-500">
-                            {{ $jadwal['jam'] }}
+                            {{ $jadwal['jam'] ?? '-' }}
                         </p>
+
+                        @if (!empty($jadwal['ruangan']))
+                        <p class="text-xs text-gray-400 mt-1">
+                            Ruangan: {{ $jadwal['ruangan'] }}
+                        </p>
+                        @endif
+
+                        @if (!empty($jadwal['dosen']))
+                        <p class="text-xs text-gray-400">
+                            Dosen: {{ $jadwal['dosen'] }}
+                        </p>
+                        @endif
+
                     </div>
 
                     @empty

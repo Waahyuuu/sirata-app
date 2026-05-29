@@ -1,6 +1,11 @@
-<section id="manfaat" class="py-24 bg-white px-4">
+<section id="manfaat" class="relative py-28 overflow-hidden px-4
+    bg-gradient-to-b from-white to-orange-50/20">
 
-    <div class="max-w-6xl mx-auto text-center">
+    <div class="absolute top-0 left-0 w-96 h-96 bg-orange-300/10 blur-[120px] rounded-full"></div>
+
+    <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-amber-200/10 blur-[140px] rounded-full"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto text-center">
 
         <div class="max-w-5xl mx-auto text-center mb-16 px-4 reveal reveal-up">
 
@@ -17,8 +22,8 @@
             </div>
 
             <h1
-                class="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 tracking-tight text-[var(--text-dark)] leading-tight">
-                Wujudkan Transparansi Akademik dengan SIRATA.
+                class="text-2xl md:text-3xl lg:text-5xl font-bold mb-6 tracking-tight text-[var(--text-dark)] leading-tight">
+                Wujudkan Transparansi <br> Akademik dengan SIRATA.
             </h1>
 
             <p class="max-w-3xl mx-auto text-base md:text-lg text-gray-600 leading-relaxed">
@@ -36,8 +41,7 @@
             <!-- CARD -->
             <div class="reveal reveal-up" style="transition-delay: {{ $loop->index * 120 }}ms;">
 
-                <div class="bg-white rounded-2xl p-8 w-full flex flex-col items-center text-center
-        manfaat-card">
+                <div class="bg-white rounded-2xl p-8 w-full flex flex-col items-center text-center manfaat-card">
 
                     <!-- ICON -->
                     <div class="w-40 h-40 flex items-center justify-center mb-6">

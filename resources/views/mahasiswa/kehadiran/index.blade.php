@@ -1,3 +1,13 @@
+@extends('layouts.user')
+
+@section('title', 'Kehadiran')
+
+@section('content')
+
 <div>
-    <!-- Waste no more time arguing what a good man should be, be one. - Marcus Aurelius -->
+
+    @include('mahasiswa.kehadiran.content')
+
 </div>
+
+@endsection

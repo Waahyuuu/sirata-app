@@ -220,21 +220,80 @@ class MahasiswaController extends Controller
             : 0;
 
         $nama = $session['nama'] ?? 'Mahasiswa';
-
         $prodi = $transkripData['department'] ?? '-';
-
         $initial = strtoupper(substr($nama, 0, 1));
 
-        $jadwalHariIni = [
-            [
-                'nama' => 'Pemrograman Web',
-                'jam' => '08:00 - 10:00'
-            ],
-            [
-                'nama' => 'Basis Data',
-                'jam' => '10:00 - 12:00'
-            ]
+        $hariMap = [
+            'Monday'    => 'Senin',
+            'Tuesday'   => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday'  => 'Kamis',
+            'Friday'    => 'Jumat',
+            'Saturday'  => 'Sabtu',
+            'Sunday'    => 'Minggu',
         ];
+
+        $hariSekarangEn = now()->format('l');
+        $hariIni = $hariMap[$hariSekarangEn] ?? 'Senin';
+
+        // Ambil jadwal dari API
+        $jadwalApi = Cache::remember(
+            "dashboard_jadwal_$nim",
+            now()->addMinutes(10),
+            function () use ($api, $nim) {
+                return $api->getJadwalMahasiswa($nim);
+            }
+        );
+
+        $jadwalHariIni = [];
+
+        if (!empty($jadwalApi) && is_array($jadwalApi)) {
+
+            foreach ($jadwalApi as $item) {
+
+                $day = trim(strtolower($item['day'] ?? ''));
+                $dayMap = [
+                    'monday'    => 'Senin',
+                    'tuesday'   => 'Selasa',
+                    'wednesday' => 'Rabu',
+                    'thursday'  => 'Kamis',
+                    'friday'    => 'Jumat',
+                    'saturday'  => 'Sabtu',
+                    'sunday'    => 'Minggu',
+
+                    // jika API sudah Indonesia
+                    'senin'  => 'Senin',
+                    'selasa' => 'Selasa',
+                    'rabu'   => 'Rabu',
+                    'kamis'  => 'Kamis',
+                    'jumat'  => 'Jumat',
+                    'sabtu'  => 'Sabtu',
+                    'minggu' => 'Minggu',
+                ];
+
+                $dayFormatted = $dayMap[$day] ?? null;
+                if ($dayFormatted !== $hariIni) {
+                    continue;
+                }
+
+                $jadwalHariIni[] = [
+                    'nama' => data_get($item, 'course.course_name')
+                        ?? $item['course_name']
+                        ?? '-',
+
+                    'jam' => ($item['start_time'] ?? '--:--')
+                        . ' - ' .
+                        ($item['end_time'] ?? '--:--'),
+
+                    'ruangan' => data_get($item, 'room.name')
+                        ?? $item['room_name']
+                        ?? '-',
+
+                    'dosen' => data_get($item, 'lecturer.name')
+                        ?? '-',
+                ];
+            }
+        }
 
         return view('mahasiswa.dashboard.index', compact(
             'mahasiswa',
@@ -556,50 +615,351 @@ class MahasiswaController extends Controller
 
     public function jadwal(KampusApiService $api)
     {
-        $mahasiswa = $this->getMahasiswaData($api);
+        $session = session('mahasiswa');
 
-        if (!$mahasiswa) {
+        if (!$session) {
             return redirect('/')
                 ->with('error', 'Silakan isi data terlebih dahulu');
         }
 
-        // DATA STATIK JADWAL
+        $nim = $session['nim'] ?? null;
+
+        if (!$nim) {
+            return redirect('/')
+                ->with('error', 'NIM tidak ditemukan');
+        }
+
+        $mahasiswa = $this->getMahasiswaData($api);
+
+        if (!$mahasiswa) {
+            return redirect('/')
+                ->with('error', 'Data mahasiswa tidak ditemukan');
+        }
+
+        $hariMap = [
+            'Monday'    => 'Senin',
+            'Tuesday'   => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday'  => 'Kamis',
+            'Friday'    => 'Jumat',
+            'Saturday'  => 'Sabtu',
+            'Sunday'    => 'Minggu',
+        ];
+
+        $hariSekarangEn = now()->format('l');
+        $hariIni = $hariMap[$hariSekarangEn] ?? 'Senin';
+        $jadwalApi = Cache::remember(
+            "jadwal_mahasiswa_$nim",
+            now()->addMinutes(10),
+            function () use ($api, $nim) {
+                return $api->getJadwalMahasiswa($nim);
+            }
+        );
+
         $jadwal = [
-            'Senin' => [
-                ['nama' => 'Pemrograman Web', 'jam' => '08:00 - 10:00'],
-                ['nama' => 'Basis Data', 'jam' => '10:00 - 12:00'],
-                ['nama' => 'Jaringan Komputer', 'jam' => '13:00 - 15:00'],
+            'Senin' => [],
+            'Selasa' => [],
+            'Rabu' => [],
+            'Kamis' => [],
+            'Jumat' => [],
+            'Sabtu' => [],
+        ];
+
+        if (!empty($jadwalApi)) {
+            foreach ($jadwalApi as $item) {
+
+                $day = $item['day'] ?? null;
+
+                if (!$day || !isset($jadwal[$day])) {
+                    continue;
+                }
+
+                $jadwal[$day][] = [
+                    'nama' => $item['course']['course_name']
+                        ?? $item['course_name']
+                        ?? '-',
+
+                    'jam' => ($item['start_time'] ?? '--:--')
+                        . ' - ' .
+                        ($item['end_time'] ?? '--:--'),
+
+                    'ruangan' => $item['room']['name']
+                        ?? $item['room_name']
+                        ?? '-',
+
+                    'dosen' => $item['lecturer']['name']
+                        ?? '-',
+                ];
+            }
+        }
+
+        $jadwalHariIni = $jadwal[$hariIni] ?? [];
+
+        $nama = $session['nama'] ?? 'Mahasiswa';
+        $initial = strtoupper(substr($nama, 0, 1));
+
+        $tanggalHariIni = Carbon::now()
+            ->locale('id')
+            ->translatedFormat('l, d F Y');
+
+        return view('mahasiswa.jadwal.index', compact(
+            'mahasiswa',
+            'jadwal',
+            'jadwalHariIni',
+            'hariIni',
+            'tanggalHariIni',
+            'nim',
+            'initial',
+            'nama'
+        ));
+    }
+
+    public function kehadiran(KampusApiService $api)
+    {
+        $session = session('mahasiswa');
+
+        if (!$session) {
+            return redirect('/')
+                ->with('error', 'Silakan isi data terlebih dahulu');
+        }
+
+        $nim = $session['nim'] ?? null;
+
+        if (!$nim) {
+            return redirect('/')
+                ->with('error', 'NIM tidak ditemukan');
+        }
+
+        $mahasiswa = $this->getMahasiswaData($api);
+
+        if (!$mahasiswa) {
+            return redirect('/')
+                ->with('error', 'Data mahasiswa tidak ditemukan');
+        }
+
+        $nama = $session['nama'] ?? 'Mahasiswa';
+        $initial = strtoupper(substr($nama, 0, 1));
+
+        // SUMMARY KEHADIRAN
+        $summary = [
+            'hadir_percent' => 98,
+            'tidak_hadir_percent' => 2,
+            'status' => 'Aman',
+            'message' => 'Tidak ada mata kuliah yang terancam cekal. Mahasiswa memiliki kehadiran yang sangat baik dengan persentase kehadiran 94.5%. Batas minimal kehadiran untuk tidak terkena cecal adalah 75%.'
+        ];
+
+        // KEHADIRAN PER MATA KULIAH
+        $kehadiranMatkul = [
+            [
+                'kode' => 'TIF401',
+                'nama' => 'Pemrograman Web',
+                'hadir' => 12,
+                'tidak_hadir' => 2,
+                'presentase' => '98%'
             ],
-            'Selasa' => [
-                ['nama' => 'Sistem Operasi', 'jam' => '08:00 - 10:00'],
-                ['nama' => 'UI/UX Design', 'jam' => '10:00 - 12:00'],
-                ['nama' => 'Algoritma', 'jam' => '13:00 - 15:00'],
+            [
+                'kode' => 'TIF402',
+                'nama' => 'Basis Data',
+                'hadir' => 14,
+                'tidak_hadir' => 1,
+                'presentase' => '93%'
             ],
-            'Rabu' => [
-                ['nama' => 'Pemrograman Mobile', 'jam' => '08:00 - 10:00'],
-                ['nama' => 'Data Mining', 'jam' => '10:00 - 12:00'],
-                ['nama' => 'Manajemen Proyek', 'jam' => '13:00 - 15:00'],
+            [
+                'kode' => 'TIF403',
+                'nama' => 'Jaringan Komputer',
+                'hadir' => 13,
+                'tidak_hadir' => 1,
+                'presentase' => '92%'
             ],
-            'Kamis' => [
-                ['nama' => 'Keamanan Sistem', 'jam' => '08:00 - 10:00'],
-                ['nama' => 'Cloud Computing', 'jam' => '10:00 - 12:00'],
-                ['nama' => 'Big Data', 'jam' => '13:00 - 15:00'],
+            [
+                'kode' => 'TIF404',
+                'nama' => 'Sistem Operasi',
+                'hadir' => 10,
+                'tidak_hadir' => 3,
+                'presentase' => '77%'
             ],
-            'Jumat' => [
-                ['nama' => 'Etika Profesi', 'jam' => '08:00 - 10:00'],
-                ['nama' => 'Kecerdasan Buatan', 'jam' => '10:00 - 12:00'],
-                ['nama' => 'Statistika', 'jam' => '13:00 - 15:00'],
+            [
+                'kode' => 'TIF405',
+                'nama' => 'Kecerdasan Buatan',
+                'hadir' => 15,
+                'tidak_hadir' => 0,
+                'presentase' => '100%'
             ],
         ];
 
-        // Jadwal hari ini (contoh ambil Rabu)
-        $jadwalHariIni = $jadwal['Rabu'];
-        $nama = $session['nama'] ?? 'Mahasiswa';
-        $nim  = $session['nim'] ?? '-';
-        $initial = strtoupper(substr($nama, 0, 1));
+        // RIWAYAT KEHADIRAN TERBARU
+        $riwayatKehadiran = [
+            [
+                'tanggal' => '17 Des 2024',
+                'mata_kuliah' => 'Kecerdasan Buatan',
+                'waktu' => '13:00 - 15:30',
+                'status' => 'Hadir',
+                'keterangan' => '-'
+            ],
+            [
+                'tanggal' => '16 Des 2024',
+                'mata_kuliah' => 'Pemrograman Web',
+                'waktu' => '08:00 - 10:00',
+                'status' => 'Hadir',
+                'keterangan' => '-'
+            ],
+            [
+                'tanggal' => '15 Des 2024',
+                'mata_kuliah' => 'Basis Data',
+                'waktu' => '10:00 - 12:00',
+                'status' => 'Tidak Hadir',
+                'keterangan' => 'Sakit'
+            ],
+            [
+                'tanggal' => '14 Des 2024',
+                'mata_kuliah' => 'Jaringan Komputer',
+                'waktu' => '13:00 - 15:00',
+                'status' => 'Hadir',
+                'keterangan' => '-'
+            ],
+            [
+                'tanggal' => '13 Des 2024',
+                'mata_kuliah' => 'Sistem Operasi',
+                'waktu' => '08:00 - 10:00',
+                'status' => 'Hadir',
+                'keterangan' => '-'
+            ],
+        ];
 
-        return view('mahasiswa.jadwal.index', compact('mahasiswa', 'jadwal', 'jadwalHariIni', 'nim', 'initial', 'nama'));
+        return view('mahasiswa.kehadiran.index', compact(
+            'mahasiswa',
+            'nama',
+            'nim',
+            'initial',
+            'summary',
+            'kehadiranMatkul',
+            'riwayatKehadiran'
+        ));
     }
+
+public function ukt(KampusApiService $api)
+{
+    $session = session('mahasiswa');
+
+    if (!$session) {
+        return redirect('/')
+            ->with('error', 'Silakan isi data terlebih dahulu');
+    }
+
+    $nim = $session['nim'] ?? null;
+
+    if (!$nim) {
+        return redirect('/')
+            ->with('error', 'NIM tidak ditemukan');
+    }
+
+    $nama = $session['nama'] ?? 'Mahasiswa';
+    $initial = strtoupper(substr($nama, 0, 1));
+
+    // Ambil seluruh semester
+    $allTagihan = Cache::remember(
+        "tagihan_semua_$nim",
+        now()->addMinutes(10),
+        function () use ($api, $nim) {
+
+            $data = [];
+
+            for ($semester = 1; $semester <= 14; $semester++) {
+
+                $tagihanSemester = $api->getTagihan([
+                    'semester' => $semester,
+                    'search' => $nim,
+                    'size' => 100
+                ]);
+
+                // Support response pagination/data
+                $items = $tagihanSemester['data']
+                    ?? $tagihanSemester
+                    ?? [];
+
+                if (empty($items)) {
+                    continue;
+                }
+
+                foreach ($items as $item) {
+
+                    // hanya nim mahasiswa login
+                    if (($item['nim'] ?? null) != $nim) {
+                        continue;
+                    }
+
+                    // ambil detail tagihan
+                    $detail = $api->getTagihanDetail(
+                        $item['id']
+                    );
+
+                    $data[] = $detail;
+                }
+            }
+
+            return $data;
+        }
+    );
+
+    $mappingJenis = [
+        'tuition' => 'SPP',
+        'development' => 'DPP',
+        'savings' => 'Tabungan',
+    ];
+
+    $tagihanFormatted = collect($allTagihan)
+        ->sortBy('semester')
+        ->map(function ($item) use ($mappingJenis) {
+
+            $details = collect($item['details'] ?? [])
+                ->map(function ($detail) use ($mappingJenis) {
+
+                    $amount = $detail['amount'] ?? 0;
+                    $paid = $detail['amount_paid'] ?? 0;
+
+                    return [
+                        'jenis' => $mappingJenis[$detail['type']]
+                            ?? ucfirst($detail['type']),
+
+                        'total' => $amount,
+                        'dibayar' => $paid,
+                        'sisa' => $amount - $paid,
+                        'lunas' => $paid >= $amount,
+                    ];
+                });
+
+            $totalTagihan = $details->sum('total');
+            $totalBayar = $details->sum('dibayar');
+            $sisa = $totalTagihan - $totalBayar;
+
+            return [
+                'id' => $item['id'],
+                'semester' => $item['semester'] ?? '-',
+
+                'tanggal' => !empty($item['created_at'])
+                    ? Carbon::parse($item['created_at'])
+                        ->translatedFormat('d F Y')
+                    : '-',
+
+                'status' => $sisa <= 0
+                    ? 'Lunas'
+                    : 'Belum Lunas',
+
+                'total' => $totalTagihan,
+                'dibayar' => $totalBayar,
+                'sisa' => $sisa,
+                'details' => $details,
+            ];
+        })
+        ->values();
+        
+    return view('mahasiswa.spp.index', compact(
+        'nama',
+        'nim',
+        'initial',
+        'tagihanFormatted'
+    ));
+}
 
     public function adminIndex(Request $request, KampusApiService $api)
     {

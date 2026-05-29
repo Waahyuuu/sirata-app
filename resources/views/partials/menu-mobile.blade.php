@@ -1,5 +1,5 @@
 <div id="mobileMenuContainer" class="mt-3 h-[60px] relative">
-    <section id="mobileMenu" class="absolute left-0 right-0 z-10 transition-all duration-500 ease-in-out px-0">
+    <section id="mobileMenu" class="absolute left-0 right-0 z-30 transition-all duration-500 ease-in-out px-0">
         <div id="menuCard"
             class="bg-gray-200 border border-transparent rounded-[24px] px-4 py-3 shadow-md transition-all duration-500 ease-in-out">
 

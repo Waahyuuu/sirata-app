@@ -152,11 +152,11 @@ class KampusApiService
         return $res['data'] ?? null;
     }
 
-    // public function getKrsDetail($nim, $semester)
-    // {
-    //     $res = $this->request("/academic-plan/$nim/detail/$semester");
-    //     return $res['data'] ?? null;
-    // }
+    public function getKrsDetail($nim, $semester)
+    {
+        $res = $this->request("/academic-plan/$nim/detail/$semester");
+        return $res['data'] ?? null;
+    }
 
     // =====================================================
     // IPK / IPS
@@ -187,13 +187,6 @@ class KampusApiService
         }
 
         $res = $this->request("/class/personal-schedule", $params);
-        return $res['data'] ?? null;
-    }
-
-    public function getKrsDetail($nim, $semester)
-    {
-        // Pastikan path-nya sesuai dokumentasi: /academic-plan/{nim}/detail/{semester}
-        $res = $this->request("/academic-plan/$nim/detail/$semester");
         return $res['data'] ?? null;
     }
 
@@ -231,7 +224,7 @@ class KampusApiService
     }
 
     // =====================================================
-    // KEUANGAN
+    // KEUANGAN & CEKAL
     // =====================================================
 
     public function getTagihan($params = [])
@@ -246,9 +239,16 @@ class KampusApiService
         return $res['data'] ?? null;
     }
 
-    public function getCekal($semester)
+    public function getTagihanMahasiswa($nim)
     {
-        $res = $this->request("/cekal/$semester");
+        $res = $this->request("/tagihan/mahasiswa/$nim");
+
+        return $res['data'] ?? [];
+    }
+
+    public function getCekal($nim)
+    {
+        $res = $this->request("attendance/cekal/$nim");
         return $res['data']['data'] ?? null;
     }
 }

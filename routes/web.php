@@ -31,7 +31,6 @@ Route::middleware(['auth'])->group(function () {
         '/admin/backup',
         [BackupController::class, 'backup']
     )->name('admin.backup');
-
 });
 
 Route::post('/mahasiswa/cari', [MahasiswaController::class, 'cari'])->name('mahasiswa.cari');
@@ -152,6 +151,8 @@ Route::middleware('mahasiswa')->group(function () {
     Route::get('/mahasiswa/hasil-studi', [MahasiswaController::class, 'hasilStudi']);
     Route::get('/mahasiswa/nilai-prestasi-akademik', [MahasiswaController::class, 'salinanNilai']);
     Route::get('/mahasiswa/jadwal', [MahasiswaController::class, 'jadwal']);
+    Route::get('/mahasiswa/kehadiran', [MahasiswaController::class, 'kehadiran']);
+    Route::get('/mahasiswa/spp', [MahasiswaController::class, 'ukt']);
 });
 
 // Route UjiCoba API Start
@@ -175,6 +176,6 @@ Route::prefix('mahasiswa')->group(function () {
     // Route::get('/test/gpa/{nim}', [TestApiController::class, 'gpaHistory']);
 });
 
-// Route::get('/token-test', [TestApiController::class, 'getTokenTest']);
+Route::get('/token-test', [TestApiController::class, 'getTokenTest']);
 
 // Route UjiCoba API Start

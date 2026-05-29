@@ -7,8 +7,8 @@
 
             <!-- Title -->
             <h1
-                class="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 tracking-tight text-[var(--text-dark)] leading-tight">
-                Frequently Asked Questions
+                class="text-2xl md:text-3xl lg:text-5xl font-bold mb-6 tracking-tight text-[var(--text-dark)] leading-tight">
+                Frequently <br> Asked Questions
             </h1>
 
             <!-- Description -->
