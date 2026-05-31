@@ -3,11 +3,11 @@
 
     <div class="absolute top-0 left-0 w-96 h-96 bg-orange-300/10 blur-[120px] rounded-full"></div>
 
-    <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-amber-200/10 blur-[140px] rounded-full"></div>
+    <div class="absolute bottom-0 right-0  bg-amber-200/10 blur-[140px] rounded-full"></div>
 
     <div class="relative z-10 max-w-6xl mx-auto text-center">
 
-        <div class="max-w-5xl mx-auto text-center mb-16 px-4 reveal reveal-up">
+        <div class="max-w-5xl mx-auto text-center mb-16 px-4">
 
             <div class="flex justify-center mb-4">
                 <div
@@ -39,7 +39,7 @@
             @forelse($manfaats as $manfaat)
 
             <!-- CARD -->
-            <div class="reveal reveal-up" style="transition-delay: {{ $loop->index * 120 }}ms;">
+            <div>
 
                 <div class="bg-white rounded-2xl p-8 w-full flex flex-col items-center text-center manfaat-card">
 

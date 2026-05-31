@@ -3,7 +3,7 @@
     <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">
 
         <!-- Left -->
-        <div class="text-center flex flex-col items-center md:sticky md:top-24 reveal reveal-left">
+        <div class="text-center flex flex-col items-center md:sticky md:top-24">
 
             <!-- Title -->
             <h1
@@ -22,11 +22,11 @@
         </div>
 
         <!-- Right -->
-        <div class="space-y-4 reveal reveal-right" id="faqContainer">
+        <div class="space-y-4" id="faqContainer">
 
             @forelse($faqs as $faq)
 
-            <div class="faq-item reveal reveal-right bg-white border border-[var(--border-color)] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[var(--shadow-primary)]"
+            <div class="faq-item bg-white border border-[var(--border-color)] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[var(--shadow-primary)]"
                 style="transition-delay: {{ $loop->index * 120 }}ms;">
 
                 <!-- Question -->

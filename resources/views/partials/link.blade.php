@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-10 md:gap-6 justify-between items-start">
 
         <!-- Sosmed -->
-        <div class="w-full md:w-auto reveal reveal-left">
+        <div class="w-full md:w-auto">
 
             <h3 class="font-semibold text-[var(--text-dark)] mb-4 tracking-wide">
                 Link Sosmed
@@ -13,18 +13,12 @@
 
                 @forelse($links as $link)
 
-                <a href="{{ $link->url }}" target="_blank" style="transition-delay: {{ $loop->index * 100 }}ms;" class="reveal reveal-left group flex items-center px-4 py-2 bg-[var(--primary-color)] border border-[var(--border-color)] rounded-xl text-sm
+                <a href="{{ $link->url }}" target="_blank" class="group flex items-center px-4 py-2 bg-[var(--primary-color)] border border-[var(--border-color)] rounded-xl text-sm
                     transition-all duration-300 ease-out
                     hover:-translate-y-1 hover:shadow-[var(--shadow-primary)]
                     {{ $link->hover_color }}">
 
-                    <i
-                        class="{{ $link->icon_class }} text-[var(--text-light)] text-lg transition-all duration-300 group-hover:rotate-6 group-hover:scale-110"></i>
-
-                    <span
-                        class="ml-0 group-hover:ml-2 max-w-0 group-hover:max-w-[120px] opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap">
-                        {{ $link->name }}
-                    </span>
+                    <i class="{{ $link->icon_class }} text-[var(--text-light)] text-lg transition-all duration-300 group-hover:rotate-6 group-hover:scale-110"></i>
 
                 </a>
 
@@ -41,7 +35,7 @@
         </div>
 
         <!-- Menu -->
-        <div class="w-full md:w-auto md:text-right reveal reveal-right">
+        <div class="w-full md:w-auto md:text-right">
 
             <h3 class="font-semibold text-[var(--text-dark)] mb-4 tracking-wide">
                 Menu Informasi

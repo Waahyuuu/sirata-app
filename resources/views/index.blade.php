@@ -10,16 +10,12 @@
 
 <div id="content" class="hidden px-4 py-4 md:px-6 md:pt-6">
 
-    <div class="hidden md:block page-enter-right">
+    <div class="hidden md:block">
         @include('partials.hero')
     </div>
 
-    <div class="block md:hidden page-enter-up">
+    <div class="block md:hidden">
         @include('partials.hero-mobile')
-    </div>
-
-    <div class="hidden md:block page-enter-left delay-200">
-        @include('partials.menu')
     </div>
 
     <div class="block md:hidden">

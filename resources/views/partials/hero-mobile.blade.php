@@ -1,7 +1,6 @@
 <section>
     <div class="bg-gray-200 rounded-[30px] 
         px-8 py-10 
-        min-h-[450px] 
         flex flex-col justify-between items-start overflow-hidden">
 
         <div class="w-full text-left">
@@ -14,7 +13,7 @@
                 <span class="text-gray-800">STIMATA</span>
             </h1>
 
-            <p class="mt-4 text-sm text-gray-700 leading-relaxed max-w-[260px]">
+            <p class="mt-4 text-sm text-gray-700 leading-relaxed ">
                 Memudahkan Orang Tua/Wali Untuk Memonitoring
                 Perkembangan Anak Secara Online dan Real-Time
             </p>

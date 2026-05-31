@@ -9,7 +9,7 @@
     <div class="max-w-6xl mx-auto px-4 relative z-10">
 
         {{-- Heading --}}
-        <div class="text-center mb-12 md:mb-16 reveal reveal-up">
+        <div class="text-center mb-12 md:mb-16">
 
             <div class="flex justify-center mb-4">
                 <div

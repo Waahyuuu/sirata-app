@@ -180,28 +180,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    const reveals = document.querySelectorAll(
-        ".reveal-right, .reveal-left, .reveal-up"
-    );
-
-    function animateOnScroll() {
-        const triggerBottom = window.innerHeight * 0.85;
-
-        reveals.forEach((el) => {
-            const top = el.getBoundingClientRect().top;
-            const bottom = el.getBoundingClientRect().bottom;
-
-            if (top < triggerBottom && bottom > 0) {
-                el.classList.add("show");
-            } else {
-                // reset biar replay
-                el.classList.remove("show");
-            }
-        });
-    }
-
-    window.addEventListener("scroll", animateOnScroll);
-
-    animateOnScroll();
-});
