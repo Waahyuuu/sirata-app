@@ -50,7 +50,7 @@ window.addEventListener("load", function () {
     if (backToTop) {
         window.addEventListener("scroll", function () {
             if (!formSection) {
-                if (window.scrollY > 300) {
+                if (window.scrollY > 2000) {
                     backToTop.classList.remove(
                         "opacity-0",
                         "pointer-events-none",
@@ -180,3 +180,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const fanSection = document.getElementById("fanSection");
+    const leftCard = document.getElementById("leftCard");
+    const centerCard = document.getElementById("centerCard");
+    const rightCard = document.getElementById("rightCard");
+
+    function handleFanScrollAnimation() {
+        if (!fanSection || !leftCard || !centerCard || !rightCard) return;
+
+        const rect = fanSection.getBoundingClientRect();
+        const totalScrollableHeight =
+            fanSection.offsetHeight - window.innerHeight;
+
+        const progress = Math.min(
+            Math.max(-rect.top / totalScrollableHeight, 0),
+            1,
+        );
+
+        const spread = progress * 130;
+        const rotate = progress * 15;
+        const scale = 1 + progress * 0.08;
+
+        leftCard.style.transform = `translate(calc(-50% - ${spread}px), -50%) rotate(${-rotate}deg)`;
+        rightCard.style.transform = `translate(calc(-50% + ${spread}px), -50%) rotate(${rotate}deg)`;
+        centerCard.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    window.addEventListener("scroll", handleFanScrollAnimation);
+    window.addEventListener("load", handleFanScrollAnimation);
+});

@@ -16,28 +16,28 @@
     /* Primary Colors */
     --primary-color: #ff6900;
     --primary-hover: #f54a00;
-    --primary-light: #FFE0B2;
+    --primary-light: #ffe0b2;
 
     /* Secondary Colors */
-    --secondary-color: #FFE0B2;
-    --secondary-dark: #FFB74D;
+    --secondary-color: #fff5e9;
+    --secondary-dark: #ffb74d;
 
     /* Text Colors */
-    --text-dark: #2D2D2D;
-    --text-light: #FFFFFF;
-    --text-muted: #6B7280;
+    --text-dark: #2d2d2d;
+    --text-light: #ffffff;
+    --text-muted: #6b7280;
 
     /* Background */
-    --bg-light: #FFF8F0;
-    --bg-white: #FFFFFF;
+    --bg-light: #fff8f0;
+    --bg-white: #ffffff;
 
     /* Border */
-    --border-color: #FFD180;
+    --border-color: #ffd180;
 
     /* Button */
     --button-bg: var(--primary-color);
     --button-hover: var(--primary-hover);
-    --button-text: #FFFFFF;
+    --button-text: #ffffff;
 
     /* Button Secondary */
     --button-secondary-bg: var(--secondary-color);
@@ -46,6 +46,24 @@
 
     /* Shadow */
     --shadow-primary: 0 4px 14px rgba(255, 143, 0, 0.25);
+}
+
+/* Global Scrollbar */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 105, 0, 0.15);
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 105, 0, 0.4);
 }
 
 html {
@@ -298,15 +316,6 @@ html {
     overflow: hidden;
 }
 
-::-webkit-scrollbar {
-    width: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-}
-
 /* icon eye start*/
 .eye-open {
     display: block !important;
@@ -331,8 +340,8 @@ html {
 /* hover card manfaat start */
 .manfaat-card {
     transition:
-        transform .35s cubic-bezier(.22,1,.36,1),
-        box-shadow .35s ease;
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.35s ease;
     will-change: transform;
 }
 
