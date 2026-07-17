@@ -25,7 +25,7 @@
 
             <!-- Header -->
             <div class="p-6">
-                <div class="bg-[#BFC3C9] rounded-2xl px-6 py-4 text-xl font-semibold shadow">
+                <div class="bg-[var(--sidebar-primary-color)] rounded-2xl px-6 py-4 text-xl font-semibold shadow">
                     @yield('title')
                 </div>
             </div>

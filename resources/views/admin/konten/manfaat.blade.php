@@ -3,59 +3,57 @@
     {{-- LIST MANFAAT --}}
     @forelse($manfaats as $manfaat)
 
-    <div class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col items-center text-center
+    <div class="bg-white border rounded-2xl p-6 flex flex-col items-center text-center
         shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300
-        group relative overflow-hidden h-full">
+        group relative overflow-hidden h-full"
+        style="border-color: #ffd180;">
 
         {{-- ACTION BUTTON --}}
         <div class="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition">
 
             {{-- EDIT --}}
             <button onclick='openEditManfaatModal(@json($manfaat))'
-                class="bg-yellow-500 hover:bg-yellow-600 p-2 rounded-lg shadow-sm transition">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z" />
-
+                class="p-2 rounded-lg shadow-sm transition duration-200 hover:shadow-md"
+                style="background: linear-gradient(135deg, #ff6900, #f54a00);"
+                onmouseover="this.style.background='linear-gradient(135deg, #f54a00, #e65100)';"
+                onmouseout="this.style.background='linear-gradient(135deg, #ff6900, #f54a00)';">
+                <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"/>
                 </svg>
-
             </button>
 
             {{-- DELETE --}}
             <button onclick="openDeleteManfaatModal({{ $manfaat->id }})"
-                class="bg-red-500 hover:bg-red-600 p-2 rounded-lg shadow-sm transition">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-
+                class="p-2 rounded-lg shadow-sm transition duration-200 hover:shadow-md"
+                style="background: linear-gradient(135deg, #ef4444, #dc2626);"
+                onmouseover="this.style.background='linear-gradient(135deg, #dc2626, #b91c1c)';"
+                onmouseout="this.style.background='linear-gradient(135deg, #ef4444, #dc2626)';">
+                <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
-
             </button>
 
         </div>
 
         {{-- ICON --}}
-        <div class="w-26 h-26 mb-2 rounded-lg overflow-hidden">
+        <div class="w-24 h-24 mb-4 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
+            style="background-color: #fff8f0;">
 
-            @if(Str::contains($manfaat->icon,'<svg')) {!! $manfaat->icon !!}
-                @else
-                <img src="{{ asset('storage/'.$manfaat->icon) }}" class="w-auto h-auto object-cover">
-                @endif
+            @if(Str::contains($manfaat->icon,'<svg'))
+                <div style="color: #ff6900;">{!! $manfaat->icon !!}</div>
+            @else
+                <img src="{{ asset('storage/'.$manfaat->icon) }}" class="w-full h-full object-cover">
+            @endif
 
         </div>
 
         {{-- TITLE --}}
-        <p class="font-semibold text-gray-800 mb-2 w-full break-words">
+        <p class="font-semibold mb-2 w-full break-words" style="color: #2d2d2d;">
             {{ $manfaat->title }}
         </p>
 
         {{-- DESCRIPTION --}}
-        <p class="text-gray-500 text-sm line-clamp-4 w-full break-words text-justify">
+        <p class="text-sm line-clamp-4 w-full break-words text-justify" style="color: #6b7280;">
             {{ $manfaat->description }}
         </p>
 
@@ -63,7 +61,7 @@
 
     @empty
 
-    <p class="text-gray-400 italic col-span-3">
+    <p class="italic col-span-3 text-center py-8" style="color: #9ca3af;">
         Belum ada manfaat
     </p>
 
@@ -74,11 +72,14 @@
 {{-- MODAL CREATE --}}
 <div id="createManfaatModal" class="modal">
 
-    <div
-        class="modal-content bg-white/90 backdrop-blur-xl p-6 rounded-3xl w-full max-w-md shadow-2xl border border-white/30">
+    <div class="modal-content p-6 rounded-2xl w-full max-w-md shadow-2xl"
+        style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid #ffd180;">
 
-        <h2 class="text-xl font-semibold mb-5">
-            ➕ Tambah Manfaat
+        <h2 class="text-xl font-semibold mb-5 flex items-center gap-2" style="color: #2d2d2d;">
+            <svg class="w-5 h-5" style="color: #ff6900;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Tambah Manfaat
         </h2>
 
         <form action="{{ route('admin.konten.manfaat.store') }}" method="POST" enctype="multipart/form-data"
@@ -87,73 +88,58 @@
             @csrf
 
             <div>
-                <label class="text-sm font-semibold text-gray-700 block mb-2">
+                <label class="text-sm font-semibold block mb-2" style="color: #2d2d2d;">
                     Judul
                 </label>
 
                 <input type="text" name="title" placeholder="Judul Manfaat"
-                    class="w-full border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 p-3 rounded-xl transition"
+                    class="w-full border p-3 rounded-xl transition outline-none"
+                    style="border-color: #ffd180;"
+                    onfocus="this.style.borderColor='#ff6900'; this.style.boxShadow='0 0 0 3px rgba(255, 105, 0, 0.1)';"
+                    onblur="this.style.borderColor='#ffd180'; this.style.boxShadow='none';"
                     required />
             </div>
 
             <div>
-                <label class="text-sm font-semibold text-gray-700 block mb-2">
+                <label class="text-sm font-semibold block mb-2" style="color: #2d2d2d;">
                     Deskripsi
                 </label>
 
                 <textarea name="description" placeholder="Deskripsi"
-                    class="w-full border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 p-3 rounded-xl transition"
+                    class="w-full border p-3 rounded-xl transition outline-none"
+                    style="border-color: #ffd180;"
+                    onfocus="this.style.borderColor='#ff6900'; this.style.boxShadow='0 0 0 3px rgba(255, 105, 0, 0.1)';"
+                    onblur="this.style.borderColor='#ffd180'; this.style.boxShadow='none';"
                     required></textarea>
             </div>
 
 
             <div>
-                <label class="text-sm font-semibold text-gray-700 block mb-2">
+                <label class="text-sm font-semibold block mb-2" style="color: #2d2d2d;">
                     Icon
                 </label>
 
                 <label for="iconInput"
-                    class="relative flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer overflow-hidden group hover:border-blue-400 transition duration-300 bg-gradient-to-br from-gray-50 to-white">
+                    class="relative flex flex-col items-center justify-center w-full h-44 border-2 border-dashed rounded-2xl cursor-pointer overflow-hidden group transition duration-300"
+                    style="border-color: #ffd180; background: linear-gradient(135deg, #fff8f0, #ffffff);"
+                    onmouseover="this.style.borderColor='#ff6900';"
+                    onmouseout="this.style.borderColor='#ffd180';">
 
                     <div id="uploadPlaceholder"
                         class="flex flex-col items-center justify-center text-center transition-all duration-300">
 
-                        <div
-                            class="w-16 h-16 rounded-2xl bg-blue-100 text-blue-500 flex items-center justify-center mb-3 group-hover:scale-110 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
-                                <path d="M0 0h24v24H0z" fill="none" />
-                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2">
-                                    <path stroke-dasharray="32" d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9">
-                                        <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s"
-                                            values="32;0" />
-                                    </path>
-                                    <path stroke-dasharray="2 4" stroke-dashoffset="6"
-                                        d="M12 21c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9" opacity="0">
-                                        <set fill="freeze" attributeName="opacity" begin="0.45s" to="1" />
-                                        <animateTransform fill="freeze" attributeName="transform" begin="0.45s"
-                                            dur="0.6s" type="rotate" values="-180 12 12;0 12 12" />
-                                        <animate attributeName="stroke-dashoffset" begin="0.85s" dur="0.6s"
-                                            repeatCount="indefinite" to="0" />
-                                    </path>
-                                    <path stroke-dasharray="10" stroke-dashoffset="10" d="M12 16v-7.5">
-                                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.85s"
-                                            dur="0.2s" to="0" />
-                                    </path>
-                                    <path stroke-dasharray="8" stroke-dashoffset="8"
-                                        d="M12 8.5l3.5 3.5M12 8.5l-3.5 3.5">
-                                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="1.05s"
-                                            dur="0.2s" to="0" />
-                                    </path>
-                                </g>
+                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                            style="background-color: #fff5e9; color: #ff6900;">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                             </svg>
                         </div>
 
-                        <p class="font-medium text-gray-700">
+                        <p class="font-medium" style="color: #2d2d2d;">
                             Pilih Icon
                         </p>
 
-                        <span class="text-sm text-gray-400">
+                        <span class="text-sm" style="color: #9ca3af;">
                             JPG, PNG, WEBP, SVG
                         </span>
                     </div>
@@ -164,19 +150,16 @@
 
                         <img id="iconPreview" class="max-h-full object-contain transition-all duration-500 ease-out" />
 
-                        <div
-                            class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                            <span
-                                class="bg-white text-gray-700 px-4 py-2 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2">
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
-                                    <path d="M0 0h24v24H0z" fill="none" />
-                                    <path fill="currentColor"
-                                        d="M8 2H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2m12 12h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2M16.707 2.293a1 1 0 0 1 .083 1.32l-.083.094L15.414 5H19a3 3 0 0 1 2.995 2.824L22 8v3a1 1 0 0 1-1.993.117L20 11V8a1 1 0 0 0-.883-.993L19 7h-3.585l1.292 1.293a1 1 0 0 1-1.32 1.497l-.094-.083l-3-3a.98.98 0 0 1-.28-.872l.036-.146l.04-.104q.087-.191.245-.334l2.959-2.958a1 1 0 0 1 1.414 0M3 12a1 1 0 0 1 .993.883L4 13v3a1 1 0 0 0 .883.993L5 17h3.585l-1.292-1.293a1 1 0 0 1-.083-1.32l.083-.094a1 1 0 0 1 1.32-.083l.094.083l3 3a.98.98 0 0 1 .28.872l-.036.146l-.04.104a1 1 0 0 1-.245.334l-2.959 2.958a1 1 0 0 1-1.497-1.32l.083-.094L8.584 19H5a3 3 0 0 1-2.995-2.824L2 16v-3a1 1 0 0 1 1-1" />
+                        <div class="absolute inset-0 flex items-center justify-center transition"
+                            style="background: rgba(0,0,0,0.3); opacity: 0;"
+                            onmouseover="this.style.opacity='1';"
+                            onmouseout="this.style.opacity='0';">
+                            <span class="bg-white px-4 py-2 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2"
+                                style="color: #2d2d2d;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                                 </svg>
-
                                 Replace
-
                             </span>
                         </div>
                     </div>
@@ -184,7 +167,7 @@
                     <input id="iconInput" type="file" name="icon_file" accept="image/*"
                         onchange="previewIcon(this); clearIconError()" class="hidden" />
                 </label>
-                <p id="iconError" class="hidden text-sm text-red-500 mt-2">
+                <p id="iconError" class="hidden text-sm mt-2" style="color: #ef4444;">
                     Icon wajib diisi
                 </p>
             </div>
@@ -192,12 +175,17 @@
             <div class="flex justify-end gap-2">
 
                 <button type="button" onclick="closeCreateManfaatModal()"
-                    class="px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-100 transition">
+                    class="px-4 py-2 rounded-lg transition hover:shadow-sm"
+                    style="color: #6b7280; background-color: #f3f4f6;"
+                    onmouseover="this.style.backgroundColor='#e5e7eb';"
+                    onmouseout="this.style.backgroundColor='#f3f4f6';">
                     Batal
                 </button>
 
-                <button
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition">
+                <button class="text-white px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition"
+                    style="background: linear-gradient(135deg, #ff6900, #f54a00);"
+                    onmouseover="this.style.background='linear-gradient(135deg, #f54a00, #e65100)';"
+                    onmouseout="this.style.background='linear-gradient(135deg, #ff6900, #f54a00)';">
                     Simpan
                 </button>
 
@@ -211,11 +199,14 @@
 {{-- MODAL EDIT --}}
 <div id="editManfaatModal" class="modal">
 
-    <div
-        class="modal-content bg-white/90 backdrop-blur-xl p-6 rounded-3xl w-full max-w-md shadow-2xl border border-white/30">
+    <div class="modal-content p-6 rounded-2xl w-full max-w-md shadow-2xl"
+        style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid #ffd180;">
 
-        <h2 class="text-xl font-semibold mb-5">
-            ✏️ Edit Manfaat
+        <h2 class="text-xl font-semibold mb-5 flex items-center gap-2" style="color: #2d2d2d;">
+            <svg class="w-5 h-5" style="color: #ff6900;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit Manfaat
         </h2>
 
         <form id="editManfaatForm" method="POST" enctype="multipart/form-data" class="space-y-4"
@@ -226,35 +217,44 @@
 
             {{-- TITLE --}}
             <div>
-                <label class="text-sm font-semibold text-gray-700 block mb-2">
+                <label class="text-sm font-semibold block mb-2" style="color: #2d2d2d;">
                     Judul
                 </label>
 
                 <input type="text" name="title" id="editManfaatTitle"
-                    class="w-full border border-gray-300 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-100 p-3 rounded-xl transition"
+                    class="w-full border p-3 rounded-xl transition outline-none"
+                    style="border-color: #ffd180;"
+                    onfocus="this.style.borderColor='#ff6900'; this.style.boxShadow='0 0 0 3px rgba(255, 105, 0, 0.1)';"
+                    onblur="this.style.borderColor='#ffd180'; this.style.boxShadow='none';"
                     required />
             </div>
 
             {{-- DESCRIPTION --}}
             <div>
-                <label class="text-sm font-semibold text-gray-700 block mb-2">
+                <label class="text-sm font-semibold block mb-2" style="color: #2d2d2d;">
                     Deskripsi
                 </label>
 
                 <textarea name="description" id="editManfaatDesc" rows="3" oninput="autoResize(this)"
-                    class="w-full border border-gray-300 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-100 p-3 rounded-xl transition resize-none overflow-hidden"
+                    class="w-full border p-3 rounded-xl transition outline-none resize-none overflow-hidden"
+                    style="border-color: #ffd180;"
+                    onfocus="this.style.borderColor='#ff6900'; this.style.boxShadow='0 0 0 3px rgba(255, 105, 0, 0.1)';"
+                    onblur="this.style.borderColor='#ffd180'; this.style.boxShadow='none';"
                     required>
                 </textarea>
             </div>
 
             {{-- ICON --}}
             <div>
-                <label class="text-sm font-semibold text-gray-700 block mb-2">
+                <label class="text-sm font-semibold block mb-2" style="color: #2d2d2d;">
                     Icon
                 </label>
 
                 <label for="editIconInput" id="editUploadBox"
-                    class="relative flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer overflow-hidden group hover:border-yellow-400 transition duration-300 bg-gradient-to-br from-gray-50 to-white">
+                    class="relative flex flex-col items-center justify-center w-full h-44 border-2 border-dashed rounded-2xl cursor-pointer overflow-hidden group transition duration-300"
+                    style="border-color: #ffd180; background: linear-gradient(135deg, #fff8f0, #ffffff);"
+                    onmouseover="this.style.borderColor='#ff6900';"
+                    onmouseout="this.style.borderColor='#ffd180';">
 
                     {{-- Preview --}}
                     <div id="editPreviewWrapper" class="absolute inset-0 flex items-center justify-center bg-white">
@@ -262,20 +262,17 @@
                         <img id="editIconPreview"
                             class="max-h-full object-contain transition-all duration-500 ease-out" />
 
-                        <div
-                            class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <div class="absolute inset-0 flex items-center justify-center transition"
+                            style="background: rgba(0,0,0,0.3); opacity: 0;"
+                            onmouseover="this.style.opacity='1';"
+                            onmouseout="this.style.opacity='0';">
 
-                            <span
-                                class="bg-white text-gray-700 px-4 py-2 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2">
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
-                                    <path d="M0 0h24v24H0z" fill="none" />
-                                    <path fill="currentColor"
-                                        d="M8 2H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2m12 12h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2M16.707 2.293a1 1 0 0 1 .083 1.32l-.083.094L15.414 5H19a3 3 0 0 1 2.995 2.824L22 8v3a1 1 0 0 1-1.993.117L20 11V8a1 1 0 0 0-.883-.993L19 7h-3.585l1.292 1.293a1 1 0 0 1-1.32 1.497l-.094-.083l-3-3a.98.98 0 0 1-.28-.872l.036-.146l.04-.104q.087-.191.245-.334l2.959-2.958a1 1 0 0 1 1.414 0M3 12a1 1 0 0 1 .993.883L4 13v3a1 1 0 0 0 .883.993L5 17h3.585l-1.292-1.293a1 1 0 0 1-.083-1.32l.083-.094a1 1 0 0 1 1.32-.083l.094.083l3 3a.98.98 0 0 1 .28.872l-.036.146l-.04.104a1 1 0 0 1-.245.334l-2.959 2.958a1 1 0 0 1-1.497-1.32l.083-.094L8.584 19H5a3 3 0 0 1-2.995-2.824L2 16v-3a1 1 0 0 1 1-1" />
+                            <span class="bg-white px-4 py-2 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2"
+                                style="color: #2d2d2d;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                                 </svg>
-
                                 Replace
-
                             </span>
 
                         </div>
@@ -285,21 +282,24 @@
                         onchange="previewEditIcon(this)" class="hidden" />
                 </label>
 
-                <p id="editIconError" class="hidden text-sm text-red-500 mt-2">
+                <p id="editIconError" class="hidden text-sm mt-2" style="color: #ef4444;">
                 </p>
             </div>
 
             <div class="flex justify-end gap-2">
 
                 <button type="button" onclick="closeModal('editManfaatModal')"
-                    class="px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-100 transition">
-
+                    class="px-4 py-2 rounded-lg transition hover:shadow-sm"
+                    style="color: #6b7280; background-color: #f3f4f6;"
+                    onmouseover="this.style.backgroundColor='#e5e7eb';"
+                    onmouseout="this.style.backgroundColor='#f3f4f6';">
                     Batal
                 </button>
 
-                <button
-                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition">
-
+                <button class="text-white px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition"
+                    style="background: linear-gradient(135deg, #ff6900, #f54a00);"
+                    onmouseover="this.style.background='linear-gradient(135deg, #f54a00, #e65100)';"
+                    onmouseout="this.style.background='linear-gradient(135deg, #ff6900, #f54a00)';">
                     Update
                 </button>
 
@@ -313,18 +313,21 @@
 {{-- MODAL DELETE --}}
 <div id="deleteManfaatModal" class="modal">
 
-    <div
-        class="modal-content bg-white/90 backdrop-blur-xl p-6 rounded-3xl w-full max-w-sm shadow-2xl border border-white/30 text-center">
+    <div class="modal-content p-6 rounded-2xl w-full max-w-sm shadow-2xl text-center"
+        style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid #ffd180;">
 
-        <div class="text-4xl mb-3">
-            ⚠️
+        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
         </div>
 
-        <h2 class="text-lg font-semibold text-gray-800 mb-2">
+        <h2 class="text-lg font-semibold mb-2" style="color: #2d2d2d;">
             Hapus Manfaat?
         </h2>
 
-        <p class="text-gray-500 text-sm mb-5">
+        <p class="text-sm mb-5" style="color: #6b7280;">
             Data tidak bisa dikembalikan
         </p>
 
@@ -336,12 +339,17 @@
             <div class="flex justify-center gap-3">
 
                 <button type="button" onclick="closeModal('deleteManfaatModal')"
-                    class="px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-100 transition">
+                    class="px-4 py-2 rounded-lg transition hover:shadow-sm"
+                    style="color: #6b7280; background-color: #f3f4f6;"
+                    onmouseover="this.style.backgroundColor='#e5e7eb';"
+                    onmouseout="this.style.backgroundColor='#f3f4f6';">
                     Batal
                 </button>
 
-                <button
-                    class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition">
+                <button class="text-white px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition"
+                    style="background: linear-gradient(135deg, #ef4444, #dc2626);"
+                    onmouseover="this.style.background='linear-gradient(135deg, #dc2626, #b91c1c)';"
+                    onmouseout="this.style.background='linear-gradient(135deg, #ef4444, #dc2626)';">
                     Hapus
                 </button>
 
@@ -353,13 +361,11 @@
 </div>
 
 <script>
-    const MAX_ICON_SIZE =
-        {{ ($maxIconSizeKB ?? 2048) * 1024 }};
+    const MAX_ICON_SIZE = {{ ($maxIconSizeKB ?? 2048) * 1024 }};
 
     function autoResize(textarea) {
         textarea.style.height = 'auto';
-        textarea.style.height =
-        textarea.scrollHeight + 'px';
+        textarea.style.height = textarea.scrollHeight + 'px';
     }
 
     function openModal(id){
@@ -367,116 +373,52 @@
     }
 
     function closeCreateManfaatModal() {
-
-        const modal = document.getElementById(
-            'createManfaatModal'
-        );
-
+        const modal = document.getElementById('createManfaatModal');
         const form = modal.querySelector('form');
 
-        // reset form input text & textarea
         form.reset();
 
-        // reset file input
-        const iconInput =
-            document.getElementById('iconInput');
-
+        const iconInput = document.getElementById('iconInput');
         iconInput.value = '';
 
-        // reset preview image
-        const preview =
-            document.getElementById('iconPreview');
-
-        const wrapper =
-            document.getElementById(
-                'previewWrapper'
-            );
-
-        const placeholder =
-            document.getElementById(
-                'uploadPlaceholder'
-            );
+        const preview = document.getElementById('iconPreview');
+        const wrapper = document.getElementById('previewWrapper');
+        const placeholder = document.getElementById('uploadPlaceholder');
 
         preview.src = '';
 
         wrapper.classList.add('hidden');
-        wrapper.classList.remove(
-            'flex',
-            'opacity-100',
-            'scale-100'
-        );
+        wrapper.classList.remove('flex', 'opacity-100', 'scale-100');
 
-        placeholder.classList.remove(
-            'hidden',
-            'opacity-0',
-            'scale-95'
-        );
+        placeholder.classList.remove('hidden', 'opacity-0', 'scale-95');
 
-        // reset error
-        document.getElementById(
-            'iconError'
-        ).classList.add('hidden');
+        document.getElementById('iconError').classList.add('hidden');
 
-        // tutup modal
         modal.classList.remove('show');
     }
 
     function openEditManfaatModal(data) {
+        document.getElementById('editManfaatTitle').value = data.title;
+        document.getElementById('editManfaatDesc').value = data.description;
+        document.getElementById('editManfaatForm').action = `/admin/konten/manfaat/${data.id}`;
 
-        document.getElementById(
-            'editManfaatTitle'
-        ).value = data.title;
-
-        document.getElementById(
-            'editManfaatDesc'
-        ).value = data.description;
-
-        document.getElementById(
-            'editManfaatForm'
-        ).action =
-        `/admin/konten/manfaat/${data.id}`;
-
-        const desc =
-            document.getElementById(
-            'editManfaatDesc'
-        );
-
-        desc.value =
-            data.description;
+        const desc = document.getElementById('editManfaatDesc');
+        desc.value = data.description;
         autoResize(desc);
 
-        const preview =
-            document.getElementById(
-                'editIconPreview'
-            );
-
-        preview.src =
-            data.icon.includes('<svg')
-            ? 'data:image/svg+xml;base64,' +
-                btoa(data.icon)
+        const preview = document.getElementById('editIconPreview');
+        preview.src = data.icon.includes('<svg')
+            ? 'data:image/svg+xml;base64,' + btoa(data.icon)
             : `/storage/${data.icon}`;
 
-        // reset error
-        document.getElementById(
-            'editIconError'
-        ).classList.add('hidden');
+        document.getElementById('editIconError').classList.add('hidden');
+        document.getElementById('editUploadBox').classList.remove('border-red-500');
 
-        document.getElementById(
-            'editUploadBox'
-        ).classList.remove(
-            'border-red-500'
-        );
-
-        openModal(
-            'editManfaatModal'
-        );
+        openModal('editManfaatModal');
     }
 
     function openDeleteManfaatModal(id){
-
-        document.getElementById('deleteManfaatForm').action =
-        `/admin/konten/manfaat/${id}`;
-
+        document.getElementById('deleteManfaatForm').action = `/admin/konten/manfaat/${id}`;
         openModal('deleteManfaatModal');
     }
 
@@ -488,182 +430,76 @@
         const wrapper = document.getElementById('previewWrapper');
         const placeholder = document.getElementById('uploadPlaceholder');
         const iconError = document.getElementById('iconError');
-        const uploadBox = document.querySelector(
-            'label[for="iconInput"]'
-        );
+        const uploadBox = document.querySelector('label[for="iconInput"]');
 
-        // reset error
         iconError.classList.add('hidden');
         uploadBox.classList.remove('border-red-500');
 
         const reader = new FileReader();
 
         reader.onload = function(e) {
-
             if (wrapper.classList.contains('hidden')) {
-
                 preview.src = e.target.result;
 
-                placeholder.classList.add(
-                    'opacity-0',
-                    'scale-95',
-                    'transition-all',
-                    'duration-300'
-                );
+                placeholder.classList.add('opacity-0', 'scale-95', 'transition-all', 'duration-300');
 
                 setTimeout(() => {
-
-                    placeholder.classList.add(
-                        'hidden'
-                    );
-
-                    wrapper.classList.remove(
-                        'hidden'
-                    );
-
-                    wrapper.classList.add(
-                        'flex'
-                    );
+                    placeholder.classList.add('hidden');
+                    wrapper.classList.remove('hidden');
+                    wrapper.classList.add('flex');
 
                     requestAnimationFrame(() => {
-                        wrapper.classList.remove(
-                            'opacity-0',
-                            'scale-90'
-                        );
-
-                        wrapper.classList.add(
-                            'opacity-100',
-                            'scale-100'
-                        );
+                        wrapper.classList.remove('opacity-0', 'scale-90');
+                        wrapper.classList.add('opacity-100', 'scale-100');
                     });
-
                 }, 250);
-
             } else {
-
-                preview.classList.add(
-                    'scale-75',
-                    'opacity-0',
-                    'rotate-6'
-                );
+                preview.classList.add('scale-75', 'opacity-0', 'rotate-6');
 
                 setTimeout(() => {
-
                     preview.src = e.target.result;
-
-                    preview.classList.remove(
-                        'scale-75',
-                        'rotate-6'
-                    );
-
-                    preview.classList.add(
-                        'scale-125',
-                        'opacity-0',
-                        '-rotate-6'
-                    );
-
+                    preview.classList.remove('scale-75', 'rotate-6');
+                    preview.classList.add('scale-125', 'opacity-0', '-rotate-6');
                     void preview.offsetWidth;
-
-                    preview.classList.remove(
-                        'scale-125',
-                        '-rotate-6',
-                        'opacity-0'
-                    );
-
-                    preview.classList.add(
-                        'scale-100',
-                        'opacity-100'
-                    );
-
+                    preview.classList.remove('scale-125', '-rotate-6', 'opacity-0');
+                    preview.classList.add('scale-100', 'opacity-100');
                 }, 220);
             }
-
         };
 
         reader.readAsDataURL(file);
     }
-    
+
     function previewEditIcon(input) {
-
-        const file =
-            input.files[0];
-
+        const file = input.files[0];
         if (!file) return;
 
-        const preview =
-            document.getElementById(
-                'editIconPreview'
-            );
+        const preview = document.getElementById('editIconPreview');
+        const reader = new FileReader();
 
-        const reader =
-            new FileReader();
-
-        reader.onload =
-        function(e) {
-
-            preview.classList.add(
-                'scale-75',
-                'opacity-0'
-            );
-
+        reader.onload = function(e) {
+            preview.classList.add('scale-75', 'opacity-0');
             setTimeout(() => {
-
-                preview.src =
-                    e.target.result;
-
-                preview.classList.remove(
-                    'scale-75',
-                    'opacity-0'
-                );
-
+                preview.src = e.target.result;
+                preview.classList.remove('scale-75', 'opacity-0');
             }, 180);
         };
 
-        reader.readAsDataURL(
-            file
-        );
+        reader.readAsDataURL(file);
     }
 
     function validateManfaatForm() {
+        const iconInput = document.getElementById('iconInput');
+        const iconError = document.getElementById('iconError');
+        const uploadBox = document.querySelector('label[for="iconInput"]');
 
-        const iconInput =
-            document.getElementById(
-                'iconInput'
-            );
+        iconError.classList.add('hidden');
+        uploadBox.classList.remove('border-red-500', 'animate-pulse');
 
-        const iconError =
-            document.getElementById(
-                'iconError'
-            );
-
-        const uploadBox =
-            document.querySelector(
-                'label[for="iconInput"]'
-            );
-
-        iconError.classList.add(
-            'hidden'
-        );
-
-        uploadBox.classList.remove(
-            'border-red-500',
-            'animate-pulse'
-        );
-
-        // WAJIB PILIH ICON
         if (!iconInput.files.length) {
-
-            iconError.textContent =
-                'Icon wajib diisi';
-
-            iconError.classList.remove(
-                'hidden'
-            );
-
-            uploadBox.classList.add(
-                'border-red-500',
-                'animate-pulse'
-            );
+            iconError.textContent = 'Icon wajib diisi';
+            iconError.classList.remove('hidden');
+            uploadBox.classList.add('border-red-500', 'animate-pulse');
 
             uploadBox.animate([
                 { transform: 'translateX(0)' },
@@ -672,48 +508,18 @@
                 { transform: 'translateX(-6px)' },
                 { transform: 'translateX(6px)' },
                 { transform: 'translateX(0)' }
-            ], {
-                duration: 450,
-                easing: 'ease-in-out'
-            });
+            ], { duration: 450, easing: 'ease-in-out' });
 
-            setTimeout(() => {
-                uploadBox.classList.remove(
-                    'animate-pulse'
-                );
-            }, 500);
-
+            setTimeout(() => { uploadBox.classList.remove('animate-pulse'); }, 500);
             return false;
         }
 
-        // VALIDASI SIZE
-        const file =
-            iconInput.files[0];
-
-        if (
-            file &&
-            file.size >
-            MAX_ICON_SIZE
-        ) {
-
-            const maxMB =
-                (
-                    MAX_ICON_SIZE /
-                    1024 /
-                    1024
-                ).toFixed(0);
-
-            iconError.textContent =
-                `Ukuran icon maksimal ${maxMB} MB`;
-
-            iconError.classList.remove(
-                'hidden'
-            );
-
-            uploadBox.classList.add(
-                'border-red-500',
-                'animate-pulse'
-            );
+        const file = iconInput.files[0];
+        if (file && file.size > MAX_ICON_SIZE) {
+            const maxMB = (MAX_ICON_SIZE / 1024 / 1024).toFixed(0);
+            iconError.textContent = `Ukuran icon maksimal ${maxMB} MB`;
+            iconError.classList.remove('hidden');
+            uploadBox.classList.add('border-red-500', 'animate-pulse');
 
             uploadBox.animate([
                 { transform: 'translateX(0)' },
@@ -722,17 +528,9 @@
                 { transform: 'translateX(-6px)' },
                 { transform: 'translateX(6px)' },
                 { transform: 'translateX(0)' }
-            ], {
-                duration: 450,
-                easing: 'ease-in-out'
-            });
+            ], { duration: 450, easing: 'ease-in-out' });
 
-            setTimeout(() => {
-                uploadBox.classList.remove(
-                    'animate-pulse'
-                );
-            }, 500);
-
+            setTimeout(() => { uploadBox.classList.remove('animate-pulse'); }, 500);
             return false;
         }
 
@@ -740,70 +538,23 @@
     }
 
     function validateEditManfaatForm() {
+        const iconInput = document.getElementById('editIconInput');
+        const iconError = document.getElementById('editIconError');
+        const uploadBox = document.getElementById('editUploadBox');
 
-        const iconInput =
-            document.getElementById(
-                'editIconInput'
-            );
+        iconError.classList.add('hidden');
+        uploadBox.classList.remove('border-red-500', 'animate-pulse');
 
-        const iconError =
-            document.getElementById(
-                'editIconError'
-            );
-
-        const uploadBox =
-            document.getElementById(
-                'editUploadBox'
-            );
-
-        iconError.classList.add(
-            'hidden'
-        );
-
-        uploadBox.classList.remove(
-            'border-red-500',
-            'animate-pulse'
-        );
-
-        // ====================
-        // TIDAK WAJIB UPLOAD
-        // ====================
-        if (
-            !iconInput.files.length
-        ) {
+        if (!iconInput.files.length) {
             return true;
         }
 
-        // ====================
-        // VALIDASI SIZE
-        // ====================
-        const file =
-            iconInput.files[0];
-
-        if (
-            file &&
-            file.size >
-            MAX_ICON_SIZE
-        ) {
-
-            const maxMB =
-                (
-                    MAX_ICON_SIZE /
-                    1024 /
-                    1024
-                ).toFixed(0);
-
-            iconError.textContent =
-                `Ukuran icon maksimal ${maxMB} MB`;
-
-            iconError.classList.remove(
-                'hidden'
-            );
-
-            uploadBox.classList.add(
-                'border-red-500',
-                'animate-pulse'
-            );
+        const file = iconInput.files[0];
+        if (file && file.size > MAX_ICON_SIZE) {
+            const maxMB = (MAX_ICON_SIZE / 1024 / 1024).toFixed(0);
+            iconError.textContent = `Ukuran icon maksimal ${maxMB} MB`;
+            iconError.classList.remove('hidden');
+            uploadBox.classList.add('border-red-500', 'animate-pulse');
 
             uploadBox.animate([
                 { transform: 'translateX(0)' },
@@ -812,17 +563,9 @@
                 { transform: 'translateX(-6px)' },
                 { transform: 'translateX(6px)' },
                 { transform: 'translateX(0)' }
-            ], {
-                duration: 450,
-                easing: 'ease-in-out'
-            });
+            ], { duration: 450, easing: 'ease-in-out' });
 
-            setTimeout(() => {
-                uploadBox.classList.remove(
-                    'animate-pulse'
-                );
-            }, 500);
-
+            setTimeout(() => { uploadBox.classList.remove('animate-pulse'); }, 500);
             return false;
         }
 

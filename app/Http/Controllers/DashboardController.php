@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Manfaat;
 use App\Models\Link;
 use App\Models\Faq;
-use App\Models\ChatbotRule;
 use App\Services\KampusApiService;
 
 class DashboardController extends Controller
@@ -43,7 +42,6 @@ class DashboardController extends Controller
                 ['label' => 'Manfaat', 'value' => Manfaat::count()],
                 ['label' => 'Link', 'value' => Link::count()],
                 ['label' => 'FAQ', 'value' => Faq::count()],
-                ['label' => 'Chatbot', 'value' => ChatbotRule::count()],
             ]
         ]);
     }

@@ -12,12 +12,14 @@ return new class extends Migration
             $table->id();
             $table->string('client_id')->index();
             $table->text('message');
-            $table->boolean('is_admin')->default(false);
+            $table->enum('sender_type', ['user', 'bot', 'admin'])->default('user');
             $table->boolean('is_read')->default(false);
-            $table->string('status')->default('bot');
+            $table->enum('status', ['sent', 'delivered', 'read'])->default('sent');
             $table->timestamps();
+            
             $table->index(['client_id', 'created_at']);
             $table->index(['client_id', 'is_read']);
+            $table->index(['sender_type']);
         });
     }
 

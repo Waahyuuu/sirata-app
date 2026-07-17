@@ -1,6 +1,6 @@
 @extends('layouts.user')
 
-@section('title', 'Nilai Prestasi Akademik')
+@section('title', 'Salinan Nilai')
 
 @section('content')
 

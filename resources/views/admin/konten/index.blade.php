@@ -8,10 +8,10 @@
 $activeTab = request('tab', 'manfaat');
 @endphp
 
-<div class="bg-white rounded-2xl shadow-sm border p-6 flex flex-col h-full">
+<div class="bg-white rounded-2xl shadow-sm border p-6 flex flex-col h-full" style="border-color: #ffd180;">
 
     {{-- TAB BUTTON --}}
-    <div class="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
+    <div class="flex gap-2 mb-6 p-1 rounded-xl w-fit" style="background-color: #fff8f0;">
         <button class="tab-btn {{ $activeTab == 'manfaat' ? 'active-tab' : '' }}" data-tab="manfaat">Manfaat</button>
 
         <button class="tab-btn {{ $activeTab == 'faq' ? 'active-tab' : '' }}" data-tab="faq">FAQ</button>
@@ -21,7 +21,7 @@ $activeTab = request('tab', 'manfaat');
 
     {{-- HEADER --}}
     <div id="tabHeader" class="flex justify-between items-center mb-4">
-        <h2 id="tabTitle" class="font-semibold text-lg">
+        <h2 id="tabTitle" class="font-semibold text-lg" style="color: #2d2d2d;">
             @if($activeTab == 'faq')
             Daftar FAQ
             @elseif($activeTab == 'link')
@@ -33,16 +33,19 @@ $activeTab = request('tab', 'manfaat');
 
         <div class="flex gap-2">
             <button id="deleteAllBtn"
-                class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                    <path fill-rule="evenodd"
-                        d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
-                        clip-rule="evenodd" />
+                class="text-white px-3 py-2 rounded transition hover:shadow-md hidden"
+                style="background: linear-gradient(135deg, #ef4444, #dc2626);"
+                onmouseover="this.style.background='linear-gradient(135deg, #dc2626, #b91c1c)';"
+                onmouseout="this.style.background='linear-gradient(135deg, #ef4444, #dc2626)';">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
-
             </button>
 
-            <button id="tabButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition hidden">
+            <button id="tabButton" class="text-white px-4 py-2 rounded transition hover:shadow-md hidden"
+                style="background: linear-gradient(135deg, #ff6900, #f54a00);"
+                onmouseover="this.style.background='linear-gradient(135deg, #f54a00, #e65100)';"
+                onmouseout="this.style.background='linear-gradient(135deg, #ff6900, #f54a00)';">
                 + Tambah
             </button>
         </div>
@@ -69,28 +72,46 @@ $activeTab = request('tab', 'manfaat');
     class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-all duration-300 flex items-center justify-center z-50">
 
     <div id="modalBox"
-        class="bg-white rounded-2xl p-6 w-full max-w-md transform scale-95 translate-y-4 opacity-0 transition-all duration-300">
+        class="bg-white rounded-2xl p-6 w-full max-w-md transform scale-95 translate-y-4 opacity-0 transition-all duration-300"
+        style="border: 1px solid #ffd180;">
 
-        <h3 class="text-lg font-bold mb-2 text-red-600">Konfirmasi Hapus Semua</h3>
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold" style="color: #dc2626;">Konfirmasi Hapus Semua</h3>
+        </div>
 
-        <p class="text-sm text-gray-500 mb-4">
+        <p class="text-sm mb-4" style="color: #6b7280;">
             Anda akan menghapus semua data. Ketik kode berikut untuk melanjutkan:
         </p>
 
-        <div id="randomCode" class="bg-gray-100 text-center font-mono text-lg py-2 rounded mb-3"></div>
+        <div id="randomCode" class="text-center font-mono text-lg py-2 rounded mb-3" style="background-color: #fff8f0; border: 1px solid #ffd180; color: #2d2d2d;"></div>
 
         <input type="text" id="confirmInput"
-            class="w-full border rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring focus:ring-red-200"
+            class="w-full border rounded-lg px-3 py-2 mb-2 focus:outline-none transition"
+            style="border-color: #ffd180;"
+            onfocus="this.style.borderColor='#ff6900'; this.style.boxShadow='0 0 0 3px rgba(255, 105, 0, 0.1)';"
+            onblur="this.style.borderColor='#ffd180'; this.style.boxShadow='none';"
             placeholder="Masukkan kode">
 
-        <div id="errorMessage" class="text-red-500 text-sm mb-3 hidden"></div>
+        <div id="errorMessage" class="text-sm mb-3 hidden" style="color: #ef4444;"></div>
 
         <div class="flex justify-end gap-2">
-            <button onclick="closeDeleteModal()" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">
+            <button onclick="closeDeleteModal()" class="px-4 py-2 rounded transition hover:shadow-sm"
+                style="background-color: #f3f4f6; color: #6b7280;"
+                onmouseover="this.style.backgroundColor='#e5e7eb';"
+                onmouseout="this.style.backgroundColor='#f3f4f6';">
                 Batal
             </button>
 
-            <button onclick="submitDelete()" class="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600">
+            <button onclick="submitDelete()" class="px-4 py-2 rounded text-white transition hover:shadow-md"
+                style="background: linear-gradient(135deg, #ef4444, #dc2626);"
+                onmouseover="this.style.background='linear-gradient(135deg, #dc2626, #b91c1c)';"
+                onmouseout="this.style.background='linear-gradient(135deg, #ef4444, #dc2626)';">
                 Hapus Semua
             </button>
         </div>

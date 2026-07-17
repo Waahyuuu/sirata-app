@@ -18,6 +18,8 @@
     --primary-hover: #f54a00;
     --primary-light: #ffe0b2;
 
+    --sidebar-primary-color: #fff5e9;
+
     /* Secondary Colors */
     --secondary-color: #fff5e9;
     --secondary-dark: #ffb74d;
@@ -121,12 +123,14 @@ html {
 
 /* Hover Desktop */
 .menu-item:hover {
-    @apply bg-white translate-x-2;
+    @apply translate-x-2 text-white;
+    background-color: var(--primary-hover);
 }
 
 /* Active Desktop */
 .menu-item.active {
-    @apply bg-white translate-x-2 shadow-sm font-medium;
+    @apply translate-x-2 shadow-sm font-medium text-white;
+    background-color: var(--primary-hover);
 }
 
 /* MOBILE < 1024px */
@@ -251,7 +255,7 @@ html {
 
 .active-tab {
     background: white;
-    color: #2563eb;
+    color: #ff6900;
 }
 
 .content-card {
@@ -259,12 +263,18 @@ html {
     padding: 20px;
 }
 
-.custom-scroll::-webkit-scrollbar {
-    width: 6px;
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
 }
-
-.custom-scroll::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #ffd180;
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #ffb74d;
 }
 
 .modal-show {

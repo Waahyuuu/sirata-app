@@ -8,82 +8,94 @@
 $activeTab = request('tab', 'message');
 @endphp
 
-<div class="bg-white rounded-2xl shadow-sm border p-6 flex flex-col h-full">
+<div class="bg-white rounded-2xl shadow-sm border p-6 flex flex-col h-full" style="border-color: #ffd180;">
 
     {{-- TAB --}}
-    <div class="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
+    <div class="flex gap-2 mb-6 p-1 rounded-xl w-fit" style="background-color: #fff8f0;">
         <button class="tab-btn {{ $activeTab == 'message' ? 'active-tab' : '' }}" data-tab="message">
             Pesan
         </button>
 
-        <button class="tab-btn {{ $activeTab == 'setting' ? 'active-tab' : '' }}" data-tab="setting">
-            ChatBot
+        <button class="tab-btn {{ $activeTab == 'notification' ? 'active-tab' : '' }}" data-tab="notification">
+            Notifikasi
         </button>
     </div>
 
     {{-- HEADER --}}
     <div class="flex justify-between items-center mb-4">
-        <h2 id="tabTitle" class="font-semibold text-lg">Daftar Pesan</h2>
+        <h2 id="tabTitle" class="font-semibold text-lg" style="color: #2d2d2d;">
+            Daftar Pesan
+        </h2>
 
-        <div class="flex gap-2">
-            <button id="deleteAllBtn"
-                class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                    <path fill-rule="evenodd"
-                        d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
-                        clip-rule="evenodd" />
-                </svg>
-            </button>
-
-            <button id="tabButton" class="bg-blue-500 text-white px-4 py-2 rounded hidden">
-                + Tambah
-            </button>
-        </div>
+        <button id="deleteAllBtn" class="text-white px-3 py-2 rounded transition hover:shadow-md hidden"
+            style="background: linear-gradient(135deg, #ef4444, #dc2626);"
+            onmouseover="this.style.background='linear-gradient(135deg, #dc2626, #b91c1c)';"
+            onmouseout="this.style.background='linear-gradient(135deg, #ef4444, #dc2626)';">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+        </button>
     </div>
 
     {{-- CONTENT --}}
-    <div class="overflow-y-auto2">
-
+    <div class="overflow-y-auto custom-scrollbar">
         <div id="message" class="tab-content {{ $activeTab != 'message' ? 'hidden' : '' }}">
             @include('admin.pesan.message')
         </div>
 
-        <div id="setting" class="tab-content {{ $activeTab != 'setting' ? 'hidden' : '' }}">
-            @include('admin.pesan.setting-chatbot')
+        <div id="notification" class="tab-content {{ $activeTab != 'notification' ? 'hidden' : '' }}">
+            @include('admin.pesan.notifikasi-pesan')
         </div>
-
     </div>
+
 </div>
 
 {{-- ================= MODAL ================= --}}
+
 <div id="deleteConfirmModal"
     class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none flex items-center justify-center z-50 transition-all duration-300">
 
     <div id="modalBox"
-        class="bg-white rounded-2xl p-6 w-full max-w-md transform scale-95 translate-y-4 opacity-0 transition-all duration-300">
+        class="bg-white rounded-2xl p-6 w-full max-w-md transform scale-95 translate-y-4 opacity-0 transition-all duration-300"
+        style="border: 1px solid #ffd180;">
 
-        <h3 class="text-lg font-bold mb-2 text-red-600">
-            Konfirmasi Hapus Semua
-        </h3>
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold" style="color: #dc2626;">Konfirmasi Hapus Semua</h3>
+        </div>
 
-        <p class="text-sm text-gray-500 mb-4">
+        <p class="text-sm mb-4" style="color: #6b7280;">
             Anda akan menghapus semua data. Ketik kode berikut untuk melanjutkan:
         </p>
 
-        <div id="randomCode" class="bg-gray-100 text-center font-mono text-lg py-2 rounded mb-3"></div>
+        <div id="randomCode" class="text-center font-mono text-lg py-2 rounded mb-3" style="background-color: #fff8f0; border: 1px solid #ffd180; color: #2d2d2d;"></div>
 
         <input type="text" id="confirmInput"
-            class="w-full border rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring focus:ring-red-200"
+            class="w-full border rounded-lg px-3 py-2 mb-2 focus:outline-none transition"
+            style="border-color: #ffd180;"
+            onfocus="this.style.borderColor='#ff6900'; this.style.boxShadow='0 0 0 3px rgba(255, 105, 0, 0.1)';"
+            onblur="this.style.borderColor='#ffd180'; this.style.boxShadow='none';"
             placeholder="Masukkan kode">
 
-        <div id="errorMessage" class="text-red-500 text-sm mb-3 hidden"></div>
+        <div id="errorMessage" class="text-sm mb-3 hidden" style="color: #ef4444;"></div>
 
         <div class="flex justify-end gap-2">
-            <button onclick="closeDeleteModal()" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">
+            <button onclick="closeDeleteModal()" class="px-4 py-2 rounded transition hover:shadow-sm"
+                style="background-color: #f3f4f6; color: #6b7280;"
+                onmouseover="this.style.backgroundColor='#e5e7eb';"
+                onmouseout="this.style.backgroundColor='#f3f4f6';">
                 Batal
             </button>
 
-            <button onclick="submitDelete()" class="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600">
+            <button onclick="submitDelete()" class="px-4 py-2 rounded text-white transition hover:shadow-md"
+                style="background: linear-gradient(135deg, #ef4444, #dc2626);"
+                onmouseover="this.style.background='linear-gradient(135deg, #dc2626, #b91c1c)';"
+                onmouseout="this.style.background='linear-gradient(135deg, #ef4444, #dc2626)';">
                 Hapus Semua
             </button>
         </div>
@@ -93,18 +105,15 @@ $activeTab = request('tab', 'message');
 
 <script>
     const deleteRoutes = {
-        message: "{{ route('admin.pesan.deleteAllMessage') }}",
-        setting: "{{ route('admin.pesan.deleteAll') }}"
+        message: "{{ route('admin.pesan.deleteAllMessage') }}"
     };
-</script>
 
-<script>
     document.addEventListener("DOMContentLoaded", function () {
 
         const tabs = document.querySelectorAll('.tab-btn');
         const contents = document.querySelectorAll('.tab-content');
 
-        function activateTab(tabName) {
+        function activateTab(tabName){
 
             tabs.forEach(t => t.classList.remove('active-tab'));
             contents.forEach(c => c.classList.add('hidden'));
@@ -113,56 +122,55 @@ $activeTab = request('tab', 'message');
             document.getElementById(tabName).classList.remove('hidden');
 
             const title = document.getElementById('tabTitle');
-            const button = document.getElementById('tabButton');
             const deleteBtn = document.getElementById('deleteAllBtn');
 
-            if (tabName === 'message') {
-                title.innerText = 'Daftar Pesan';
+            if(tabName === 'message'){
 
-                button.classList.add('hidden');
+                title.innerText = 'Daftar Pesan';
 
                 deleteBtn.classList.remove('hidden');
                 deleteBtn.onclick = () => openDeleteModal('message');
+
             }
 
-            if (tabName === 'setting') {
-                title.innerText = 'Daftar Chatbot';
+            if(tabName === 'notification'){
 
-                button.classList.remove('hidden');
-                deleteBtn.classList.remove('hidden');
+                title.innerText = 'Daftar Mahasiswa Cekal';
 
-                button.innerText = '+ Tambah Rule';
-                button.onclick = () => openModal('createRuleModal');
+                deleteBtn.classList.add('hidden');
 
-                deleteBtn.onclick = () => openDeleteModal('setting');
             }
+
         }
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
+        tabs.forEach(tab=>{
+
+            tab.addEventListener('click',()=>{
 
                 const tabName = tab.dataset.tab;
 
                 const url = new URL(window.location);
                 url.searchParams.set('tab', tabName);
-                window.history.replaceState({}, '', url);
+                window.history.replaceState({},'',url);
 
                 activateTab(tabName);
+
             });
+
         });
 
-        let currentTab = new URLSearchParams(window.location.search).get('tab') || 'message';
-        activateTab(currentTab);
+        activateTab(new URLSearchParams(window.location.search).get('tab') || 'message');
+
     });
 
-    let generatedCode = null;
-    let currentDeleteType = null;
+    let generatedCode = '';
+    let currentDeleteType = '';
 
-    function openDeleteModal(type) {
+    function openDeleteModal(type){
 
         currentDeleteType = type;
 
-        generatedCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+        generatedCode = Math.random().toString(36).substring(2,7).toUpperCase();
 
         document.getElementById('randomCode').innerText = generatedCode;
         document.getElementById('confirmInput').value = '';
@@ -178,79 +186,193 @@ $activeTab = request('tab', 'message');
 
         modal.classList.add('modal-show');
 
-        setTimeout(() => {
+        setTimeout(()=>{
+
             box.classList.add('modal-box-show');
-        }, 50);
+
+        },50);
+
     }
 
-    function closeDeleteModal() {
+    function closeDeleteModal(){
 
         const modal = document.getElementById('deleteConfirmModal');
         const box = document.getElementById('modalBox');
 
         box.classList.remove('modal-box-show');
 
-        setTimeout(() => {
+        setTimeout(()=>{
+
             modal.classList.remove('modal-show');
-        }, 200);
+
+        },200);
+
     }
 
-    document.getElementById('deleteConfirmModal')
-        .addEventListener('click', function(e) {
-            if (e.target === this) closeDeleteModal();
-        });
+    document.getElementById('deleteConfirmModal').addEventListener('click',function(e){
 
-    function submitDelete() {
+        if(e.target===this){
+
+            closeDeleteModal();
+
+        }
+
+    });
+
+    function submitDelete(){
 
         const input = document.getElementById('confirmInput');
         const error = document.getElementById('errorMessage');
 
-        const value = input.value.trim();
-
         error.classList.add('hidden');
 
-        if (!value) {
-            error.innerText = 'Kode wajib diisi!';
+        if(input.value.trim()===''){
+
+            error.innerText='Kode wajib diisi!';
             error.classList.remove('hidden');
-            input.classList.add('shake');
-            setTimeout(() => input.classList.remove('shake'), 300);
+
             return;
+
         }
 
-        if (value !== generatedCode) {
-            error.innerText = 'Kode tidak sesuai!';
+        if(input.value.trim()!==generatedCode){
+
+            error.innerText='Kode tidak sesuai!';
             error.classList.remove('hidden');
-            input.classList.add('shake');
-            setTimeout(() => input.classList.remove('shake'), 300);
+
             return;
+
         }
 
-        closeDeleteModal();
+        const form=document.createElement('form');
 
-        setTimeout(() => {
+        form.method='POST';
+        form.action=deleteRoutes[currentDeleteType];
 
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = deleteRoutes[currentDeleteType];
+        form.innerHTML=`
+            @csrf
+            <input type="hidden" name="_method" value="DELETE">
+        `;
 
-            const csrf = document.createElement('input');
-            csrf.type = 'hidden';
-            csrf.name = '_token';
-            csrf.value = "{{ csrf_token() }}";
+        document.body.appendChild(form);
+        form.submit();
 
-            const method = document.createElement('input');
-            method.type = 'hidden';
-            method.name = '_method';
-            method.value = 'DELETE';
-
-            form.appendChild(csrf);
-            form.appendChild(method);
-
-            document.body.appendChild(form);
-            form.submit();
-
-        }, 200);
     }
 </script>
+
+<style>
+    /* ========================================
+       STYLE ADMIN INDEX
+       ======================================== */
+
+    /* Tab Button */
+    .tab-btn {
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-weight: 500;
+        color: #6b7280;
+        transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+        background: white;
+        transform: translateY(-1px);
+    }
+
+    .active-tab {
+        background: white;
+        color: #ff6900;
+    }
+
+    /* Modal */
+    .modal-show {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    .modal-box-show {
+        opacity: 1 !important;
+        transform: scale(1) translateY(0) !important;
+    }
+
+    #modalBox {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        50% { transform: translateX(4px); }
+        75% { transform: translateX(-4px); }
+        100% { transform: translateX(0); }
+    }
+
+    .shake {
+        animation: shake 0.3s;
+    }
+
+    .chat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        max-width: 100%;
+        overflow: hidden;
+        padding-bottom: 8px;
+    }
+
+    .chat-card {
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        word-wrap: break-word;
+        word-break: break-word;
+        box-sizing: border-box;
+    }
+
+    .chat-card * {
+        max-width: 100% !important;
+        overflow-wrap: break-word !important;
+        word-wrap: break-word !important;
+        box-sizing: border-box !important;
+    }
+
+    .chat-preview {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+        line-height: 1.5;
+        max-height: 3em;
+    }
+
+    .chat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+
+    @media (max-width: 640px) {
+        .chat-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+
+        .chat-card {
+            padding: 1rem !important;
+        }
+    }
+
+    @media (min-width: 641px) and (max-width: 1024px) {
+        .chat-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+</style>
 
 @endsection

@@ -7,25 +7,60 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     protected $fillable = [
+        'chat_session_id',
         'client_id',
         'message',
-        'is_admin',
+        'sender_type',
         'is_read',
-        'status'
+        'status',
     ];
 
     protected $casts = [
-        'is_admin' => 'boolean',
         'is_read' => 'boolean',
     ];
-    
+
+    public function session()
+    {
+        return $this->belongsTo(ChatSession::class, 'chat_session_id');
+    }
+
+    public function getNimAttribute()
+    {
+        return $this->session?->nim;
+    }
+
+    public function getNamaMahasiswaAttribute()
+    {
+        return $this->session?->nama_mahasiswa;
+    }
+
+    public function getNamaIbuAttribute()
+    {
+        return $this->session?->nama_ibu;
+    }
+
+    public function getStatusSessionAttribute()
+    {
+        return $this->session?->status ?? 'guest';
+    }
+
     public function scopeUser($query)
     {
-        return $query->where('is_admin', false);
+        return $query->where('sender_type', 'user');
+    }
+
+    public function scopeBot($query)
+    {
+        return $query->where('sender_type', 'bot');
     }
 
     public function scopeAdmin($query)
     {
-        return $query->where('is_admin', true);
+        return $query->where('sender_type', 'admin');
+    }
+
+    public function scopeUnread($query)
+    {
+        return $query->where('is_read', false);
     }
 }

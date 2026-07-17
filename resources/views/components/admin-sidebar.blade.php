@@ -1,5 +1,5 @@
 <div
-    class="w-20 lg:w-72 mt-6 bg-[#BFC3C9] rounded-r-[20px] lg:rounded-r-[30px] flex flex-col justify-between overflow-hidden transition-all duration-300">
+    class="w-20 lg:w-72 mt-6 bg-[var(--sidebar-primary-color)] rounded-r-[20px] lg:rounded-r-[30px] flex flex-col justify-between overflow-hidden transition-all duration-300">
 
     <div>
 
@@ -19,7 +19,7 @@
                     </div>
 
                     {{-- Mengambil Role User --}}
-                    <div class="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div class="text-xs font-medium text-[var(--primary-color)] uppercase tracking-wider">
                         {{ auth()->user()->role ?? 'Admin' }}
                     </div>
                 </div>
@@ -43,8 +43,8 @@
                 <span class="lg:inline">Dashboard</span>
             </a>
 
-            <!-- Pesan -->
-            <a href="{{ route('admin.pesan') }}" class="menu-item flex items-center justify-center lg:justify-start gap-3
+            <!-- Pesan dengan Badge Notifikasi -->
+            <a href="{{ route('admin.pesan') }}" id="pesanMenuLink" class="menu-item flex items-center justify-center lg:justify-start gap-3 relative
                 {{ request()->routeIs('admin.pesan*') ? 'active' : '' }}">
 
                 <!-- Icon Pesan -->
@@ -55,7 +55,13 @@
                         d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z" />
                 </svg>
 
-                <span class="lg:inline">Pesan</span>
+                <span class="lg:inline">Manajemen Pesan</span>
+
+                <!-- Badge Notifikasi -->
+                <span id="unreadBadge"
+                    class="absolute -top-1 -right-1 lg:static lg:ml-auto bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1.5 shadow-lg ring-2 ring-white hidden">
+                    0
+                </span>
             </a>
 
             <!-- Mahasiswa -->
@@ -135,3 +141,52 @@
     </div>
 
 </div>
+
+<!-- Script untuk Update Badge -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const badge = document.getElementById('unreadBadge');
+        
+        // Fungsi untuk update jumlah pesan belum dibaca
+        function updateUnreadCount() {
+            fetch('/chatbot/unread-count')
+                .then(response => response.json())
+                .then(data => {
+                    const count = data.unread || 0;
+                    if (count > 0) {
+                        badge.textContent = count > 99 ? '99+' : count;
+                        badge.classList.remove('hidden');
+                        
+                        // Animasi badge
+                        badge.style.transition = 'transform 0.3s ease';
+                        badge.style.transform = 'scale(1.3)';
+                        setTimeout(() => {
+                            badge.style.transform = 'scale(1)';
+                        }, 300);
+                    } else {
+                        badge.classList.add('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching unread count:', error);
+                });
+        }
+
+        // Update pertama kali
+        updateUnreadCount();
+
+        // Update setiap 5 detik
+        setInterval(updateUnreadCount, 5000);
+
+        // Jika di halaman pesan, update badge saat pesan dibaca
+        if (window.location.pathname.includes('/admin/pesan')) {
+            // Reset badge saat di halaman pesan
+            badge.classList.add('hidden');
+            
+            // Update badge saat ada perubahan pada chat
+            document.addEventListener('chatRead', function() {
+                updateUnreadCount();
+            });
+        }
+    });
+</script>

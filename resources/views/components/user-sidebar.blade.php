@@ -1,4 +1,5 @@
-<div class="w-20 lg:w-72 mt-6 bg-[#BFC3C9] rounded-r-[30px] flex flex-col justify-between overflow-hidden">
+<div
+    class="w-20 lg:w-72 mt-6 bg-[var(--sidebar-primary-color)] rounded-r-[30px] flex flex-col justify-between overflow-hidden">
 
     <div>
 
@@ -8,7 +9,7 @@
 
                 <!-- Avatar -->
                 <div
-                    class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-slate-700 text-white font-bold text-lg shadow-sm">
+                    class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-[var(--primary-color)] text-white font-bold text-lg shadow-sm">
                     {{ $initial }}
                 </div>
 
@@ -18,7 +19,7 @@
                         {{ $nama }}
                     </div>
 
-                    <div class="text-sm font-medium text-gray-500">
+                    <div class="text-sm font-medium text-[var(--primary-color)]">
                         NIM : {{ $nim }}
                     </div>
                 </div>
@@ -37,7 +38,7 @@
                         d="M8.557 2.75H4.682A1.93 1.93 0 0 0 2.75 4.682v3.875a1.94 1.94 0 0 0 1.932 1.942h3.875a1.94 1.94 0 0 0 1.942-1.942V4.682A1.94 1.94 0 0 0 8.557 2.75m10.761 0h-3.875a1.94 1.94 0 0 0-1.942 1.932v3.875a1.943 1.943 0 0 0 1.942 1.942h3.875a1.94 1.94 0 0 0 1.932-1.942V4.682a1.93 1.93 0 0 0-1.932-1.932M8.557 13.5H4.682a1.943 1.943 0 0 0-1.932 1.943v3.875a1.93 1.93 0 0 0 1.932 1.932h3.875a1.94 1.94 0 0 0 1.942-1.932v-3.875a1.94 1.94 0 0 0-1.942-1.942m8.818-.001a3.875 3.875 0 1 0 0 7.75a3.875 3.875 0 0 0 0-7.75" />
                 </svg>
 
-                <span class="lg:inline">Dashboard</span>
+                <span class="lg:inline">Dasbor</span>
             </a>
 
             <!-- Biodata -->
@@ -48,7 +49,7 @@
                         d="M8 8.5c3.85 0 7 2.5 7 4.5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2c0-2 3.15-4.5 7-4.5M8 10c-1.61 0-3.064.526-4.092 1.234C2.798 12.001 2.5 12.733 2.5 13a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5c0-.267-.297-1-1.408-1.766C11.064 10.526 9.609 10 8 10m0-9a3.5 3.5 0 1 1 0 7a3.5 3.5 0 0 1 0-7m0 1.5a2 2 0 1 0 0 4a2 2 0 0 0 0-4" />
                 </svg>
 
-                <span>Biodata Mahasiswa</span>
+                <span>Biodata</span>
             </a>
 
             <!-- Hasil Studi -->
@@ -75,7 +76,7 @@
                         d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 5.25H10V5h10zm-10 2h10v3.5H10zm-2 3.5H4v-3.5h4zM8 5v3.25H4V5zM4 19v-3.25h4V19zm6 0v-3.25h10V19z" />
                 </svg>
 
-                <span class="lg:inline">Nilai Prestasi Akademik</span>
+                <span class="lg:inline">Salinan Nilai</span>
             </a>
 
             <!-- Jadwal -->
@@ -94,7 +95,7 @@
             </a>
 
             <!-- Kehadiran -->
-            <a href="/mahasiswa/kehadiran" class="menu-item">
+            <a href="/mahasiswa/kehadiran" class="menu-item {{ request()->is('mahasiswa/kehadiran') ? 'active' : '' }}">
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -109,7 +110,7 @@
             </a>
 
             <!-- UKT -->
-            <a href="/mahasiswa/spp" class="menu-item">
+            <a href="/mahasiswa/spp" class="menu-item {{ request()->is('mahasiswa/spp') ? 'active' : '' }}">
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
                     <path fill="currentColor"

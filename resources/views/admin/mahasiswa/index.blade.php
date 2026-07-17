@@ -33,7 +33,7 @@
         </div>
 
         {{-- CARD --}}
-        <div class="bg-white rounded-2xl border shadow-sm flex flex-col flex-1 overflow-hidden">
+        <div class="bg-white rounded-2xl border shadow-sm flex flex-col flex-1 overflow-hidden" style="border-color: #ffd180;">
 
             @include('admin.mahasiswa.tabel-mahasiswa')
 
