@@ -144,49 +144,62 @@
 
 <!-- Script untuk Update Badge -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const badge = document.getElementById('unreadBadge');
-        
-        // Fungsi untuk update jumlah pesan belum dibaca
-        function updateUnreadCount() {
-            fetch('/chatbot/unread-count')
-                .then(response => response.json())
-                .then(data => {
-                    const count = data.unread || 0;
-                    if (count > 0) {
-                        badge.textContent = count > 99 ? '99+' : count;
-                        badge.classList.remove('hidden');
-                        
-                        // Animasi badge
-                        badge.style.transition = 'transform 0.3s ease';
-                        badge.style.transform = 'scale(1.3)';
-                        setTimeout(() => {
-                            badge.style.transform = 'scale(1)';
-                        }, 300);
-                    } else {
-                        badge.classList.add('hidden');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching unread count:', error);
-                });
-        }
-
-        // Update pertama kali
-        updateUnreadCount();
-
-        // Update setiap 5 detik
-        setInterval(updateUnreadCount, 5000);
-
-        // Jika di halaman pesan, update badge saat pesan dibaca
-        if (window.location.pathname.includes('/admin/pesan')) {
-            // Reset badge saat di halaman pesan
-            badge.classList.add('hidden');
-            
-            // Update badge saat ada perubahan pada chat
-            document.addEventListener('chatRead', function() {
-                updateUnreadCount();
+// Script untuk update badge - versi yang sudah diperbaiki
+document.addEventListener('DOMContentLoaded', function() {
+    const badge = document.getElementById('unreadBadge');
+    if (!badge) return;
+    
+    // Fungsi untuk update jumlah pesan belum dibaca (HANYA dari user validasi)
+    function updateUnreadCount() {
+        fetch('/chatbot/unread-count')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const count = data.unread || 0;
+                
+                if (count > 0) {
+                    badge.textContent = count > 99 ? '99+' : count;
+                    badge.classList.remove('hidden');
+                    
+                    badge.style.transition = 'transform 0.3s ease';
+                    badge.style.transform = 'scale(1.3)';
+                    setTimeout(() => {
+                        badge.style.transform = 'scale(1)';
+                    }, 300);
+                } else {
+                    badge.classList.add('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching unread count:', error);
+                badge.classList.add('hidden');
             });
+    }
+
+    // Update pertama kali
+    updateUnreadCount();
+
+    // Update setiap 5 detik
+    setInterval(updateUnreadCount, 5000);
+
+    // Jika di halaman pesan, update badge saat pesan dibaca
+    if (window.location.pathname.includes('/admin/pesan')) {
+        badge.classList.add('hidden');
+        
+        document.addEventListener('chatRead', function() {
+            setTimeout(updateUnreadCount, 500);
+        });
+    }
+
+    // Update saat tab aktif kembali
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            updateUnreadCount();
         }
     });
+});
 </script>

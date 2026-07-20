@@ -55,18 +55,23 @@ class MessageController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | INDEX - HALAMAN ADMIN PESAN
+    | INDEX - HALAMAN ADMIN PESAN (DIPERBAIKI)
     |--------------------------------------------------------------------------
     */
     public function index()
     {
+        // =============================================
+        // PERBAIKAN: HANYA tampilkan chat yang ter-validasi
+        // =============================================
         $chats = Message::select(
-            'client_id',
-            DB::raw('MAX(id) as last_id'),
-            DB::raw('SUM(CASE WHEN sender_type = "user" AND is_read = 0 THEN 1 ELSE 0 END) as unread')
+            'messages.client_id',
+            DB::raw('MAX(messages.id) as last_id'),
+            DB::raw('SUM(CASE WHEN messages.sender_type = "user" AND messages.is_read = 0 THEN 1 ELSE 0 END) as unread')
         )
             ->with(['session'])
-            ->groupBy('client_id')
+            ->join('chat_sessions', 'messages.chat_session_id', '=', 'chat_sessions.id')
+            ->where('chat_sessions.status', '!=', 'guest')
+            ->groupBy('messages.client_id')
             ->orderByDesc('last_id')
             ->get();
 
@@ -360,18 +365,25 @@ class MessageController extends Controller
     public function list()
     {
         // =============================================
-        // PERBAIKAN: Group by chat_session_id jika ada
+        // PERBAIKAN: HANYA tampilkan chat yang ter-validasi
         // =============================================
         $chats = Message::select(
-            'client_id',
-            'chat_session_id',
-            DB::raw('MAX(id) as last_id'),
-            DB::raw('SUM(CASE WHEN sender_type = "user" AND is_read = 0 THEN 1 ELSE 0 END) as unread')
+            'messages.client_id',
+            'messages.chat_session_id',
+            DB::raw('MAX(messages.id) as last_id'),
+            DB::raw('SUM(CASE WHEN messages.sender_type = "user" AND messages.is_read = 0 THEN 1 ELSE 0 END) as unread')
         )
             ->with(['session'])
-            ->groupBy('client_id', 'chat_session_id')
+            ->join('chat_sessions', 'messages.chat_session_id', '=', 'chat_sessions.id')
+            ->where('chat_sessions.status', '!=', 'guest')
+            ->groupBy('messages.client_id', 'messages.chat_session_id')
             ->orderByDesc('last_id')
             ->get();
+
+        // Jika tidak ada chat yang validasi, return empty array
+        if ($chats->isEmpty()) {
+            return response()->json([]);
+        }
 
         $lastMessages = Message::whereIn('id', $chats->pluck('last_id'))
             ->get()
@@ -411,10 +423,10 @@ class MessageController extends Controller
                     'chat_session_id' => $chat->chat_session_id,
                     'label' => $label,
                     'last_id' => $chat->last_id,
-                    'unread' => $chat->unread,
+                    'unread' => (int) $chat->unread,
                     'last' => $lastMsg ? $lastMsg->message : null,
                     'preview' => $cleanText,
-                    'is_new' => $chat->unread > 0,
+                    'is_new' => (int) $chat->unread > 0,
                     'nim' => $nim,
                     'nama_mahasiswa' => $namaMahasiswa,
                     'nama_ibu' => $namaIbu,
@@ -535,14 +547,19 @@ class MessageController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | UNREAD COUNT - JUMLAH PESAN BELUM DIBACA
+    | UNREAD COUNT - JUMLAH PESAN BELUM DIBACA (DIPERBAIKI)
     |--------------------------------------------------------------------------
     */
     public function unreadCount()
     {
         try {
-            $count = Message::where('sender_type', 'user')
-                ->where('is_read', false)
+            // =============================================
+            // PERBAIKAN: Hanya hitung pesan dari user yang sudah validasi
+            // =============================================
+            $count = Message::where('messages.sender_type', 'user')
+                ->where('messages.is_read', false)
+                ->join('chat_sessions', 'messages.chat_session_id', '=', 'chat_sessions.id')
+                ->where('chat_sessions.status', '!=', 'guest')
                 ->count();
 
             return response()->json([
@@ -551,10 +568,75 @@ class MessageController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Unread count error: ' . $e->getMessage());
+            
+            // =============================================
+            // FALLBACK: Jika join error, coba filter berdasarkan client_id
+            // =============================================
+            try {
+                $count = Message::where('sender_type', 'user')
+                    ->where('is_read', false)
+                    ->where('client_id', 'NOT LIKE', 'guest-%')
+                    ->count();
+                    
+                return response()->json([
+                    'unread' => $count,
+                    'success' => true,
+                    'fallback' => true
+                ]);
+            } catch (\Exception $e2) {
+                Log::error('Unread count fallback error: ' . $e2->getMessage());
+                return response()->json([
+                    'unread' => 0,
+                    'success' => false,
+                    'message' => $e2->getMessage()
+                ], 500);
+            }
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SESSION STATUS - CEK STATUS USER (DITAMBAHKAN)
+    |--------------------------------------------------------------------------
+    */
+    public function sessionStatus(Request $request)
+    {
+        try {
+            $clientId = $request->query('client_id');
+            
+            if (!$clientId) {
+                return response()->json([
+                    'status' => 'guest',
+                    'is_guest' => true
+                ]);
+            }
+
+            $session = ChatSession::where('client_id', $clientId)->first();
+            
+            if (!$session) {
+                return response()->json([
+                    'status' => 'guest',
+                    'is_guest' => true,
+                    'client_id' => $clientId
+                ]);
+            }
+
             return response()->json([
-                'unread' => 0,
-                'success' => false,
-                'message' => $e->getMessage()
+                'status' => $session->status,
+                'is_guest' => $session->status === 'guest',
+                'client_id' => $session->client_id,
+                'nim' => $session->nim,
+                'nama_mahasiswa' => $session->nama_mahasiswa,
+                'nama_ibu' => $session->nama_ibu,
+                'email' => $session->email,
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Session status error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'guest',
+                'is_guest' => true,
+                'error' => $e->getMessage()
             ], 500);
         }
     }

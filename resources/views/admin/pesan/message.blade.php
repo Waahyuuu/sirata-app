@@ -45,7 +45,11 @@
                         class="text-[10px] bg-green-100 text-green-700 px-2.5 py-0.5 rounded-full truncate">
                         ✓ Orang Tua
                     </span>
-                    <span x-show="chat.status === 'guest' || !chat.status"
+                    <!-- 
+                    // PERBAIKAN: Guest sudah tidak muncul karena difilter di server
+                    // Tapi tetap dipertahankan untuk jaga-jaga
+                    -->
+                    <span x-show="chat.status === 'guest'"
                         class="text-[10px] bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full shrink-0">
                         👤 Guest
                     </span>
@@ -238,6 +242,7 @@
             showDeleteModal: false,
             chatLabel: '',
             chatNim: '',
+            isLoading: false,
 
             init() {
                 this.loadChats()
@@ -278,9 +283,21 @@
             },
 
             async loadChats() {
+                if (this.isLoading) return;
+                this.isLoading = true;
+
                 try {
                     let res = await fetch('/chatbot/list')
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+                    
                     let data = await res.json()
+
+                    // =============================================
+                    // PERBAIKAN: Filter double-check untuk guest
+                    // =============================================
+                    data = data.filter(chat => chat.status !== 'guest');
 
                     data = data.map(chat => {
                         let cleanText = chat.last || '-';
@@ -320,6 +337,8 @@
                     
                 } catch (error) {
                     console.error('Error loading chats:', error)
+                } finally {
+                    this.isLoading = false;
                 }
             },
 
@@ -331,9 +350,6 @@
                 this.chatNim = ''
 
                 try {
-                    // =============================================
-                    // PERBAIKAN: Ambil CSRF Token dengan benar
-                    // =============================================
                     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
                     
                     await fetch('/chatbot/mark-as-read', {
@@ -424,9 +440,6 @@
                 el.style.height = el.scrollHeight + 'px'
             },
 
-            // =============================================
-            // PERBAIKAN: send() dengan CSRF Fix
-            // =============================================
             async send() {
                 if (!this.message.trim()) return
 
@@ -447,12 +460,8 @@
                 this.scrollBottom()
 
                 try {
-                    // =============================================
-                    // PERBAIKAN: Ambil CSRF Token dengan benar
-                    // =============================================
                     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
                     
-                    // Jika token tidak ada, coba dari cookie
                     if (!csrfToken) {
                         console.warn('CSRF token not found in meta tag, trying cookie...');
                     }
@@ -464,7 +473,7 @@
                             'X-CSRF-TOKEN': csrfToken,
                             'Accept': 'application/json'
                         },
-                        credentials: 'include', // ← PENTING!
+                        credentials: 'include',
                         body: JSON.stringify({
                             client_id: this.client_id,
                             message: text
@@ -506,9 +515,6 @@
 
             async confirmDeleteAll() {
                 try {
-                    // =============================================
-                    // PERBAIKAN: CSRF Token untuk DELETE
-                    // =============================================
                     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
                     
                     let res = await fetch('/admin/pesan/delete-all-message', {
@@ -549,9 +555,14 @@
         fetch('/chatbot/list')
             .then(res => res.json())
             .then(data => {
+                // =============================================
+                // PERBAIKAN: Filter guest di badge juga
+                // =============================================
                 let totalUnread = 0;
                 data.forEach(chat => {
-                    totalUnread += chat.unread || 0;
+                    if (chat.status !== 'guest') {
+                        totalUnread += chat.unread || 0;
+                    }
                 });
 
                 if (totalUnread > 0) {

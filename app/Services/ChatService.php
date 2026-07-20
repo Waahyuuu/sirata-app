@@ -8,6 +8,7 @@ use App\Models\Faq;
 use App\Models\Manfaat;
 use App\Services\KampusApiService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ChatService
 {
@@ -34,68 +35,163 @@ class ChatService
             "Ada yang bisa saya bantu? 😊";
     }
 
+    // =============================================
+    // PERBAIKAN 1: CEK APAKAH USER ADALAH GUEST
+    // =============================================
+    private function isGuest($clientId)
+    {
+        return str_starts_with($clientId, 'guest-');
+    }
+
+    // =============================================
+    // PERBAIKAN 2: CEK APAKAH USER SUDAH VALIDASI
+    // =============================================
+    private function isValidated($clientId)
+    {
+        $session = ChatSession::where('client_id', $clientId)->first();
+        return $session && $session->status !== 'guest';
+    }
+
+    // =============================================
+    // PERBAIKAN 3: CEK APAKAH PESAN MEMINTA ADMIN
+    // =============================================
+    private function isAdminRequest($message)
+    {
+        $keywords = [
+            'admin',
+            'berbicara dengan admin',
+            'bicara admin',
+            'hubungi admin',
+            'chat admin',
+            'dengan admin',
+            'admin saja',
+            'panggil admin',
+            'bicara dengan admin',
+            'berbicara admin'
+        ];
+        
+        $message = strtolower(trim($message));
+        
+        foreach ($keywords as $keyword) {
+            if (str_contains($message, $keyword)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // =============================================
+    // PERBAIKAN 4: RESPONSE UNTUK GUEST YANG MINTA ADMIN
+    // =============================================
+    private function getGuestAdminResponse()
+    {
+        return "🙏 Maaf, untuk berbicara dengan Admin, Anda harus melakukan validasi terlebih dahulu.\n\n" .
+               "📋 Silakan isi form di halaman utama dengan:\n" .
+               "• NIM Mahasiswa\n" .
+               "• Nama Ibu Kandung\n" .
+               "• Tanggal Lahir Mahasiswa\n\n" .
+               "Setelah validasi, Anda akan terhubung dengan Admin.\n\n" .
+               "💡 Sementara itu, saya tetap bisa membantu Anda dengan:\n" .
+               "• informasi nim - Cari data mahasiswa\n" .
+               "• manfaat - Info SIRATA\n" .
+               "• menu - Lihat semua layanan\n\n" .
+               "Ada yang bisa saya bantu? 😊";
+    }
+
     public function handle($clientId, $messageRaw)
     {
-        $now = Carbon::now('Asia/Jakarta');
+        try {
+            $now = Carbon::now('Asia/Jakarta');
 
-        $last = Message::where('client_id', $clientId)
-            ->latest()
-            ->first();
+            $last = Message::where('client_id', $clientId)
+                ->latest()
+                ->first();
 
-        $chatSession = ChatSession::where('client_id', $clientId)->first();
+            $chatSession = ChatSession::where('client_id', $clientId)->first();
 
-        $messageLower = strtolower(trim($messageRaw));
+            $messageLower = strtolower(trim($messageRaw));
 
-        // =============================================
-        // TERIMA KASIH
-        // =============================================
-        $terimaKasih = ['terima kasih', 'makasih', 'thanks', 'thank you', 'thx', 'trims', 'matur nuwun'];
-        foreach ($terimaKasih as $ucapan) {
-            if (str_contains($messageLower, $ucapan)) {
+            // =============================================
+            // PERBAIKAN 5: CEK APAKAH GUEST DAN MINTA ADMIN
+            // =============================================
+            if ($this->isGuest($clientId) && $this->isAdminRequest($messageLower)) {
                 return $this->saveBotReply(
                     $clientId,
-                    "Sama-sama! 😊\n\n" .
-                        "Senang bisa membantu Anda.\n\n" .
-                        "Ada yang lain bisa saya bantu? " .
-                        "Silakan ketik 'menu' untuk melihat layanan yang tersedia.",
+                    $this->getGuestAdminResponse(),
                     $chatSession
                 );
             }
-        }
 
-        // =============================================
-        // SALAM
-        // =============================================
-        $salam = ['halo', 'hai', 'hey', 'hello', 'hi', 'assalamualaikum', 'selamat pagi', 'selamat siang', 'selamat sore', 'selamat malam'];
-        foreach ($salam as $ucapan) {
-            if (str_contains($messageLower, $ucapan)) {
-                $waktu = $this->getWaktu();
+            // =============================================
+            // TERIMA KASIH
+            // =============================================
+            $terimaKasih = ['terima kasih', 'makasih', 'thanks', 'thank you', 'thx', 'trims', 'matur nuwun'];
+            foreach ($terimaKasih as $ucapan) {
+                if (str_contains($messageLower, $ucapan)) {
+                    return $this->saveBotReply(
+                        $clientId,
+                        "Sama-sama! 😊\n\n" .
+                            "Senang bisa membantu Anda.\n\n" .
+                            "Ada yang lain bisa saya bantu? " .
+                            "Silakan ketik 'menu' untuk melihat layanan yang tersedia.",
+                        $chatSession
+                    );
+                }
+            }
+
+            // =============================================
+            // SALAM
+            // =============================================
+            $salam = ['halo', 'hai', 'hey', 'hello', 'hi', 'assalamualaikum', 'selamat pagi', 'selamat siang', 'selamat sore', 'selamat malam'];
+            foreach ($salam as $ucapan) {
+                if (str_contains($messageLower, $ucapan)) {
+                    $waktu = $this->getWaktu();
+                    return $this->saveBotReply(
+                        $clientId,
+                        "{$waktu}! 👋\n\n" .
+                            "Ada yang bisa saya bantu?\n\n" .
+                            "💡 Ketik 'menu' untuk melihat layanan yang tersedia.",
+                        $chatSession
+                    );
+                }
+            }
+
+            // =============================================
+            // PAK/BU
+            // =============================================
+            if (str_contains($messageLower, 'pak') || str_contains($messageLower, 'bu')) {
                 return $this->saveBotReply(
                     $clientId,
-                    "{$waktu}! 👋\n\n" .
-                        "Ada yang bisa saya bantu?\n\n" .
+                    "Ada yang bisa saya bantu, Bapak/Ibu? 😊\n\n" .
                         "💡 Ketik 'menu' untuk melihat layanan yang tersedia.",
                     $chatSession
                 );
             }
-        }
 
-        // =============================================
-        // PAK/BU
-        // =============================================
-        if (str_contains($messageLower, 'pak') || str_contains($messageLower, 'bu')) {
-            return $this->saveBotReply(
-                $clientId,
-                "Ada yang bisa saya bantu, Bapak/Ibu? 😊\n\n" .
-                    "💡 Ketik 'menu' untuk melihat layanan yang tersedia.",
-                $chatSession
-            );
-        }
+            // =============================================
+            // CEK APAKAH USER SEDANG CHAT DENGAN ADMIN
+            // =============================================
+            if ($last && $last->sender_type === 'admin') {
+                $messageData = [
+                    'client_id' => $clientId,
+                    'message' => $messageRaw,
+                    'sender_type' => 'user',
+                    'is_read' => false,
+                    'status' => 'sent'
+                ];
+                
+                if ($chatSession) {
+                    $messageData['chat_session_id'] = $chatSession->id;
+                }
+                
+                Message::create($messageData);
+                return null;
+            }
 
-        // =============================================
-        // CEK APAKAH USER SEDANG CHAT DENGAN ADMIN
-        // =============================================
-        if ($last && $last->sender_type === 'admin') {
+            // =============================================
+            // SIMPAN PESAN USER
+            // =============================================
             $messageData = [
                 'client_id' => $clientId,
                 'message' => $messageRaw,
@@ -109,183 +205,205 @@ class ChatService
             }
             
             Message::create($messageData);
-            return null;
-        }
 
-        // =============================================
-        // SIMPAN PESAN USER
-        // =============================================
-        $messageData = [
-            'client_id' => $clientId,
-            'message' => $messageRaw,
-            'sender_type' => 'user',
-            'is_read' => false,
-            'status' => 'sent'
-        ];
-        
-        if ($chatSession) {
-            $messageData['chat_session_id'] = $chatSession->id;
-        }
-        
-        Message::create($messageData);
+            $message = $this->normalize($messageRaw);
 
-        $message = $this->normalize($messageRaw);
+            // =============================================
+            // MENU
+            // =============================================
+            if (
+                str_contains($message, 'menu') ||
+                str_contains($message, 'help') ||
+                str_contains($message, 'bantuan') ||
+                str_contains($message, 'tolong')
+            ) {
+                return $this->saveBotReply(
+                    $clientId,
+                    "📋 MENU UTAMA SIRATA\n\n" .
+                        "• informasi nim - Cari data mahasiswa\n" .
+                        "• berbicara dengan admin - Chat admin\n" .
+                        "• manfaat - Info SIRATA\n" .
+                        "• Pertanyaan Terkait SIRATA\n\n" .
+                        "💡 Ketik salah satu menu di atas untuk memulai.",
+                    $chatSession
+                );
+            }
 
-        // =============================================
-        // MENU
-        // =============================================
-        if (
-            str_contains($message, 'menu') ||
-            str_contains($message, 'help') ||
-            str_contains($message, 'bantuan') ||
-            str_contains($message, 'tolong')
-        ) {
+            // =============================================
+            // INFORMASI NIM
+            // =============================================
+            if (cache()->get('chatbot_waiting_name_' . $clientId)) {
+                if (in_array($message, ['no', 'tidak', 'batal'])) {
+                    cache()->forget('chatbot_waiting_name_' . $clientId);
+                    return $this->saveBotReply(
+                        $clientId,
+                        "✅ Pencarian mahasiswa dibatalkan.\n\n" .
+                            "Silakan pilih menu lain atau ketik 'menu' untuk melihat layanan.",
+                        $chatSession
+                    );
+                }
+
+                $reply = $this->handleNama($message, $clientId);
+
+                if ($reply && str_contains($reply, '🎓 DATA MAHASISWA')) {
+                    cache()->forget('chatbot_waiting_name_' . $clientId);
+                }
+
+                return $this->saveBotReply(
+                    $clientId,
+                    $reply ??
+                        "❌ Data mahasiswa tidak ditemukan.\n\n" .
+                        "Silakan ketik nama lengkap mahasiswa.\n\n" .
+                        "💡 Ketik 'batal' untuk membatalkan.",
+                    $chatSession
+                );
+            }
+
+            if (
+                str_contains($message, 'nim') ||
+                str_contains($message, 'nomor induk') ||
+                str_contains($message, 'informasi nim') ||
+                str_contains($message, 'cari nim') ||
+                str_contains($message, 'cek nim')
+            ) {
+                cache()->put(
+                    'chatbot_waiting_name_' . $clientId,
+                    true,
+                    now()->addMinutes(10)
+                );
+
+                return $this->saveBotReply(
+                    $clientId,
+                    "🎓 INFORMASI NIM\n\n" .
+                        "Silakan masukkan nama lengkap mahasiswa.\n\n" .
+                        "Contoh: Andi Saputra\n\n" .
+                        "💡 Ketik 'batal' untuk membatalkan.",
+                    $chatSession
+                );
+            }
+
+            // =============================================
+            // PERBAIKAN 6: CHAT DENGAN ADMIN - DENGAN CEK GUEST
+            // =============================================
+            if (
+                str_contains($message, 'admin') ||
+                str_contains($message, 'berbicara dengan admin') ||
+                str_contains($message, 'bicara admin') ||
+                str_contains($message, 'hubungi admin')
+            ) {
+                // =============================================
+                // PERBAIKAN: Guest tidak bisa chat admin
+                // =============================================
+                if ($this->isGuest($clientId)) {
+                    return $this->saveBotReply(
+                        $clientId,
+                        $this->getGuestAdminResponse(),
+                        $chatSession
+                    );
+                }
+
+                // Cek jam operasional
+                if ($now->hour < 7 || $now->hour >= 15) {
+                    return $this->saveBotReply(
+                        $clientId,
+                        "🙏 Maaf, layanan Admin SIRATA sedang tidak beroperasi.\n\n"
+                            . "🕐 Jam operasional:\n"
+                            . "Senin - Jumat\n"
+                            . "Pukul 07.00 - 15.00 WIB.\n\n"
+                            . "Silakan hubungi kembali pada jam operasional.\n\n"
+                            . "Sementara itu Anda tetap dapat menggunakan:\n"
+                            . "• informasi nim - Cari NIM\n"
+                            . "• manfaat - Info SIRATA\n\n" .
+                            "Ada yang bisa saya bantu? 😊",
+                        $chatSession
+                    );
+                }
+
+                // =============================================
+                // PERBAIKAN: Cek apakah user sudah validasi
+                // =============================================
+                if (!$this->isValidated($clientId)) {
+                    return $this->saveBotReply(
+                        $clientId,
+                        "🙏 Untuk berbicara dengan Admin, Anda harus melakukan verifikasi terlebih dahulu.\n\n" .
+                        "📋 Silakan isi form di halaman utama dengan:\n" .
+                        "• NIM Mahasiswa\n" .
+                        "• Nama Ibu Kandung\n" .
+                        "• Tanggal Lahir Mahasiswa\n\n" .
+                        "Setelah verifikasi, Anda akan terhubung dengan Admin.",
+                        $chatSession
+                    );
+                }
+
+                return $this->saveBotReply(
+                    $clientId,
+                    "👨‍💼 Baik.\n\n" .
+                        "Anda akan terhubung dengan Admin SIRATA.\n" .
+                        "Silakan tuliskan pertanyaan Anda.\n" .
+                        "Admin akan membalas segera.\n\n" .
+                        "💡 Sambil menunggu, Anda bisa:\n" .
+                        "• Mencari informasi NIM\n" .
+                        "• Melihat manfaat SIRATA",
+                    $chatSession,
+                    'admin'
+                );
+            }
+
+            // =============================================
+            // MANFAAT
+            // =============================================
+            if (
+                str_contains($message, 'manfaat') ||
+                str_contains($message, 'tujuan') ||
+                str_contains($message, 'fungsi') ||
+                str_contains($message, 'keuntungan')
+            ) {
+                return $this->saveBotReply(
+                    $clientId,
+                    $this->getManfaat(),
+                    $chatSession
+                );
+            }
+
+            // =============================================
+            // FAQ
+            // =============================================
+            if ($reply = $this->findFaq($message)) {
+                return $this->saveBotReply(
+                    $clientId,
+                    $reply . "\n\n" .
+                        "💡 Ada yang lain bisa saya bantu?",
+                    $chatSession
+                );
+            }
+
+            // =============================================
+            // DEFAULT REPLY
+            // =============================================
             return $this->saveBotReply(
                 $clientId,
-                "📋 MENU UTAMA SIRATA\n\n" .
-                    "• informasi nim - Cari data mahasiswa\n" .
+                "Maaf, saya belum memahami pertanyaan tersebut. 🤔\n\n" .
+                    "📋 Silakan pilih salah satu layanan berikut:\n\n" .
+                    "• informasi nim - Cari NIM\n" .
                     "• berbicara dengan admin - Chat admin\n" .
                     "• manfaat - Info SIRATA\n" .
-                    "• Pertanyaan Terkait SIRATA\n\n" .
-                    "💡 Ketik salah satu menu di atas untuk memulai.",
+                    "• menu - Lihat semua layanan\n\n" .
+                    "💡 Ketik 'menu' untuk melihat semua layanan.",
                 $chatSession
             );
-        }
 
-        // =============================================
-        // INFORMASI NIM
-        // =============================================
-        if (cache()->get('chatbot_waiting_name_' . $clientId)) {
-            if (in_array($message, ['no', 'tidak', 'batal'])) {
-                cache()->forget('chatbot_waiting_name_' . $clientId);
-                return $this->saveBotReply(
-                    $clientId,
-                    "✅ Pencarian mahasiswa dibatalkan.\n\n" .
-                        "Silakan pilih menu lain atau ketik 'menu' untuk melihat layanan.",
-                    $chatSession
-                );
-            }
-
-            $reply = $this->handleNama($message, $clientId);
-
-            if ($reply && str_contains($reply, '🎓 DATA MAHASISWA')) {
-                cache()->forget('chatbot_waiting_name_' . $clientId);
-            }
+        } catch (\Exception $e) {
+            Log::error('ChatService error: ' . $e->getMessage(), [
+                'client_id' => $clientId,
+                'message' => $messageRaw
+            ]);
 
             return $this->saveBotReply(
                 $clientId,
-                $reply ??
-                    "❌ Data mahasiswa tidak ditemukan.\n\n" .
-                    "Silakan ketik nama lengkap mahasiswa.\n\n" .
-                    "💡 Ketik 'batal' untuk membatalkan.",
+                "Maaf, terjadi kesalahan. Silakan coba lagi nanti. 🙏",
                 $chatSession
             );
         }
-
-        if (
-            str_contains($message, 'nim') ||
-            str_contains($message, 'nomor induk') ||
-            str_contains($message, 'informasi nim') ||
-            str_contains($message, 'cari nim') ||
-            str_contains($message, 'cek nim')
-        ) {
-            cache()->put(
-                'chatbot_waiting_name_' . $clientId,
-                true,
-                now()->addMinutes(10)
-            );
-
-            return $this->saveBotReply(
-                $clientId,
-                "🎓 INFORMASI NIM\n\n" .
-                    "Silakan masukkan nama lengkap mahasiswa.\n\n" .
-                    "Contoh: Andi Saputra\n\n" .
-                    "💡 Ketik 'batal' untuk membatalkan.",
-                $chatSession
-            );
-        }
-
-        // =============================================
-        // CHAT DENGAN ADMIN
-        // =============================================
-        if (
-            str_contains($message, 'admin') ||
-            str_contains($message, 'berbicara dengan admin') ||
-            str_contains($message, 'bicara admin') ||
-            str_contains($message, 'hubungi admin')
-        ) {
-            if ($now->hour < 7 || $now->hour >= 15) {
-                return $this->saveBotReply(
-                    $clientId,
-                    "🙏 Maaf, layanan Admin SIRATA sedang tidak beroperasi.\n\n"
-                        . "🕐 Jam operasional:\n"
-                        . "Senin - Jumat\n"
-                        . "Pukul 07.00 - 15.00 WIB.\n\n"
-                        . "Silakan hubungi kembali pada jam operasional.\n\n"
-                        . "Sementara itu Anda tetap dapat menggunakan:\n"
-                        . "• informasi nim - Cari NIM\n"
-                        . "• manfaat - Info SIRATA\n\n" .
-                        "Ada yang bisa saya bantu? 😊",
-                    $chatSession
-                );
-            }
-
-            return $this->saveBotReply(
-                $clientId,
-                "👨‍💼 Baik.\n\n" .
-                    "Anda akan terhubung dengan Admin SIRATA.\n" .
-                    "Silakan tuliskan pertanyaan Anda.\n" .
-                    "Admin akan membalas segera.\n\n" .
-                    "💡 Sambil menunggu, Anda bisa:\n" .
-                    "• Mencari informasi NIM\n" .
-                    "• Melihat manfaat SIRATA",
-                $chatSession,
-                'admin'
-            );
-        }
-
-        // =============================================
-        // MANFAAT
-        // =============================================
-        if (
-            str_contains($message, 'manfaat') ||
-            str_contains($message, 'tujuan') ||
-            str_contains($message, 'fungsi') ||
-            str_contains($message, 'keuntungan')
-        ) {
-            return $this->saveBotReply(
-                $clientId,
-                $this->getManfaat(),
-                $chatSession
-            );
-        }
-
-        // =============================================
-        // FAQ
-        // =============================================
-        if ($reply = $this->findFaq($message)) {
-            return $this->saveBotReply(
-                $clientId,
-                $reply . "\n\n" .
-                    "💡 Ada yang lain bisa saya bantu?",
-                $chatSession
-            );
-        }
-
-        // =============================================
-        // DEFAULT REPLY
-        // =============================================
-        return $this->saveBotReply(
-            $clientId,
-            "Maaf, saya belum memahami pertanyaan tersebut. 🤔\n\n" .
-                "📋 Silakan pilih salah satu layanan berikut:\n\n" .
-                "• informasi nim - Cari NIM\n" .
-                "• berbicara dengan admin - Chat admin\n" .
-                "• manfaat - Info SIRATA\n" .
-                "• menu - Lihat semua layanan\n\n" .
-                "💡 Ketik 'menu' untuk melihat semua layanan.",
-            $chatSession
-        );
     }
 
     // =============================================
@@ -307,21 +425,20 @@ class ChatService
     }
 
     // =============================================
-    // SAVE BOT REPLY - DIPERBAIKI!
+    // SAVE BOT REPLY
     // =============================================
     private function saveBotReply($clientId, $reply, $chatSession = null, $senderType = 'bot')
     {
         $data = [
             'client_id' => $clientId,
             'message' => $reply,
-            'sender_type' => $senderType,  // ✅ 'bot' atau 'admin'
+            'sender_type' => $senderType,
             'is_read' => false,
             'status' => 'sent'
         ];
         
         if ($chatSession) {
             $data['chat_session_id'] = $chatSession->id;
-            // ✅ HANYA chat_session_id, TIDAK ADA nim, nama_mahasiswa, nama_ortu
         }
         
         Message::create($data);

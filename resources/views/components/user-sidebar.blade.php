@@ -126,7 +126,7 @@
 
     <!-- LOGOUT -->
     <div class="mb-6">
-        <form action="{{ route('logout') }}" method="POST">
+        <form action="{{ route('logout') }}" method="POST" onsubmit="return clearChatSession()">
             @csrf
             <button type="submit" class="menu-item w-full text-left flex items-center gap-2">
 
@@ -142,3 +142,40 @@
     </div>
 
 </div>
+
+<script>
+    function clearChatSession() {
+    // 1. Hapus client_id dari cookie
+    document.cookie = 'client_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    
+    // 2. Hapus semua data chat dari localStorage
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+        if (key.startsWith('chat_') || key.startsWith('welcome_sent_') || key === 'client_id') {
+            localStorage.removeItem(key);
+        }
+    });
+    
+    // 3. Hapus semua data chat dari sessionStorage
+    const sessionKeys = Object.keys(sessionStorage);
+    sessionKeys.forEach(key => {
+        if (key.startsWith('chat_') || key.startsWith('welcome_sent_') || key === 'client_id') {
+            sessionStorage.removeItem(key);
+        }
+    });
+    
+    // 4. Hapus cookie lain yang mungkin terkait
+    document.cookie.split(";").forEach(function(c) {
+        if (c.includes('client_id') || c.includes('chat_')) {
+            document.cookie = c
+                .replace(/^ +/, "")
+                .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        }
+    });
+    
+    console.log('✅ Chat session cleared on logout');
+    
+    // Lanjutkan submit form
+    return true;
+}
+</script>

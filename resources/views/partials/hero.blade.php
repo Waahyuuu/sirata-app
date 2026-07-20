@@ -8,13 +8,10 @@
 
         <div class="hero-overlay"></div>
 
-        <!-- RESPONSIVE GRID CONTAINER -->
         <div class="absolute z-10 inset-0 grid grid-cols-1 lg:grid-cols-2 items-center gap-8
                     px-[20px] md:px-[40px] lg:px-[60px] xl:px-[110px] 
-                    pt-[40px] md:pt-[50px] lg:pt-[60px] 
-                    pb-[140px] md:pb-[150px] lg:pb-[130px]">
+                    pt-[40px] md:pt-[50px] lg:pt-[60px] ">
 
-            <!-- SISI KIRI: TEKS UTAMA -->
             <div class="max-w-[650px] text-left mobile-text-center">
                 <p class="uppercase tracking-wide font-bold text-white
                            text-[clamp(16px,2vw,28px)]
@@ -38,7 +35,6 @@
                 </p>
             </div>
 
-            <!-- SISI KANAN: TRACK ANIMASI MOCKUP KIPAS -->
             <div class="flex justify-center items-center w-full relative h-full mockup-container-responsive">
                 <div class="mockup-animation-track">
                     @include('components.mockup')
@@ -47,7 +43,6 @@
 
         </div>
 
-        <!-- HERO MENU BAWAH (SESUAI GAMBAR 2) -->
         <div class="hero-menu-wrapper">
             <div class="menu-corner-top"></div>
             <div class="hero-menu">

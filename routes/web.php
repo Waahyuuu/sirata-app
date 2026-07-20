@@ -40,6 +40,7 @@ Route::post('/chatbot/reply', [MessageController::class, 'reply']);
 Route::get('/chatbot/list', [MessageController::class, 'list']);
 Route::post('/chatbot/mark-as-read', [MessageController::class, 'markAsRead']);
 Route::get('/chatbot/unread-count', [MessageController::class, 'unreadCount']);
+Route::get('/chatbot/session-status', [MessageController::class, 'sessionStatus']);
 
 // =============================================
 // ADMIN ROUTES
@@ -110,12 +111,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-// user akses
+// =============================================
+// PERBAIKAN: USER LOGOUT - Hapus Cookie & Session
+// =============================================
 Route::post('/logout', function () {
+    // 1. Hapus session mahasiswa
     session()->forget('mahasiswa');
+    session()->forget('client_id');
+    session()->forget('chat_session_id');
+    
+    // 2. Hapus cookie client_id dari browser
+    if (isset($_COOKIE['client_id'])) {
+        setcookie('client_id', '', time() - 3600, '/');
+        setcookie('client_id', '', time() - 3600, '/', $_SERVER['HTTP_HOST'] ?? '');
+        setcookie('client_id', '', time() - 3600, '/', $_SERVER['SERVER_NAME'] ?? '');
+    }
+    
+    // 3. Invalidate session
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-    return redirect('/');
+    
+    // 4. Redirect ke home dengan flag
+    return redirect('/')->with('clear_chat', true);
 })->name('logout');
 
 Route::middleware('mahasiswa')->group(function () {
