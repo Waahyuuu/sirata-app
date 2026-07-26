@@ -186,14 +186,15 @@
         <div>
             <label class="block mb-1.5 text-sm font-medium" style="color: #6b7280;">
                 <span class="flex items-center gap-1.5">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" style="color: #ff6900;">
-    <rect x="3" y="4" width="18" height="16" rx="2" ry="2" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-    <path d="M7 15h4" />
-    <path d="M7 13h2" />
-    <circle cx="17" cy="14" r="2" />
-    <path d="M17 18v-1a2 2 0 0 1 2-2h1" />
-</svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" style="color: #ff6900;">
+                        <rect x="3" y="4" width="18" height="16" rx="2" ry="2" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                        <path d="M7 15h4" />
+                        <path d="M7 13h2" />
+                        <circle cx="17" cy="14" r="2" />
+                        <path d="M17 18v-1a2 2 0 0 1 2-2h1" />
+                    </svg>
                     Warga Negara
                 </span>
             </label>
@@ -292,8 +293,9 @@
                     Email Kampus
                 </span>
             </label>
-            <div class="bg-[#fff8f0] border rounded-xl p-3 text-sm font-medium"
-                style="border-color: #ffd180; color: #2d2d2d;">
+            <div class="bg-[#fff8f0] border rounded-xl p-3 text-sm font-medium" style="border-color: #ffd180; color: #2d2d2d; 
+               overflow-wrap: break-word;
+               word-break: break-word;">
                 {{ $s['stimata_email'] }}
             </div>
         </div>

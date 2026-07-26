@@ -145,14 +145,19 @@
 
 <script>
     function clearChatSession() {
-    // 1. Hapus client_id dari cookie
+    console.log('🔄 Starting chat session cleanup...');
+    
+    // 1. Hapus client_id dari cookie (dengan berbagai path & domain)
     document.cookie = 'client_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'client_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname + ';';
+    document.cookie = 'client_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname + ';';
     
     // 2. Hapus semua data chat dari localStorage
     const keys = Object.keys(localStorage);
     keys.forEach(key => {
         if (key.startsWith('chat_') || key.startsWith('welcome_sent_') || key === 'client_id') {
             localStorage.removeItem(key);
+            console.log('🗑️ Removed from localStorage:', key);
         }
     });
     
@@ -161,21 +166,57 @@
     sessionKeys.forEach(key => {
         if (key.startsWith('chat_') || key.startsWith('welcome_sent_') || key === 'client_id') {
             sessionStorage.removeItem(key);
+            console.log('🗑️ Removed from sessionStorage:', key);
         }
     });
     
-    // 4. Hapus cookie lain yang mungkin terkait
+    // 4. Hapus cookie lain yang mungkin terkait (lebih bersih)
     document.cookie.split(";").forEach(function(c) {
-        if (c.includes('client_id') || c.includes('chat_')) {
-            document.cookie = c
-                .replace(/^ +/, "")
-                .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        const cookieName = c.split("=")[0].trim();
+        if (cookieName.includes('client_id') || cookieName.includes('chat_')) {
+            document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname + ';';
+            console.log('🗑️ Removed cookie:', cookieName);
         }
     });
+    
+    // 5. Dispatch event untuk memberitahu komponen lain (seperti chatbot)
+    window.dispatchEvent(new CustomEvent('chat-logout', {
+        detail: { 
+            client_id: null,
+            timestamp: Date.now()
+        }
+    }));
     
     console.log('✅ Chat session cleared on logout');
     
     // Lanjutkan submit form
     return true;
 }
+
+// =============================================
+// EVENT LISTENER untuk deteksi logout dari komponen lain
+// =============================================
+window.addEventListener('chat-logout', function(e) {
+    console.log('📡 Logout event received from another component');
+    // Tambahan cleanup jika diperlukan
+});
+
+// =============================================
+// DETEKSI jika user logout dari tab lain
+// =============================================
+window.addEventListener('storage', function(e) {
+    if (e.key === 'client_id' && e.newValue === null) {
+        console.log('🔍 Logout detected from another tab via storage event');
+        // Hapus data chat di tab ini juga
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.startsWith('chat_') || key.startsWith('welcome_sent_')) {
+                localStorage.removeItem(key);
+            }
+        });
+    }
+});
+
+console.log('✅ Sidebar logout handler initialized');
 </script>

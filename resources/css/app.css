@@ -149,13 +149,17 @@ html {
     }
 
     .menu-item:hover {
-        @apply bg-white translate-x-0 rounded-full;
+        @apply translate-x-0 rounded-full;
+        background-color: #f54a00;
+        color: white; /* Opsional: buat icon jadi putih */
     }
 
     .menu-item.active {
-        @apply bg-white shadow-md
+        @apply shadow-md
                 rounded-full
                 translate-x-0;
+        background-color: #f54a00;
+        color: white; /* Opsional: buat icon jadi putih */
     }
 
     .menu-item span {

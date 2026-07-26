@@ -1,5 +1,5 @@
 <button id="back-to-top"
-    class="fixed bottom-5 right-5 md:bottom-8 md:right-8 z-20
+    class="fixed bottom-12 right-5 md:bottom-8 md:right-8 z-20
     w-10 h-10 md:w-14 md:h-14
     bg-[var(--button-bg)] hover:bg-[var(--button-hover)]
     text-white flex items-center justify-center
