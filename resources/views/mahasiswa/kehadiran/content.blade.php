@@ -68,7 +68,7 @@
                 <p class="text-sm leading-relaxed" style="color: #6b7280;">
                     {{ $summary['message'] }}
                 </p>
-                @if($summary['status'] === 'Aman')
+                @if($summary['status'] === 'Tidak Cekal')
                 <div class="mt-3 flex items-center gap-2">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
                         style="background: linear-gradient(135deg, #10b981, #059669);">
@@ -171,7 +171,7 @@
                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
                     style="background: linear-gradient(135deg, #10b981, #059669);">
                     <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-                    Aman ≥75%
+                    Tidak Cekal ≥75%
                 </span>
                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
                     style="background: linear-gradient(135deg, #ef4444, #dc2626);">
@@ -270,7 +270,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
-                                Aman
+                                Tidak Cekal
                             </span>
                             @endif
                         </td>

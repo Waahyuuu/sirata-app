@@ -40,7 +40,7 @@
                         clip-rule="evenodd" />
                 </svg>
 
-                <span class="lg:inline">Dashboard</span>
+                <span class="lg:inline">Dasbor</span>
             </a>
 
             <!-- Pesan dengan Badge Notifikasi -->

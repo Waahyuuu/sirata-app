@@ -911,7 +911,7 @@ class MahasiswaController extends Controller
         $initial = strtoupper(substr($nama, 0, 1));
 
         // ============================================================
-        // 🔥 Toggle status setiap refresh menggunakan session
+        //  Toggle status setiap refresh menggunakan session
         // ============================================================
         $sessionKey = 'kehadiran_status_' . $nim;
 
@@ -926,7 +926,7 @@ class MahasiswaController extends Controller
         session([$sessionKey => $isCekalMode]);
 
         // ============================================================
-        // 🔥 Ambil data mata kuliah dari jadwal (KRS) semester AKTIF
+        // Ambil data mata kuliah dari jadwal (KRS) semester AKTIF
         // ============================================================
         $semesterData = $this->getSemesterData($api, $nim);
         $semesterAktif = $semesterData['semesterAktif'] ?? 1;
@@ -953,7 +953,7 @@ class MahasiswaController extends Controller
         }
 
         // ============================================================
-        // 🔥 Generate data kehadiran berdasarkan mode (Cekal atau Aman)
+        // Generate data kehadiran berdasarkan mode (Cekal atau Aman)
         // ============================================================
         $kehadiranMatkul = [];
         $totalHadir = 0;
@@ -1198,7 +1198,7 @@ class MahasiswaController extends Controller
         $summary = [
             'hadir_percent' => $hadirPercent,
             'tidak_hadir_percent' => $tidakHadirPercent,
-            'status' => $hasCekal ? 'Cekal' : 'Aman',
+            'status' => $hasCekal ? 'Cekal' : 'Tidak Cekal',
             'message' => $message,
             'pesan_orang_tua' => $pesanOrangTua,
             'cekal_matkul' => $cekalMatkulList,
